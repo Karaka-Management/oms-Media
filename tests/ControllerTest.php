@@ -23,7 +23,7 @@ use phpOMS\Event\EventManager;
 use phpOMS\Module\ModuleManager;
 use phpOMS\Router\WebRouter;
 
-require_once __DIR__ . '/../Autoloader.php';
+require_once __DIR__ . '/../../tests/Autoloader.php';
 
 /**
  * @internal
