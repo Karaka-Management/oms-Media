@@ -12,7 +12,7 @@
  */
 declare(strict_types=1);
 
-namespace Modules\tests\Media\Models;
+namespace Modules\Media\tests\Models;
 
 use Modules\Admin\Models\NullAccount;
 use Modules\Media\Models\Collection;

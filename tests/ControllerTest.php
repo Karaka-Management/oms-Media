@@ -12,7 +12,7 @@
  */
 declare(strict_types=1);
 
-namespace Modules\tests\Media;
+namespace Modules\Media\tests;
 
 use Model\CoreSettings;
 use Modules\Media\Models\UploadStatus;
