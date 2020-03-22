@@ -12,7 +12,6 @@
  */
 declare(strict_types=1);
 
-use Modules\Media\Models\PathSettings;
 use phpOMS\Uri\UriFactory;
 
 /**
