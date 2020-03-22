@@ -35,10 +35,10 @@ use phpOMS\Uri\UriFactory;
 
 <div class="row">
     <div class="col-xs-12 col-md-6">
-        <section class="box wf-100">
-            <header><h1><?= $this->getHtml('Upload') ?></h1></header>
-            <div class="inner">
-                <form method="PUT" id="media-uploader" action="<?= UriFactory::build('{/api}media'); ?>">
+        <form method="PUT" id="media-uploader" action="<?= UriFactory::build('{/api}media'); ?>">
+            <div class="portlet">
+                <div class="portlet-head"><?= $this->getHtml('Upload') ?></div>
+                <div class="portlet-body">
                     <table class="layout wf-100">
                         <tr><td><label for="iPath"><?= $this->getHtml('Path') ?></label>
                         <tr><td><input type="text" id="iPath" name="virtualPath" value="<?= $this->request->getUri()->getQuery('path') ?? ''; ?>" disabled>
@@ -52,10 +52,12 @@ use phpOMS\Uri\UriFactory;
                             </select>
                         <tr><td><label for="iFiles"><?= $this->getHtml('Files') ?></label>
                         <tr><td><input type="file" id="iFiles" name="files" multiple>
-                        <tr><td><input type="submit" id="iMediaCreate" name="mediaCreateButton" value="<?= $this->getHtml('Create', '0', '0'); ?>">
                     </table>
-                </form>
-            </div>
-        </section>
+                </div>
+                <div class="portlet-foot">
+                    <input type="submit" id="iMediaCreate" name="mediaCreateButton" value="<?= $this->getHtml('Create', '0', '0'); ?>">
+                </div>
+            </form>
+        </div>
     </div>
 </div>

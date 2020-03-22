@@ -362,4 +362,53 @@ final class ApiController extends Controller
 
         return $mediaCollection;
     }
+
+    /**
+     * Api method to create media file.
+     *
+     * @param RequestAbstract  $request  Request
+     * @param ResponseAbstract $response Response
+     * @param mixed            $data     Generic data
+     *
+     * @return void
+     *
+     * @api
+     *
+     * @since 1.0.0
+     */
+    public function apiMediaCreate(RequestAbstract $request, ResponseAbstract $response, $data = null) : void
+    {
+        $virtualPath  = (string) ($request->getData('path') ?? '');
+        $fileName     = (string) ($request->getData('fileName') ?? '');
+        $pathSettings = (int) ($request->getData('pathsettings') ?? PathSettings::RANDOM_PATH);
+
+        $outputDir    = '';
+        if ($pathSettings === PathSettings::RANDOM_PATH) {
+            $outputDir = self::createMediaPath(__DIR__ . '/../../../Modules/Media/Files');
+        } elseif ($pathSettings === PathSettings::FILE_PATH) {
+            $outputDir = __DIR__ . '/../../../Modules/Media/Files/' . \ltrim($virtualPath, '\\/');
+        }
+
+        \file_put_contents($outputDir . '/' . $fileName, (string) ($request->getData('content') ?? ''));
+
+        $status = [
+            [
+                'status'    => UploadStatus::OK,
+                'path'      => $outputDir . '/' . $fileName,
+                'filename'  => $fileName,
+                'name'      => $request->getData('name') ?? '',
+                'size'      => \strlen((string) ($request->getData('content') ?? '')),
+                'extension' => \substr($fileName, \strripos($fileName, '.')),
+            ],
+        ];
+
+        $created = $this->createDbEntries($status, $request->getHeader()->getAccount(), $virtualPath);
+
+        $ids = [];
+        foreach ($created as $file) {
+            $ids[] = $file->getId();
+        }
+
+        $this->fillJsonResponse($request, $response, NotificationLevel::OK, 'Media', 'Media successfully created.', $ids);
+    }
 }

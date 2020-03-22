@@ -246,6 +246,9 @@ final class BackendController extends Controller
         $view = new View($this->app->l11nManager, $request, $response);
         $view->setTemplate('/Modules/Media/Theme/Backend/media-file-create');
 
+        $editor = new \Modules\Editor\Theme\Backend\Components\Editor\BaseView($this->app->l11nManager, $request, $response);
+        $view->addData('editor', $editor);
+
         return $view;
     }
 
