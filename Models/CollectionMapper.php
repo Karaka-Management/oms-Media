@@ -40,6 +40,14 @@ final class CollectionMapper extends MediaMapper
     ];
 
     /**
+     * Model to use by the mapper.
+     *
+     * @var string
+     * @since 1.0.0
+     */
+    protected static string $model = Collection::class;
+
+    /**
      * Primary table.
      *
      * @var string
