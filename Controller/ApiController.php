@@ -382,7 +382,7 @@ final class ApiController extends Controller
         $fileName     = (string) ($request->getData('fileName') ?? '');
         $pathSettings = (int) ($request->getData('pathsettings') ?? PathSettings::RANDOM_PATH);
 
-        $outputDir    = '';
+        $outputDir = '';
         if ($pathSettings === PathSettings::RANDOM_PATH) {
             $outputDir = self::createMediaPath(__DIR__ . '/../../../Modules/Media/Files');
         } elseif ($pathSettings === PathSettings::FILE_PATH) {
