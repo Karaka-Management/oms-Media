@@ -82,14 +82,14 @@ class CollectionTest extends \PHPUnit\Framework\TestCase
 
     public function testSourceInputOutput() : void
     {
-        $this->media->setSources([new NullMedia(1), new NullMedia(2), new NullMedia(3)]);
-        self::assertEquals([new NullMedia(1), new NullMedia(2), new NullMedia(3)], $this->media->getSources());
+        $this->media->setSources([$a = new NullMedia(1), $b = new NullMedia(2), $c = new NullMedia(3)]);
+        self::assertEquals([$a, $b, $c], $this->media->getSources());
     }
 
     public function testSourceAddInputOutput() : void
     {
-        $this->media->setSources([new NullMedia(1), new NullMedia(2), new NullMedia(3)]);
-        $this->media->addSource(new NullMedia(4));
-        self::assertEquals([new NullMedia(1), new NullMedia(2), new NullMedia(3), new NullMedia(4)], $this->media->getSources());
+        $this->media->setSources([$a = new NullMedia(1), $b = new NullMedia(2), $c = new NullMedia(3)]);
+        $this->media->addSource($d = new NullMedia(4));
+        self::assertEquals([$a, $b, $c, $d], $this->media->getSources());
     }
 }

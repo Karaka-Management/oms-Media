@@ -23,7 +23,7 @@ use Modules\Media\Models\MediaMapper;
  */
 class MediaMapperTest extends \PHPUnit\Framework\TestCase
 {
-    public function testCRUD() : void
+    public function testCR() : void
     {
         $media = new Media();
         $media->setCreatedBy(new NullAccount(1));
