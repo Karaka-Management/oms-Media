@@ -12,7 +12,7 @@
  */
 declare(strict_types=1);
 
-namespace Modules\Media\tests;
+namespace Modules\Media\tests\Controller;
 
 use Model\CoreSettings;
 use Modules\Media\Models\UploadStatus;
@@ -26,7 +26,7 @@ use phpOMS\Router\WebRouter;
 /**
  * @internal
  */
-class ControllerTest extends \PHPUnit\Framework\TestCase
+class ApiControllerTest extends \PHPUnit\Framework\TestCase
 {
     protected $app    = null;
     protected $module = null;
