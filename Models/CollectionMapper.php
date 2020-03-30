@@ -32,10 +32,10 @@ final class CollectionMapper extends MediaMapper
      */
     protected static array $hasMany = [
         'sources' => [
-            'mapper' => MediaMapper::class, /* mapper of the related object */
-            'table'  => 'media_relation', /* table of the related object, null if no relation table is used (many->1) */
+            'mapper'   => MediaMapper::class,
+            'table'    => 'media_relation',
             'external' => 'media_relation_dst',
-            'self'   => 'media_relation_src',
+            'self'     => 'media_relation_src',
         ],
     ];
 

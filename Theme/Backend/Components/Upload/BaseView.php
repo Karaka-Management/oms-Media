@@ -66,7 +66,7 @@ class BaseView extends View
     /**
      * {@inheritdoc}
      */
-    public function render(...$data): string
+    public function render(...$data) : string
     {
         $this->form        = $data[0];
         $this->name        = $data[1] ?? 'UNDEFINED';

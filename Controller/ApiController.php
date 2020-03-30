@@ -21,6 +21,7 @@ use Modules\Media\Models\CollectionMapper;
 use Modules\Media\Models\Media;
 use Modules\Media\Models\MediaMapper;
 use Modules\Media\Models\NullCollection;
+use Modules\Media\Models\NullMedia;
 use Modules\Media\Models\PathSettings;
 use Modules\Media\Models\PermissionState;
 use Modules\Media\Models\UploadFile;
@@ -32,6 +33,7 @@ use phpOMS\Message\RequestAbstract;
 use phpOMS\Message\ResponseAbstract;
 use phpOMS\System\MimeType;
 use phpOMS\Utils\Parser\Markdown\Markdown;
+use phpOMS\Model\Message\FormValidation;
 
 /**
  * Media class.
@@ -98,7 +100,7 @@ final class ApiController extends Controller
     public function apiMediaUpload(RequestAbstract $request, ResponseAbstract $response, $data = null) : void
     {
         $uploads = $this->uploadFiles(
-            $request->getData('name') ?? '',
+            $request->getData('name') === null || $request->getFiles() !== null ? '' : $request->getData('name'),
             $request->getFiles(),
             $request->getHeader()->getAccount(),
             (string) ($request->getData('path') ?? __DIR__ . '/../../../Modules/Media/Files'),
@@ -189,7 +191,7 @@ final class ApiController extends Controller
      * @param array $status  Files
      * @param int   $account Uploader
      *
-     * @return array
+     * @return Media[]
      *
      * @since 1.0.0
      */
@@ -321,6 +323,83 @@ final class ApiController extends Controller
         }
 
         return $media;
+    }
+
+    /**
+     * Api method to create a collection.
+     *
+     * @param RequestAbstract  $request  Request
+     * @param ResponseAbstract $response Response
+     * @param mixed            $data     Generic data
+     *
+     * @return void
+     *
+     * @api
+     *
+     * @since 1.0.0
+     */
+    public function apiCollectionCreate(RequestAbstract $request, ResponseAbstract $response, $data = null) : void
+    {
+        if (!empty($val = $this->validateCollectionCreate($request))) {
+            $response->set('collection_create', new FormValidation($val));
+
+            return;
+        }
+
+        $collection = $this->createCollectionFromRequest($request);
+        $this->createModel($request->getHeader()->getAccount(), $collection, CollectionMapper::class, 'collection');
+        $this->fillJsonResponse($request, $response, NotificationLevel::OK, 'Collection', 'Collection successfully created.', $collection);
+    }
+
+    /**
+     * Validate collection create request
+     *
+     * @param RequestAbstract $request Request
+     *
+     * @return array<string, bool> Returns the validation array of the request
+     *
+     * @since 1.0.0
+     */
+    private function validateCollectionCreate(RequestAbstract $request) : array
+    {
+        $val = [];
+        if (($val['name'] = empty($request->getData('name')))
+            || ($val['media'] = empty($request->getDataJson('media-list')))
+        ) {
+            return $val;
+        }
+
+        return [];
+    }
+
+    /**
+     * Method to create collection from request.
+     *
+     * @param RequestAbstract $request Request
+     *
+     * @return Collection Returns the collection from the request
+     *
+     * @since 1.0.0
+     */
+    private function createCollectionFromRequest(RequestAbstract $request) : Collection
+    {
+        $mediaCollection = new Collection();
+        $mediaCollection->setName($request->getData('name') ?? '');
+        $mediaCollection->setDescription($description = Markdown::parse($request->getData('description') ?? ''));
+        $mediaCollection->setDescriptionRaw($description);
+        $mediaCollection->setCreatedBy(new NullAccount($request->getHeader()->getAccount()));
+
+        $media = $request->getDataJson('media-list');
+        foreach ($media as $file) {
+            $mediaCollection->addSource(new NullMedia((int) $file));
+        }
+
+        $mediaCollection->setVirtualPath($request->getData('virtualpath') ?? '/');
+        $mediaCollection->setPath($request->getData('virtualpath') ?? '/');
+
+        CollectionMapper::create($mediaCollection);
+
+        return $mediaCollection;
     }
 
     /**
