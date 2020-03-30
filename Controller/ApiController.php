@@ -31,9 +31,9 @@ use phpOMS\Account\PermissionType;
 use phpOMS\Message\NotificationLevel;
 use phpOMS\Message\RequestAbstract;
 use phpOMS\Message\ResponseAbstract;
+use phpOMS\Model\Message\FormValidation;
 use phpOMS\System\MimeType;
 use phpOMS\Utils\Parser\Markdown\Markdown;
-use phpOMS\Model\Message\FormValidation;
 
 /**
  * Media class.
