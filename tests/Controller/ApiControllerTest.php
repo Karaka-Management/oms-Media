@@ -15,13 +15,14 @@ declare(strict_types=1);
 namespace Modules\Media\tests\Controller;
 
 use Model\CoreSettings;
-use Modules\Media\Models\UploadStatus;
 use phpOMS\Account\AccountManager;
 use phpOMS\Application\ApplicationAbstract;
 use phpOMS\Dispatcher\Dispatcher;
 use phpOMS\Event\EventManager;
 use phpOMS\Module\ModuleManager;
 use phpOMS\Router\WebRouter;
+use Modules\Media\tests\Controller\Api\ApiControllerMediaTrait;
+use Modules\Media\tests\Controller\Api\ApiControllerCollectionTrait;
 
 /**
  * @internal
@@ -53,40 +54,6 @@ class ApiControllerTest extends \PHPUnit\Framework\TestCase
         $this->module = $this->app->moduleManager->get('Media');
     }
 
-    /**
-     * @covers Modules\Media\Controller\ApiController
-     * @group module
-     */
-    public function testCreateDbEntries() : void
-    {
-        $status = [
-            [
-                'status' => UploadStatus::OK,
-                'extension' => 'png',
-                'filename' => 'logo.png',
-                'name' => 'logo.png',
-                'path' => 'Modules/tests/Media/Files/',
-                'size' => 90210,
-            ],
-            [
-                'status' => UploadStatus::FAILED_HASHING,
-                'extension' => 'png',
-                'filename' => 'logo.png',
-                'name' => 'logo.png',
-                'path' => 'Modules/tests/Media/Files/',
-                'size' => 90210,
-            ],
-            [
-                'status' => UploadStatus::OK,
-                'extension' => 'png',
-                'filename' => 'logo2.png',
-                'name' => 'logo2.png',
-                'path' => 'Modules/tests/Media/Files/',
-                'size' => 90210,
-            ],
-        ];
-
-        $ids = $this->module->createDbEntries($status, 1);
-        self::assertCount(2, $ids);
-    }
+    use ApiControllerMediaTrait;
+    use ApiControllerCollectionTrait;
 }
