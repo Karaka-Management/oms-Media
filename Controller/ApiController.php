@@ -58,12 +58,6 @@ use phpOMS\Utils\Parser\Markdown\Markdown;
  * @todo Orange-Management/Modules#160
  *  Fix media upload
  *
- * @todo Orange-Management/oms-Media#1
- *      [Test] Create collection creation test
- *
- * @todo Orange-Management/oms-Media#2
- *      [Test] Split ApiController test for Media and Collection
- *
  * @todo Orange-Management/oms-Media#3
  *      [MultiUpload] Allow to create a collection when uploading multiple files
  *
