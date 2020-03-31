@@ -83,7 +83,7 @@ trait ApiControllerCollectionTrait
         $this->module->apiCollectionCreate($request, $response);
 
         $collection = $response->get('')['response'];
-        self::assertEquals('Test Collection', $collection);
+        self::assertEquals('Test Collection', $collection->getName());
         self::assertCount(2, $collection->getSources());
     }
 }
