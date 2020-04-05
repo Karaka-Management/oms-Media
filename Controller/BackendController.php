@@ -116,11 +116,6 @@ final class BackendController extends Controller
      *
      * @return RenderableInterface
      *
-     * @todo Orange-Management/Modules#208
-     *  Improve the media list
-     *      1. Collections should show their content
-     *      2. The first page should show an overview (Modules, Users, ...?)
-     *
      * @since 1.0.0
      * @codeCoverageIgnore
      */
@@ -174,11 +169,6 @@ final class BackendController extends Controller
      * @param mixed            $data     Generic data
      *
      * @return RenderableInterface
-     *
-     * @todo Orange-Management/Modules#208
-     *  Improve the media list
-     *      1. Collections should show their content
-     *      2. The first page should show an overview (Modules, Users, ...?)
      *
      * @since 1.0.0
      * @codeCoverageIgnore

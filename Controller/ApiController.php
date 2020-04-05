@@ -59,14 +59,14 @@ use phpOMS\Utils\Parser\Markdown\Markdown;
  *  Fix media upload
  *
  * @todo Orange-Management/oms-Media#3
- *      [MultiUpload] Allow to create a collection when uploading multiple files
+ *  [MultiUpload] Allow to create a collection when uploading multiple files
  *
  * @todo Orange-Management/oms-Media#14
- *      [Download] Allow to download files
+ *  [Download] Allow to download files
  *
  * @todo Orange-Management/oms-Media#15
- *      [Download] Allow to download collections
- *      Downloading a collection should return a zip or tar.gz
+ *  [Download] Allow to download collections
+ *  Downloading a collection should return a zip or tar.gz
  */
 final class ApiController extends Controller
 {
