@@ -15,14 +15,14 @@ declare(strict_types=1);
 namespace Modules\Media\tests\Controller;
 
 use Model\CoreSettings;
+use Modules\Media\tests\Controller\Api\ApiControllerCollectionTrait;
+use Modules\Media\tests\Controller\Api\ApiControllerMediaTrait;
 use phpOMS\Account\AccountManager;
 use phpOMS\Application\ApplicationAbstract;
 use phpOMS\Dispatcher\Dispatcher;
 use phpOMS\Event\EventManager;
 use phpOMS\Module\ModuleManager;
 use phpOMS\Router\WebRouter;
-use Modules\Media\tests\Controller\Api\ApiControllerMediaTrait;
-use Modules\Media\tests\Controller\Api\ApiControllerCollectionTrait;
 
 /**
  * @internal

@@ -16,9 +16,9 @@ namespace Modules\Media\tests\Controller\Api;
 
 use phpOMS\Message\Http\HttpRequest;
 use phpOMS\Message\Http\HttpResponse;
+use phpOMS\System\File\Local\Directory;
 use phpOMS\Uri\HttpUri;
 use phpOMS\Utils\TestUtils;
-use phpOMS\System\File\Local\Directory;
 
 trait ApiControllerCollectionTrait
 {

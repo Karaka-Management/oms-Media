@@ -14,11 +14,11 @@ declare(strict_types=1);
 
 namespace Modules\Media\tests\Controller\Api;
 
+use Modules\Media\Models\UploadStatus;
 use phpOMS\Message\Http\HttpRequest;
 use phpOMS\Message\Http\HttpResponse;
-use phpOMS\Uri\HttpUri;
-use Modules\Media\Models\UploadStatus;
 use phpOMS\System\File\Local\Directory;
+use phpOMS\Uri\HttpUri;
 use phpOMS\Utils\TestUtils;
 
 trait ApiControllerMediaTrait
