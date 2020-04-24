@@ -166,7 +166,7 @@ final class ApiController extends Controller
             if ($pathSettings === PathSettings::RANDOM_PATH) {
                 $outputDir = self::createMediaPath($basePath);
             } elseif ($pathSettings === PathSettings::FILE_PATH) {
-                $outputDir = $basePath . $virtualPath;
+                $outputDir = \rtrim($basePath, '/\\') . $virtualPath;
                 $absolute  = true;
             } else {
                 return $mediaCreated;
