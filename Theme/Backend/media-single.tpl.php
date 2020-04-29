@@ -20,7 +20,7 @@ use \phpOMS\Uri\UriFactory;
 include __DIR__ . '/template-functions.php';
 
 /**
- * @var \phpOMS\Views\View          $this
+ * @var \Modules\Media\Views\MediaView $this
  * @var \Modules\Media\Models\Media $media
  */
 $media = $this->getData('media');
@@ -79,8 +79,8 @@ echo $this->getData('nav')->render();
                     <?php endforeach; else : $path = $this->dirPathFunction($media, $this->request->getData('sub') ?? ''); ?>
                         <?php $list = \phpOMS\System\File\Local\Directory::list($path);
                             foreach ($list as $key => $value) :
-                                $url = UriFactory::build('{/prefix}media/single?{?}&id=' . $media->getId() . '&sub=' . \substr($value, \strlen($media->getPath())));
-                                $icon = $this->fileIconFunction(FileUtils::getExtensionType(!\is_dir($value) ? File::extension($value) : 'collection'));
+                                $url  = UriFactory::build('{/prefix}media/single?{?}&id=' . $media->getId() . '&sub=' . \substr($value, \strlen($media->getPath())));
+                                $icon = $fileIconFunction(FileUtils::getExtensionType(!\is_dir($value) ? File::extension($value) : 'collection'));
                         ?>
                         <tr data-href="<?= $url; ?>">
                             <td><a href="<?= $url; ?>"><i class="fa fa-<?= $this->printHtml($icon); ?>"></i></a>
@@ -125,9 +125,9 @@ echo $this->getData('nav')->render();
                         <textarea class="textContent" data-tpl-text="/media/content" data-tpl-value="/media/content" data-marker="tpl" name="content"></textarea>
                         </template>
                         <pre class="textContent" data-tpl-text="/media/content" data-tpl-value="/media/content"><?= $this->printHtml(
-                                $this->getFileContent(
-                                    $media->isAbsolute() ? $path : __DIR__ . '/../../../../' . \ltrim($path, '/')
-                                )
+                            $this->getFileContent(
+                                $media->isAbsolute() ? $path : __DIR__ . '/../../../../' . \ltrim($path, '/')
+                            )
                         ); ?></pre>
                     <?php endif; ?>
                 <?php endif; ?>
