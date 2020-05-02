@@ -302,7 +302,9 @@ final class ApiController extends Controller
      */
     public function apiMediaUpdate(RequestAbstract $request, ResponseAbstract $response, $data = null) : void
     {
+        /** @var Media $old */
         $old = clone MediaMapper::get((int) $request->getData('id'));
+        /** @var Media $new */
         $new = $this->updateMediaFromRequest($request);
         $this->updateModel($request->getHeader()->getAccount(), $old, $new, MediaMapper::class, 'media');
         $this->fillJsonResponse($request, $response, NotificationLevel::OK, 'Media', 'Media successfully updated', $new);
@@ -319,6 +321,7 @@ final class ApiController extends Controller
      */
     private function updateMediaFromRequest(RequestAbstract $request) : Media
     {
+        /** @var Media $media */
         $media = MediaMapper::get((int) $request->getData('id'));
         $media->setName((string) ($request->getData('name') ?? $media->getName()));
         $media->setVirtualPath((string) ($request->getData('virtualpath') ?? $media->getVirtualPath()));
