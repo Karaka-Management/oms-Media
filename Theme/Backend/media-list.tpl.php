@@ -20,7 +20,7 @@ include __DIR__ . '/template-functions.php';
  * @var \phpOMS\Views\View $this
  * @var string             $parent
  */
-$mediaPath = $this->getData('path') ?? '/';
+$mediaPath = \urldecode($this->getData('path') ?? '/');
 
 /**
  * @var \Modules\Media\Models\Media[] $media
@@ -55,7 +55,7 @@ $media = $this->getData('media');
 
                         $subPath .= '/' . $paths[$i];
 
-                        $url = $i === $length - 1 ? UriFactory::build('{%}') : UriFactory::build('{/prefix}media/list?path=' . $subPath);
+                        $url = UriFactory::build('{/prefix}media/list?path=' . $subPath);
                 ?>
                     <li data-href="<?= $url; ?>"><a href="<?= $url; ?>"><?= $this->printHtml($paths[$i]); ?></a></li>
                 <?php endfor; ?>
@@ -82,11 +82,10 @@ $media = $this->getData('media');
                         foreach ($media as $key => $value) :
                             ++$count;
 
-                            if ($value->getExtension() === 'collection') {
-                                $url = UriFactory::build('{/prefix}media/list?path=' . \rtrim($value->getVirtualPath(), '/') . '/' . $value->getName());
-                            } else {
-                                $url = UriFactory::build('{/prefix}media/single?id=' . $value->getId());
-                            }
+                            $url = $value->getExtension() === 'collection'
+                                ? UriFactory::build('{/prefix}media/list?path=' . \rtrim($value->getVirtualPath(), '/') . '/' . $value->getName())
+                                : UriFactory::build('{/prefix}media/single?id=' . $value->getId());
+
                             $icon = $fileIconFunction(\phpOMS\System\File\FileUtils::getExtensionType($value->getExtension()));
                         ?>
                     <tr data-href="<?= $url; ?>">

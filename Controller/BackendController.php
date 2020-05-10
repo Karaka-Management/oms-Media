@@ -129,7 +129,7 @@ final class BackendController extends Controller
         /** @var Media[] $media */
         $media = MediaMapper::getByVirtualPath($path);
 
-        $collection = CollectionMapper::getParentCollection($path);
+        $collection = CollectionMapper::getParentCollection(\str_replace('+', ' ', $path));
         if ($collection instanceof Collection) {
             $media += $collection->getSources();
 
