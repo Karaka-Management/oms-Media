@@ -96,8 +96,8 @@ echo $this->getData('nav')->render();
     <?php else: ?>
     <div class="col-xs-12">
         <section id="mediaFile" class="box wf-100"
-            data-ui-content=".inner"
-            data-ui-element="#mediaFile .textContent"
+            data-update-content=".inner"
+            data-update-element="#mediaFile .textContent"
             data-tag="form"
             data-method="POST"
             data-uri="<?= \phpOMS\Uri\UriFactory::build('{/api}media?{?}&csrf={$CSRF}'); ?>">
