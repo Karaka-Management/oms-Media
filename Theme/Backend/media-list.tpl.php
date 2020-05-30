@@ -41,7 +41,7 @@ $media = $this->getData('media');
 <div class="row">
     <div class="col-xs-12">
         <div class="box">
-            <ul class="crumbs-1">
+            <ul class="crumbs-2">
                 <li data-href="<?= UriFactory::build('{/prefix}media/list?path=/'); ?>"><a href="<?= UriFactory::build('{/prefix}media/list?path=/'); ?>">/</a></li>
                 <?php
                     $subPath = '';
@@ -57,7 +57,7 @@ $media = $this->getData('media');
 
                         $url = UriFactory::build('{/prefix}media/list?path=' . $subPath);
                 ?>
-                    <li data-href="<?= $url; ?>"><a href="<?= $url; ?>"><?= $this->printHtml($paths[$i]); ?></a></li>
+                    <li data-href="<?= $url; ?>"<?= $i === $length - 1 ? 'class="active"' : '' ?>><a href="<?= $url; ?>"><?= $this->printHtml($paths[$i]); ?></a></li>
                 <?php endfor; ?>
             </ul>
         </div>
