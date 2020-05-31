@@ -36,7 +36,7 @@ class BaseView extends View
      * @var string
      * @since 1.0.0
      */
-    protected string $form = '';
+    protected string $id = '';
 
     /**
      * Virtual path of the media file
@@ -55,6 +55,14 @@ class BaseView extends View
     protected string $name = '';
 
     /**
+     * Is required?
+     *
+     * @var bool
+     * @since 1.0.0
+     */
+    private bool $isRequired = false;
+
+    /**
      * {@inheritdoc}
      */
     public function __construct(L11nManager $l11n = null, RequestAbstract $request, ResponseAbstract $response)
@@ -68,9 +76,46 @@ class BaseView extends View
      */
     public function render(...$data) : string
     {
-        $this->form        = $data[0];
+        $this->id          = $data[0];
         $this->name        = $data[1];
         $this->virtualPath = $data[2] ?? '/';
+        $this->isRequired  = $data[3] ?? false;
         return parent::render();
+    }
+
+    /**
+     * Get selector id
+     *
+     * @return string
+     *
+     * @since 1.0.0
+     */
+    public function getId() : string
+    {
+        return $this->id;
+    }
+
+    /**
+     * Get name
+     *
+     * @return string
+     *
+     * @since 1.0.0
+     */
+    public function getName() : string
+    {
+        return $this->name;
+    }
+
+    /**
+     * Is required?
+     *
+     * @return bool
+     *
+     * @since 1.0.0
+     */
+    public function isRequired() : bool
+    {
+        return $this->isRequired;
     }
 }
