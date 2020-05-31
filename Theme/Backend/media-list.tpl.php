@@ -31,9 +31,9 @@ $media = $this->getData('media');
 <div class="row">
     <div class="col-xs-12">
         <div class="box">
-            <a class="button" href="<?= UriFactory::build('{/prefix}media/upload?path={?path}'); ?>">Upload</a>
-            <a class="button" href="<?= UriFactory::build('{/prefix}media/file/create?path={?path}'); ?>">Create File</a>
-            <a class="button" href="<?= UriFactory::build('{/prefix}media/collection/create?path={?path}'); ?>">Create Collection</a>
+            <a tabindex="0" class="button" href="<?= UriFactory::build('{/prefix}media/upload?path={?path}'); ?>">Upload</a>
+            <a tabindex="0" class="button" href="<?= UriFactory::build('{/prefix}media/file/create?path={?path}'); ?>">Create File</a>
+            <a tabindex="0" class="button" href="<?= UriFactory::build('{/prefix}media/collection/create?path={?path}'); ?>">Create Collection</a>
         </div>
     </div>
 </div>

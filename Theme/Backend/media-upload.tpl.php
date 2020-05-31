@@ -28,7 +28,7 @@ use phpOMS\Uri\UriFactory;
 <div class="row">
     <div class="col-xs-12">
         <div class="box">
-            <a class="button" href="<?= UriFactory::build('{/prefix}media/list?path={?path}'); ?>">Back</a>
+            <a tabindex="0" class="button" href="<?= UriFactory::build('{/prefix}media/list?path={?path}'); ?>">Back</a>
         </div>
     </div>
 </div>

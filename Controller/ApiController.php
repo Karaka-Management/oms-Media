@@ -198,14 +198,16 @@ final class ApiController extends Controller
     }
 
     /**
-     * @param array $status  Files
-     * @param int   $account Uploader
+     * @param array  $status      Files
+     * @param int    $account     Uploader
+     * @param string $virtualPath Virtual path
+     * @param string $ip          Ip
      *
      * @return Media[]
      *
      * @since 1.0.0
      */
-    public function createDbEntries(array $status, int $account, string $virtualPath = '') : array
+    public function createDbEntries(array $status, int $account, string $virtualPath = '', string $ip = '127.0.0.1') : array
     {
         $mediaCreated = [];
 
@@ -224,7 +226,8 @@ final class ApiController extends Controller
                         null,
                         PermissionType::READ | PermissionType::MODIFY | PermissionType::DELETE | PermissionType::PERMISSION
                     ),
-                    $account
+                    $account,
+                    $ip
                 );
             }
         }
@@ -306,7 +309,7 @@ final class ApiController extends Controller
         $old = clone MediaMapper::get((int) $request->getData('id'));
         /** @var Media $new */
         $new = $this->updateMediaFromRequest($request);
-        $this->updateModel($request->getHeader()->getAccount(), $old, $new, MediaMapper::class, 'media');
+        $this->updateModel($request->getHeader()->getAccount(), $old, $new, MediaMapper::class, 'media', $request->getOrigin());
         $this->fillJsonResponse($request, $response, NotificationLevel::OK, 'Media', 'Media successfully updated', $new);
     }
 
@@ -360,7 +363,7 @@ final class ApiController extends Controller
         }
 
         $collection = $this->createCollectionFromRequest($request);
-        $this->createModel($request->getHeader()->getAccount(), $collection, CollectionMapper::class, 'collection');
+        $this->createModel($request->getHeader()->getAccount(), $collection, CollectionMapper::class, 'collection', $request->getOrigin());
         $this->fillJsonResponse($request, $response, NotificationLevel::OK, 'Collection', 'Collection successfully created.', $collection);
     }
 
