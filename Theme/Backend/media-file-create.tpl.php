@@ -32,7 +32,7 @@ use phpOMS\Uri\UriFactory;
             <div class="portlet-body">
                 <form id="fEditor" method="PUT" action="<?= UriFactory::build('{/api}media/file?{?}&csrf={$CSRF}'); ?>">
                     <div class="ipt-wrap">
-                        <div class="ipt-first"><input name="title" type="text" class="wf-100"></div>
+                        <div class="ipt-first"><input autocomplete="off" name="name" type="text" class="wf-100"></div>
                         <div class="ipt-second"><input type="submit" value="<?= $this->getHtml('Save', '0', '0') ?>"></div>
                     </div>
                 </form>
@@ -46,7 +46,7 @@ use phpOMS\Uri\UriFactory;
         </div>
 
         <div class="box">
-            <?= $this->getData('editor')->getData('text')->render('editor', 'plain', 'fEditor'); ?>
+            <?= $this->getData('editor')->getData('text')->render('editor', 'content', 'fEditor'); ?>
         </div>
     </div>
 </div>

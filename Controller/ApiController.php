@@ -34,6 +34,7 @@ use phpOMS\Message\ResponseAbstract;
 use phpOMS\Model\Message\FormValidation;
 use phpOMS\System\MimeType;
 use phpOMS\Utils\Parser\Markdown\Markdown;
+use phpOMS\System\File\Local\Directory;
 
 /**
  * Media class.
@@ -327,7 +328,7 @@ final class ApiController extends Controller
         /** @var Media $media */
         $media = MediaMapper::get((int) $request->getData('id'));
         $media->setName((string) ($request->getData('name') ?? $media->getName()));
-        $media->setVirtualPath((string) ($request->getData('virtualpath') ?? $media->getVirtualPath()));
+        $media->setVirtualPath(\urldecode((string) ($request->getData('virtualpath') ?? $media->getVirtualPath())));
 
         if ($request->getData('content') !== null) {
             \file_put_contents(
@@ -473,8 +474,9 @@ final class ApiController extends Controller
      */
     public function apiMediaCreate(RequestAbstract $request, ResponseAbstract $response, $data = null) : void
     {
-        $virtualPath  = (string) ($request->getData('path') ?? '');
-        $fileName     = (string) ($request->getData('fileName') ?? '');
+        $virtualPath  = \urldecode((string) ($request->getData('path') ?? ''));
+        $fileName     = (string) ($request->getData('fileName') ?? ($request->getData('name') ?? ''));
+        $fileName    .= \strripos($fileName, '.') === false ? '.txt' : '';
         $pathSettings = (int) ($request->getData('pathsettings') ?? PathSettings::RANDOM_PATH);
 
         $outputDir = '';
@@ -484,16 +486,20 @@ final class ApiController extends Controller
             $outputDir = __DIR__ . '/../../../Modules/Media/Files/' . \ltrim($virtualPath, '\\/');
         }
 
+        if (!\is_dir($outputDir)) {
+            Directory::create($outputDir, 0755, true);
+        }
+
         \file_put_contents($outputDir . '/' . $fileName, (string) ($request->getData('content') ?? ''));
 
         $status = [
             [
                 'status'    => UploadStatus::OK,
-                'path'      => $outputDir . '/' . $fileName,
+                'path'      => $outputDir,
                 'filename'  => $fileName,
                 'name'      => $request->getData('name') ?? '',
                 'size'      => \strlen((string) ($request->getData('content') ?? '')),
-                'extension' => \substr($fileName, \strripos($fileName, '.')),
+                'extension' => \substr($fileName, \strripos($fileName, '.') + 1),
             ],
         ];
 

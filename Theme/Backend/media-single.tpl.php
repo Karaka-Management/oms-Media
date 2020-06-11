@@ -26,12 +26,21 @@ include __DIR__ . '/template-functions.php';
 $media = $this->getData('media');
 echo $this->getData('nav')->render();
 ?>
+<?php if ($this->request->getData('path') !== null) : ?>
+<div class="row">
+    <div class="col-xs-12">
+        <div class="box">
+            <a tabindex="0" class="button" href="<?= UriFactory::build('{/prefix}media/list?path={?path}'); ?>">Back</a>
+        </div>
+    </div>
+</div>
+<?php endif; ?>
 
 <div class="row">
     <div class="col-xs-12">
-        <section class="box wf-100">
-            <header><h1><?= $this->printHtml($media->getName()); ?></h1></header>
-            <div class="inner">
+        <section class="portlet">
+            <div class="portlet-head"><?= $this->printHtml($media->getName()); ?></div>
+            <div class="portlet-body">
                 <table class="list w-100">
                     <tbody>
                         <tr><td><?= $this->getHtml('Name') ?><td class="wf-100"><?= $this->printHtml($media->getName()); ?>
@@ -49,7 +58,7 @@ echo $this->getData('nav')->render();
 <div class="row">
     <?php if ($this->isCollectionFunction($media, $this->request->getData('sub') ?? '')) : ?>
     <div class="col-xs-12">
-        <div class="box wf-100">
+        <section class="portlet">
             <table class="default">
                 <caption><?= $this->getHtml('Media') ?><i class="fa fa-download floatRight download btn"></i></caption>
                 <thead>
@@ -91,17 +100,17 @@ echo $this->getData('nav')->render();
                             <td><a href="<?= $url; ?>"><?= File::created($value)->format('Y-m-d'); ?></a>
                     <?php endforeach; endif; ?>
             </table>
-        </div>
+        </section>
     </div>
     <?php else: ?>
     <div class="col-xs-12">
-        <section id="mediaFile" class="box wf-100"
+        <section id="mediaFile" class="portlet"
             data-update-content=".inner"
             data-update-element="#mediaFile .textContent"
             data-tag="form"
             data-method="POST"
             data-uri="<?= \phpOMS\Uri\UriFactory::build('{/api}media?{?}&csrf={$CSRF}'); ?>">
-            <div class="inner">
+            <div class="portlet-body inner">
                 <?php
                 $path = $this->filePathFunction($media, $this->request->getData('sub') ?? '');
 
