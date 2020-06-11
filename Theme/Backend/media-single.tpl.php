@@ -25,15 +25,17 @@ $media = $this->getData('media');
 /** @var \Modules\Media\Views\MediaView $this */
 echo $this->getData('nav')->render();
 ?>
-<?php if ($this->request->getData('path') !== null) : ?>
 <div class="row">
     <div class="col-xs-12">
         <div class="box">
-            <a tabindex="0" class="button" href="<?= UriFactory::build('{/prefix}media/list?path={?path}'); ?>">Back</a>
+            <?php if ($this->request->getData('path') !== null) : ?>
+                <a tabindex="0" class="button" href="<?= UriFactory::build('{/prefix}media/list?path={?path}'); ?>">Back</a>
+            <?php else: ?>
+                <a tabindex="0" class="button" href="<?= UriFactory::build('{/prefix}media/list'); ?>">Back</a>
+            <?php endif; ?>
         </div>
     </div>
 </div>
-<?php endif; ?>
 
 <div class="row">
     <div class="col-xs-12">
