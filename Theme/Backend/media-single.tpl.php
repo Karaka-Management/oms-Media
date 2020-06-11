@@ -19,11 +19,10 @@ use \phpOMS\Uri\UriFactory;
 
 include __DIR__ . '/template-functions.php';
 
-/**
- * @var \Modules\Media\Views\MediaView $this
- * @var \Modules\Media\Models\Media    $media
- */
+/** @var \Modules\Media\Models\Media $media */
 $media = $this->getData('media');
+
+/** @var \Modules\Media\Views\MediaView $this */
 echo $this->getData('nav')->render();
 ?>
 <?php if ($this->request->getData('path') !== null) : ?>
@@ -51,6 +50,21 @@ echo $this->getData('nav')->render();
                         <tr><td colspan="2"><?= $media->getDescription(); ?>
                 </table>
             </div>
+            <?php
+            $path = $this->filePathFunction($media, $this->request->getData('sub') ?? '');
+            if ($this->isTextFile($media, $path)) : ?>
+            <div id="iMediaFileUpdate" class="portlet-foot"
+                data-update-content="#mediaFile .portlet-body"
+                data-update-element="#mediaFile .textContent"
+                data-update-tpl="#iMediaUpdateTpl"
+                data-tag="form"
+                data-method="POST"
+                data-uri="<?= UriFactory::build('{/api}media?{?}&csrf={$CSRF}'); ?>">
+                <button class="save hidden"><?= $this->getHtml('Save', '0', '0') ?></button>
+                <button class="cancel hidden"><?= $this->getHtml('Cancel', '0', '0') ?></button>
+                <button class="update"><?= $this->getHtml('Edit', '0', '0') ?></button>
+            </div>
+            <?php endif; ?>
         </section>
     </div>
 </div>
@@ -71,7 +85,7 @@ echo $this->getData('nav')->render();
                     <td><?= $this->getHtml('Created') ?>
                 <tbody>
                     <?php
-                        if (!\is_dir($media->isAbsolute() ? $path : __DIR__ . '/../../../../' . \ltrim($media->getPath(), '//'))
+                        if (!\is_dir($media->isAbsolute() ? $media->getPath() : __DIR__ . '/../../../../' . \ltrim($media->getPath(), '//'))
                             || $media->getPath() === ''
                         ) :
                             foreach ($media as $key => $value) :
@@ -104,13 +118,8 @@ echo $this->getData('nav')->render();
     </div>
     <?php else: ?>
     <div class="col-xs-12">
-        <section id="mediaFile" class="portlet"
-            data-update-content=".inner"
-            data-update-element="#mediaFile .textContent"
-            data-tag="form"
-            data-method="POST"
-            data-uri="<?= \phpOMS\Uri\UriFactory::build('{/api}media?{?}&csrf={$CSRF}'); ?>">
-            <div class="portlet-body inner">
+        <section id="mediaFile" class="portlet">
+            <div class="portlet-body">
                 <?php
                 $path = $this->filePathFunction($media, $this->request->getData('sub') ?? '');
 
@@ -119,19 +128,13 @@ echo $this->getData('nav')->render();
                         <img src="<?= $media->isAbsolute() ? $this->printHtml($path) : $this->printHtml($this->request->getUri()->getBase() . $path); ?>">
                     </div>
                 <?php elseif ($this->isTextFile($media, $path)) : ?>
-                    <div class="vC">
-                        <button class="save hidden"><?= $this->getHtml('Save', '0', '0') ?></button>
-                        <button class="cancel hidden"><?= $this->getHtml('Cancel', '0', '0') ?></button>
-                        <button class="update"><?= $this->getHtml('Edit', '0', '0') ?></button>
-                    </div>
                     <!-- if markdown show markdown editor, if image show image editor, if text file show textarea only on edit -->
 
                     <?php if (!\file_exists($media->isAbsolute() ? $path : __DIR__ . '/../../../../' . \ltrim($path, '/'))) : ?>
                         <div class="centerText"><i class="fa fa-question fa-5x"></i></div>
                     <?php else : ?>
-                        <template></template><!-- todo: this is required because of selectorLength + i in Form.js = first element = add template, second element = edit element. Fix -->
-                        <template>
-                        <textarea class="textContent" data-tpl-text="/media/content" data-tpl-value="/media/content" data-marker="tpl" name="content"></textarea>
+                        <template id="iMediaUpdateTpl">
+                            <textarea class="textContent" form="iMediaFileUpdate" data-tpl-text="/media/content" data-tpl-value="/media/content" data-marker="tpl" name="content"></textarea>
                         </template>
                         <pre class="textContent" data-tpl-text="/media/content" data-tpl-value="/media/content"><?= $this->printHtml(
                             $this->getFileContent(

@@ -308,8 +308,10 @@ final class ApiController extends Controller
     {
         /** @var Media $old */
         $old = clone MediaMapper::get((int) $request->getData('id'));
+
         /** @var Media $new */
         $new = $this->updateMediaFromRequest($request);
+
         $this->updateModel($request->getHeader()->getAccount(), $old, $new, MediaMapper::class, 'media', $request->getOrigin());
         $this->fillJsonResponse($request, $response, NotificationLevel::OK, 'Media', 'Media successfully updated', $new);
     }
