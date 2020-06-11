@@ -12,7 +12,6 @@
  */
 declare(strict_types=1);
 
-
 use \phpOMS\System\File\FileUtils;
 use \phpOMS\System\File\Local\File;
 use \phpOMS\Uri\UriFactory;
@@ -29,9 +28,9 @@ echo $this->getData('nav')->render();
     <div class="col-xs-12">
         <div class="box">
             <?php if ($this->request->getData('path') !== null) : ?>
-                <a tabindex="0" class="button" href="<?= UriFactory::build('{/prefix}media/list?path={?path}'); ?>">Back</a>
+                <a tabindex="0" class="button" href="<?= UriFactory::build('{/prefix}media/list?path={?path}'); ?>"><?= $this->getHtml('Back'); ?></a>
             <?php else: ?>
-                <a tabindex="0" class="button" href="<?= UriFactory::build('{/prefix}media/list'); ?>">Back</a>
+                <a tabindex="0" class="button" href="<?= UriFactory::build('{/prefix}media/list'); ?>"><?= $this->getHtml('Back'); ?></a>
             <?php endif; ?>
         </div>
     </div>
