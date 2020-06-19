@@ -131,16 +131,14 @@ echo $this->getData('nav')->render();
                 <?php elseif ($this->isTextFile($media, $path)) : ?>
                     <!-- if markdown show markdown editor, if image show image editor, if text file show textarea only on edit -->
 
-                    <?php if (!\file_exists($media->isAbsolute() ? $path : __DIR__ . '/../../../../' . \ltrim($path, '/'))) : ?>
+                    <?php if (!\file_exists(($media->isAbsolute() ? '' : __DIR__ . '/../../../../') . $media->getPath())) : ?>
                         <div class="centerText"><i class="fa fa-question fa-5x"></i></div>
                     <?php else : ?>
                         <template id="iMediaUpdateTpl">
                             <textarea class="textContent" form="iMediaFileUpdate" data-tpl-text="/media/content" data-tpl-value="/media/content" data-marker="tpl" name="content"></textarea>
                         </template>
                         <pre class="textContent" data-tpl-text="/media/content" data-tpl-value="/media/content"><?= $this->printHtml(
-                            $this->getFileContent(
-                                $media->isAbsolute() ? $path : __DIR__ . '/../../../../' . \ltrim($path, '/')
-                            )
+                            $this->getFileContent(($media->isAbsolute() ? '' : __DIR__ . '/../../../../') . $media->getPath())
                         ); ?></pre>
                     <?php endif; ?>
                 <?php endif; ?>
