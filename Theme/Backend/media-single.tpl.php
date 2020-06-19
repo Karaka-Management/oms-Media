@@ -126,7 +126,7 @@ echo $this->getData('nav')->render();
 
                 if ($this->isImageFile($media, $path)) : ?>
                     <div class="h-overflow centerText">
-                        <img src="<?= $media->isAbsolute() ? $this->printHtml($path) : $this->printHtml($this->request->getUri()->getBase() . $path); ?>">
+                        <img src="<?= $media->getPath(); ?>">
                     </div>
                 <?php elseif ($this->isTextFile($media, $path)) : ?>
                     <!-- if markdown show markdown editor, if image show image editor, if text file show textarea only on edit -->
