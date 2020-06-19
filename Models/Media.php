@@ -337,7 +337,7 @@ class Media implements \JsonSerializable
      */
     public function getPath() : string
     {
-        return $this->path;
+        return $this->isAbsolute ? $this->path : \ltrim($this->path, '/');
     }
 
      /**
