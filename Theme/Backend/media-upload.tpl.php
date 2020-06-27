@@ -44,10 +44,11 @@ use phpOMS\Uri\UriFactory;
                         <tr><td><input type="text" id="iPath" name="virtualPath" value="<?= empty($this->request->getUri()->getQuery('path')) ? '/' : $this->request->getUri()->getQuery('path'); ?>" disabled>
                         <tr><td><label><?= $this->getHtml('Settings') ?></label>
                         <tr><td>
-                            <span class="checkbox">
-                                <input type="checkbox" id="iAddCollection" name="addcollection" checked>
-                                <label for="iAddCollection"><?= $this->getHtml('AddToCollection') ?></label>
-                            </span>
+                                <label class="checkbox" for="iAddCollection">
+                                    <input type="checkbox" id="iAddCollection" name="addcollection" checked>
+                                    <span class="checkmark"></span>
+                                    <?= $this->getHtml('AddToCollection') ?>
+                                </label>
                         <tr><td><label for="iPathSettings"><?= $this->getHtml('PathSettings') ?></label>
                         <tr><td>
                             <select id="iPathSettings" name="pathsettings">
