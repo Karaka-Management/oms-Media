@@ -59,6 +59,9 @@ class CollectionTest extends \PHPUnit\Framework\TestCase
     public function testPathInputOutput() : void
     {
         $this->media->setPath('/home/root');
+        self::assertEquals('home/root', $this->media->getPath());
+
+        $this->media->setAbsolute(true);
         self::assertEquals('/home/root', $this->media->getPath());
     }
 
