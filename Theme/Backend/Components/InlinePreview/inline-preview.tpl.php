@@ -15,7 +15,7 @@
             <div class="advancedInput wf-100" id="<?= $this->printHtml($this->getId()); ?>">
                 <input autocomplete="off" class="input" type="text" id="i<?= $this->printHtml($this->getId()); ?>"
                     data-emptyAfter="true"
-                    data-autocomplete="false"
+                    data-autocomplete="off"
                     data-src="api/media/find?search={#mediaInput}">
                 <div id="<?= $this->printHtml($this->getId()); ?>-dropdown" class="dropdown" data-active="true">
                     <table class="default">

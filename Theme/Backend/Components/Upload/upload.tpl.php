@@ -15,7 +15,7 @@
                             <div class="advancedInput wf-100" id="iMediaInput">
                                 <input autocomplete="off" class="input" id="mediaInput" name="mediaFile" type="text"
                                     data-emptyAfter="true"
-                                    data-autocomplete="false"
+                                    data-autocomplete="off"
                                     data-src="api/media/find?search={#mediaInput}">
                                 <div id="iMediaInput-dropdown" class="dropdown" data-active="true">
                                     <table id="iMediaInput-table" class="default">
