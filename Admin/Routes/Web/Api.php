@@ -37,6 +37,17 @@ return [
             ],
         ],
     ],
+    '^.*/media/collection(\?+.*|$)' => [
+        [
+            'dest' => '\Modules\Media\Controller\ApiController:apiCollectionCreate',
+            'verb' => RouteVerb::PUT,
+            'permission' => [
+                'module' => ApiController::MODULE_NAME,
+                'type'  => PermissionType::CREATE,
+                'state' => PermissionState::MEDIA,
+            ],
+        ],
+    ],
     '^.*/media/find.*$' => [
         [
             'dest' => '\Modules\Media\Controller\ApiController:apiMediaFind',

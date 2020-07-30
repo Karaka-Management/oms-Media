@@ -12,7 +12,6 @@
  */
 declare(strict_types=1);
 
-use Modules\Media\Models\PathSettings;
 use phpOMS\Uri\UriFactory;
 
 /**
@@ -28,7 +27,7 @@ use phpOMS\Uri\UriFactory;
 <div class="row">
     <div class="col-xs-12">
         <div class="box">
-            <a tabindex="0" class="button" href="<?= UriFactory::build('{/prefix}media/list?path={?path}'); ?>">Back</a>
+            <a tabindex="0" class="button" href="<?= UriFactory::build('{/prefix}media/list?path={?path}'); ?>"><?= $this->getHtml('Back', '0', '0'); ?></a>
         </div>
     </div>
 </div>
@@ -40,8 +39,10 @@ use phpOMS\Uri\UriFactory;
                 <div class="portlet-head"><?= $this->getHtml('Upload') ?></div>
                 <div class="portlet-body">
                     <table class="layout wf-100">
+                    <tr><td><label for="iVirtualPath"><?= $this->getHtml('VirtualPath') ?></label>
+                        <tr><td><input type="text" id="iVirtualPath" name="virtualPath" value="<?= empty($this->request->getUri()->getQuery('path')) ? '/' : $this->request->getUri()->getQuery('path'); ?>" disabled>
                         <tr><td><label for="iPath"><?= $this->getHtml('Path') ?></label>
-                        <tr><td><input type="text" id="iPath" name="virtualPath" value="<?= empty($this->request->getUri()->getQuery('path')) ? '/' : $this->request->getUri()->getQuery('path'); ?>" disabled>
+                        <tr><td><input type="text" id="iPath" name="path" value="<?= empty($this->request->getUri()->getQuery('path')) ? '/' : $this->request->getUri()->getQuery('path'); ?>">
                         <tr><td><label><?= $this->getHtml('Settings') ?></label>
                         <tr><td>
                                 <label class="checkbox" for="iAddCollection">
@@ -49,12 +50,6 @@ use phpOMS\Uri\UriFactory;
                                     <span class="checkmark"></span>
                                     <?= $this->getHtml('AddToCollection') ?>
                                 </label>
-                        <tr><td><label for="iPathSettings"><?= $this->getHtml('PathSettings') ?></label>
-                        <tr><td>
-                            <select id="iPathSettings" name="pathsettings">
-                                <option value="<?= PathSettings::FILE_PATH ?>" selected><?= $this->getHtml('FilePath') ?>
-                                <option value="<?= PathSettings::RANDOM_PATH ?>"><?= $this->getHtml('RandomPath') ?>
-                            </select>
                         <tr><td><label for="iFiles"><?= $this->getHtml('Files') ?></label>
                         <tr><td><input type="file" id="iFiles" name="files" multiple>
                     </table>

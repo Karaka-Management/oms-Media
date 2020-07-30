@@ -19,6 +19,7 @@ use Modules\Media\Models\Collection;
 use Modules\Media\Models\CollectionMapper;
 use Modules\Media\Models\Media;
 use Modules\Media\Models\MediaMapper;
+use Modules\Media\Models\NullMedia;
 use Modules\Media\Views\MediaView;
 use phpOMS\Asset\AssetType;
 use phpOMS\Contract\RenderableInterface;
@@ -130,16 +131,32 @@ final class BackendController extends Controller
         $media = MediaMapper::getByVirtualPath($path);
 
         $collection = CollectionMapper::getParentCollection(\str_replace('+', ' ', $path));
+
+        if (\is_array($collection) && \is_dir(__DIR__ . '/../Files' . $path)) {
+            $collection = new Collection();
+            $collection->setName(\basename($path));
+            $collection->setVirtualPath(\dirname($path));
+            $collection->setPath(\dirname($path));
+            $collection->setAbsolute(false);
+        }
+
         if ($collection instanceof Collection) {
             $media += $collection->getSources();
 
             /** @var string[] $glob */
-            $glob = \glob(__DIR__ . '/../Files' . \trim($collection->getPath(), '/') . '/' . $collection->getName() . '/*');
+            $glob = $collection->isAbsolute()
+                ? $collection->getPath() . '/' . $collection->getName() . '/*'
+                : \glob(__DIR__ . '/../Files' . '/' . \rtrim($collection->getPath(), '/') . '/' . $collection->getName() . '/*');
             $glob = $glob === false ? [] : $glob;
 
             foreach ($glob as $file) {
                 foreach ($media as $obj) {
-                    if ($obj->getName() . '.' . $obj->getExtension() === \basename($file)) {
+                    if (($obj->getExtension() !== 'collection'
+                            && !empty($obj->getExtension())
+                            && $obj->getName() . '.' . $obj->getExtension() === \basename($file))
+                        || ($obj->getExtension() === 'collection'
+                            && $obj->getName() === \basename($file))
+                    ) {
                         continue 2;
                     }
                 }
@@ -148,7 +165,8 @@ final class BackendController extends Controller
 
                 $localMedia = new Media();
                 $localMedia->setName($pathinfo['filename']);
-                $localMedia->setExtension($pathinfo['extension'] ?? '');
+                $localMedia->setExtension(\is_dir($file) ? 'collection' : $pathinfo['extension'] ?? '');
+                $localMedia->setVirtualPath($path);
                 $localMedia->setCreatedBy(new Account());
 
                 $media[] = $localMedia;
@@ -179,10 +197,10 @@ final class BackendController extends Controller
         $view->setTemplate('/Modules/Media/Theme/Backend/media-single');
         $view->addData('nav', $this->app->moduleManager->get('Navigation')->createNavigationMid(1000401001, $request, $response));
 
-        $media = MediaMapper::get((int) $request->getData('id'));
+        $id    = (int) $request->getData('id');
+        $media = MediaMapper::get($id);
         if ($media->getExtension() === 'collection') {
 
-            //$media = CollectionMapper::get($media->getId());
             $media = MediaMapper::getByVirtualPath(
                 $media->getVirtualPath() . ($media->getVirtualPath() !== '/' ? '/' : '') . $media->getName()
             );
@@ -192,6 +210,22 @@ final class BackendController extends Controller
 
             $view->addData('path', $collection->getVirtualPath() . '/' . $collection->getName());
             $view->setTemplate('/Modules/Media/Theme/Backend/media-list');
+        }
+
+        if ($id == 0) {
+            $path = \urldecode($request->getData('path'));
+
+            if ($media instanceof NullMedia
+                && \is_file(__DIR__ . '/../Files' . $path)
+            ) {
+                $name = \explode('.', \basename($path));
+
+                $media->setName($name[0]);
+                $media->setExtension($name[1] ?? '');
+                $media->setVirtualPath(\dirname($path));
+                $media->setPath('/Modules/Media/Files/' . \ltrim($path, '\\/'));
+                $media->setAbsolute(false);
+            }
         }
 
         $view->addData('media', $media);

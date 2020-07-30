@@ -42,5 +42,6 @@ return ['Media' => [
     'Size'        => 'Size',
     'Type'        => 'Type',
     'Upload'      => 'Upload',
+    'VirtualPath'  => 'Virtual Path',
     'Visibility'  => 'Visibility',
 ]];

@@ -156,6 +156,8 @@ class Media implements \JsonSerializable
     {
         $this->createdBy = new NullAccount();
         $this->createdAt = new \DateTime();
+
+        $this->setExtension('colection');
     }
 
     /**
@@ -337,7 +339,7 @@ class Media implements \JsonSerializable
      */
     public function getPath() : string
     {
-        return $this->isAbsolute ? $this->path : \ltrim($this->path, '/');
+        return $this->isAbsolute ? $this->path : \ltrim($this->path, '\\/');
     }
 
      /**

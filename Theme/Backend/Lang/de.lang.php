@@ -42,5 +42,6 @@ return ['Media' => [
     'Size'        => 'Größe',
     'Type'        => 'Typ',
     'Upload'      => 'Hochladen',
+    'VirtualPath'      => 'Virtueller Pfad',
     'Visibility'  => 'Sichtbarkeit',
 ]];

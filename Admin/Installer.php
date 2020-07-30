@@ -85,7 +85,7 @@ final class Installer extends InstallerAbstract
         $collection = new Collection();
         $collection->setName((string) $data['name'] ?? '');
         $collection->setVirtualPath((string) $data['virtualPath'] ?? '/');
-        $collection->setPath((string) $data['virtualPath'] ?? '/');
+        $collection->setPath((string) ($data['path'] ?? '/Modules/Media/Files/' . ((string) $data['name'] ?? '')));
         $collection->setCreatedBy(new NullAccount((int) $data['user'] ?? 1));
 
         CollectionMapper::create($collection);

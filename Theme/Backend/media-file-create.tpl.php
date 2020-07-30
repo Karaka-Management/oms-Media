@@ -19,23 +19,10 @@ use phpOMS\Uri\UriFactory;
  */
 ?>
 <div class="row">
-    <div class="col-xs-12">
-        <div class="box">
-            <a tabindex="0" class="button" href="<?= UriFactory::build('{/prefix}media/list?path={?path}'); ?>"><?= $this->getHtml('Back'); ?></a>
-        </div>
-    </div>
-</div>
-
-<div class="row">
-    <div class="col-xs-12">
+    <div class="col-xs-12 col-md-8">
         <div class="portlet">
             <div class="portlet-body">
-                <form id="fEditor" method="PUT" action="<?= UriFactory::build('{/api}media/file?{?}&csrf={$CSRF}'); ?>">
-                    <div class="ipt-wrap">
-                        <div class="ipt-first"><input autocomplete="off" name="name" type="text" class="wf-100"></div>
-                        <div class="ipt-second"><input type="submit" value="<?= $this->getHtml('Save', '0', '0') ?>"></div>
-                    </div>
-                </form>
+                <input autocomplete="off" form="fEditor" name="name" type="text" class="wf-100">
             </div>
         </div>
 
@@ -49,4 +36,50 @@ use phpOMS\Uri\UriFactory;
             <?= $this->getData('editor')->getData('text')->render('editor', 'content', 'fEditor'); ?>
         </div>
     </div>
+
+    <div class="col-xs-12 col-md-4">
+        <div class="box">
+            <a tabindex="0" class="button" href="<?= UriFactory::build('{/prefix}media/list?path={?path}'); ?>"><?= $this->getHtml('Back'); ?></a>
+        </div>
+
+        <div class="portlet">
+            <form id="fEditor" method="PUT" action="<?= UriFactory::build('{/api}media/file?{?}&csrf={$CSRF}'); ?>">
+                <div class="portlet-head"><?= $this->getHtml('Settings'); ?></div>
+                <div class="portlet-body">
+                    <table class="layout wf-100">
+                        <tr><td><label for="iVirtualPath"><?= $this->getHtml('VirtualPath') ?></label>
+                            <tr><td><input type="text" id="iVirtualPath" name="virtualPath" value="<?= empty($this->request->getUri()->getQuery('path')) ? '/' : $this->request->getUri()->getQuery('path'); ?>" disabled>
+                            <tr><td><label for="iPath"><?= $this->getHtml('Path') ?></label>
+                            <tr><td><input type="text" id="iPath" name="path" value="<?= empty($this->request->getUri()->getQuery('path')) ? '/' : $this->request->getUri()->getQuery('path'); ?>">
+                        <tr><td><label><?= $this->getHtml('Settings') ?></label>
+                        <tr><td>
+                                <label class="checkbox" for="iAddCollection">
+                                    <input type="checkbox" id="iAddCollection" name="addcollection" checked>
+                                    <span class="checkmark"></span>
+                                    <?= $this->getHtml('AddToCollection') ?>
+                                </label>
+                    </table>
+                </div>
+                <div class="portlet-foot">
+                    <input type="submit" value="<?= $this->getHtml('Save', '0', '0') ?>">
+                </div>
+            </form>
+        </div>
+
+        <div class="portlet">
+            <div class="portlet-body">
+                <form>
+                    <table class="layout">
+                        <tr><td colspan="2"><label><?= $this->getHtml('Permission'); ?></label>
+                        <tr><td><select>
+                                    <option>
+                                </select>
+                        <tr><td colspan="2"><label><?= $this->getHtml('GroupUser'); ?></label>
+                        <tr><td><input id="iPermission" name="group" type="text" placeholder="&#xf084;"><td><button><?= $this->getHtml('Add'); ?></button>
+                    </table>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
+

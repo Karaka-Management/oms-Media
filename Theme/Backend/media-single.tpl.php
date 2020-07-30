@@ -28,7 +28,7 @@ echo $this->getData('nav')->render();
     <div class="col-xs-12">
         <div class="box">
             <?php if ($this->request->getData('path') !== null) : ?>
-                <a tabindex="0" class="button" href="<?= UriFactory::build('{/prefix}media/list?path={?path}'); ?>"><?= $this->getHtml('Back'); ?></a>
+                <a tabindex="0" class="button" href="<?= UriFactory::build('{/prefix}media/list?path=' . ($media->getId() === 0 ? $media->getVirtualPath() : '{?path}')); ?>"><?= $this->getHtml('Back'); ?></a>
             <?php else: ?>
                 <a tabindex="0" class="button" href="<?= UriFactory::build('{/prefix}media/list'); ?>"><?= $this->getHtml('Back'); ?></a>
             <?php endif; ?>

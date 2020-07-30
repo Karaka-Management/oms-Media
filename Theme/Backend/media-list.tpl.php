@@ -13,6 +13,7 @@
 declare(strict_types=1);
 
 use phpOMS\Uri\UriFactory;
+use phpOMS\System\File\FileUtils;
 
 include __DIR__ . '/template-functions.php';
 
@@ -27,8 +28,8 @@ $mediaPath = \urldecode($this->getData('path') ?? '/');
  */
 $media = $this->getData('media');
 
-$previous = empty($media) ? '{/prefix}media/list' : '{/prefix}media/list?{?}&id=' . \reset($media)->getId() . '&ptype=-';
-$next     = empty($media) ? '{/prefix}media/list' : '{/prefix}media/list?{?}&id=' . \end($media)->getId() . '&ptype=+';
+$previous = empty($media) ? '{/prefix}media/list' : '{/prefix}media/list?{?}&id=' . \reset($media)->getId() . '&ptype=p';
+$next     = empty($media) ? '{/prefix}media/list' : '{/prefix}media/list?{?}&id=' . \end($media)->getId() . '&ptype=n';
 ?>
 
 <div class="row">
@@ -87,9 +88,15 @@ $next     = empty($media) ? '{/prefix}media/list' : '{/prefix}media/list?{?}&id=
 
                             $url = $value->getExtension() === 'collection'
                                 ? UriFactory::build('{/prefix}media/list?path=' . \rtrim($value->getVirtualPath(), '/') . '/' . $value->getName())
-                                : UriFactory::build('{/prefix}media/single?id=' . $value->getId() . '&path={?path}');
+                                : UriFactory::build('{/prefix}media/single?id=' . $value->getId()
+                                    . '&path={?path}' . (
+                                            $value->getId() === 0
+                                                ? '/' . $value->getName() . (!empty($value->getExtension()) ? '.' . $value->getExtension() : '')
+                                                : ''
+                                        )
+                                );
 
-                            $icon = $fileIconFunction(\phpOMS\System\File\FileUtils::getExtensionType($value->getExtension()));
+                            $icon = $fileIconFunction(FileUtils::getExtensionType($value->getExtension()));
                         ?>
                     <tr tabindex="0" data-href="<?= $url; ?>">
                         <td data-label="<?= $this->getHtml('Type') ?>"><a href="<?= $url; ?>"><i class="fa fa-<?= $this->printHtml($icon); ?>"></i></a>

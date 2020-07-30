@@ -114,7 +114,7 @@ final class ApiController extends Controller
             $request->getData('name') === null || $request->getFiles() !== null ? '' : $request->getData('name'),
             $request->getFiles(),
             $request->getHeader()->getAccount(),
-            (string) ($request->getData('path') ?? __DIR__ . '/../../../Modules/Media/Files'),
+            __DIR__ . '/../../../Modules/Media/Files' . ((string) ($request->getData('path') ?? '')),
             (string) ($request->getData('virtualPath') ?? ''),
             (string) ($request->getData('password') ?? ''),
             (string) ($request->getData('encrypt') ?? ''),
@@ -152,7 +152,7 @@ final class ApiController extends Controller
         string $name,
         array $files,
         int $account,
-        string $basePath = 'Modules/Media/Files',
+        string $basePath = '/Modules/Media/Files',
         string $virtualPath = '',
         string $password = '',
         string $encryptionKey = '',
@@ -286,7 +286,7 @@ final class ApiController extends Controller
 
         return \str_replace('\\', '/',
             \str_replace($realpath, '',
-                \rtrim($path, '/')
+                \rtrim($path, '\\/')
             )
         );
     }
@@ -327,14 +327,32 @@ final class ApiController extends Controller
      */
     private function updateMediaFromRequest(RequestAbstract $request) : Media
     {
+        $id = (int) $request->getData('id');
+
         /** @var Media $media */
-        $media = MediaMapper::get((int) $request->getData('id'));
+        $media = MediaMapper::get($id);
         $media->setName((string) ($request->getData('name') ?? $media->getName()));
         $media->setVirtualPath(\urldecode((string) ($request->getData('virtualpath') ?? $media->getVirtualPath())));
 
+        if ($id == 0) {
+            $path = \urldecode($request->getData('path'));
+
+            if ($media instanceof NullMedia
+                && \is_file(__DIR__ . '/../Files' . $path)
+            ) {
+                $name = \explode('.', \basename($path));
+
+                $media->setName($name[0]);
+                $media->setExtension($name[1] ?? '');
+                $media->setVirtualPath(\dirname($path));
+                $media->setPath('/Modules/Media/Files/' . \ltrim($path, '\\/'));
+                $media->setAbsolute(false);
+            }
+        }
+
         if ($request->getData('content') !== null) {
             \file_put_contents(
-                $media->isAbsolute() ? $media->getPath() : __DIR__ . '/../../../' . \ltrim($media->getPath(), '/'),
+                $media->isAbsolute() ? $media->getPath() : __DIR__ . '/../../../' . \ltrim($media->getPath(), '\\/'),
                 $request->getData('content')
             );
 
@@ -382,9 +400,7 @@ final class ApiController extends Controller
     private function validateCollectionCreate(RequestAbstract $request) : array
     {
         $val = [];
-        if (($val['name'] = empty($request->getData('name')))
-            || ($val['media'] = empty($request->getDataJson('media-list')))
-        ) {
+        if (($val['name'] = empty($request->getData('name')))) {
             return $val;
         }
 
@@ -413,8 +429,20 @@ final class ApiController extends Controller
             $mediaCollection->addSource(new NullMedia((int) $file));
         }
 
-        $mediaCollection->setVirtualPath($request->getData('virtualpath') ?? '/');
-        $mediaCollection->setPath($request->getData('virtualpath') ?? '/');
+        $virtualPath  = \urldecode((string) ($request->getData('virtualpath') ?? '/'));
+
+        $outputDir = '';
+        if (empty($request->getData('path'))) {
+            $outputDir = self::createMediaPath(__DIR__ . '/../../../Modules/Media/Files');
+        } else {
+            $outputDir = __DIR__ . '/../../../Modules/Media/Files/' . \ltrim($request->getData('path'), '\\/');
+            Directory::create($outputDir . '/' . $request->getData('name'), 0775, true);
+        }
+
+        $outputDir = \substr($outputDir, \strlen(__DIR__ . '/../../..'));
+
+        $mediaCollection->setVirtualPath($virtualPath);
+        $mediaCollection->setPath($outputDir);
 
         CollectionMapper::create($mediaCollection);
 
@@ -453,10 +481,8 @@ final class ApiController extends Controller
         $mediaCollection->setDescriptionRaw($description);
         $mediaCollection->setCreatedBy(new NullAccount($account));
         $mediaCollection->setSources($media);
-        $mediaCollection->setVirtualPath('/Modules/Helper');
-        $mediaCollection->setPath('/Modules/Helper');
-
-        CollectionMapper::create($mediaCollection);
+        $mediaCollection->setVirtualPath('/');
+        $mediaCollection->setPath('/Modules/Media/Files');
 
         return $mediaCollection;
     }
@@ -476,23 +502,28 @@ final class ApiController extends Controller
      */
     public function apiMediaCreate(RequestAbstract $request, ResponseAbstract $response, $data = null) : void
     {
-        $virtualPath  = \urldecode((string) ($request->getData('path') ?? ''));
+        $path         = \urldecode((string) ($request->getData('path') ?? ''));
+        $virtualPath  = \urldecode((string) ($request->getData('virtualpath') ?? ''));
         $fileName     = (string) ($request->getData('fileName') ?? ($request->getData('name') ?? ''));
         $fileName    .= \strripos($fileName, '.') === false ? '.txt' : '';
-        $pathSettings = (int) ($request->getData('pathsettings') ?? PathSettings::RANDOM_PATH);
 
         $outputDir = '';
-        if ($pathSettings === PathSettings::RANDOM_PATH) {
+        if (empty($request->getData('path'))) {
             $outputDir = self::createMediaPath(__DIR__ . '/../../../Modules/Media/Files');
-        } elseif ($pathSettings === PathSettings::FILE_PATH) {
-            $outputDir = __DIR__ . '/../../../Modules/Media/Files/' . \ltrim($virtualPath, '\\/');
+        } else {
+            $outputDir = __DIR__ . '/../../../Modules/Media/Files/' . \ltrim($path, '\\/');
         }
 
         if (!\is_dir($outputDir)) {
-            Directory::create($outputDir, 0755, true);
+            $created = Directory::create($outputDir, 0775, true);
+
+            if (!$created) {
+                throw new \Exception('Couldn\'t create outputdir: "' . $outputDir . '"');
+            }
         }
 
         \file_put_contents($outputDir . '/' . $fileName, (string) ($request->getData('content') ?? ''));
+        $outputDir = \substr($outputDir, \strlen(__DIR__ . '/../../..'));
 
         $status = [
             [
