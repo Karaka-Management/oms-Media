@@ -49,6 +49,17 @@ class Collection extends Media implements \Iterator
     protected bool $versioned = false;
 
     /**
+     * Constructor.
+     *
+     * @since 1.0.0
+     */
+    public function __construct()
+    {
+        parent::__construct();
+        $this->setExtension('colection');
+    }
+
+    /**
      * Set sources.
      *
      * @param array $sources Source array

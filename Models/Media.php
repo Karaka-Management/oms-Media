@@ -156,8 +156,6 @@ class Media implements \JsonSerializable
     {
         $this->createdBy = new NullAccount();
         $this->createdAt = new \DateTime();
-
-        $this->setExtension('colection');
     }
 
     /**
