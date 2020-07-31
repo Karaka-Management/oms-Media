@@ -429,7 +429,7 @@ final class ApiController extends Controller
             $mediaCollection->addSource(new NullMedia((int) $file));
         }
 
-        $virtualPath  = \urldecode((string) ($request->getData('virtualpath') ?? '/'));
+        $virtualPath = \urldecode((string) ($request->getData('virtualpath') ?? '/'));
 
         $outputDir = '';
         if (empty($request->getData('path'))) {
@@ -502,10 +502,10 @@ final class ApiController extends Controller
      */
     public function apiMediaCreate(RequestAbstract $request, ResponseAbstract $response, $data = null) : void
     {
-        $path         = \urldecode((string) ($request->getData('path') ?? ''));
-        $virtualPath  = \urldecode((string) ($request->getData('virtualpath') ?? ''));
-        $fileName     = (string) ($request->getData('fileName') ?? ($request->getData('name') ?? ''));
-        $fileName    .= \strripos($fileName, '.') === false ? '.txt' : '';
+        $path        = \urldecode((string) ($request->getData('path') ?? ''));
+        $virtualPath = \urldecode((string) ($request->getData('virtualpath') ?? ''));
+        $fileName    = (string) ($request->getData('fileName') ?? ($request->getData('name') ?? ''));
+        $fileName   .= \strripos($fileName, '.') === false ? '.txt' : '';
 
         $outputDir = '';
         if (empty($request->getData('path'))) {

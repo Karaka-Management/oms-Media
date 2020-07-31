@@ -146,7 +146,7 @@ final class BackendController extends Controller
             /** @var string[] $glob */
             $glob = $collection->isAbsolute()
                 ? $collection->getPath() . '/' . $collection->getName() . '/*'
-                : \glob(__DIR__ . '/../Files' . '/' . \rtrim($collection->getPath(), '/') . '/' . $collection->getName() . '/*');
+                : \glob(__DIR__ . '/../Files/' . \rtrim($collection->getPath(), '/') . '/' . $collection->getName() . '/*');
             $glob = $glob === false ? [] : $glob;
 
             foreach ($glob as $file) {
