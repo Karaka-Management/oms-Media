@@ -12,8 +12,8 @@
  */
 declare(strict_types=1);
 
-use phpOMS\Uri\UriFactory;
 use phpOMS\System\File\FileUtils;
+use phpOMS\Uri\UriFactory;
 
 include __DIR__ . '/template-functions.php';
 
