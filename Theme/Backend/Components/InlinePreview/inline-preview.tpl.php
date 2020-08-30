@@ -38,7 +38,7 @@
             </div>
         </span>
     </div>
-    <div class="ipt-second"><button><?= $this->getHtml('Select', 'Media') ?></button></div>
+    <div class="ipt-second"><button><?= $this->getHtml('Select', 'Media'); ?></button></div>
 </div>
 <div class="box" id="<?= $this->printHtml($this->getId()); ?>-tags" data-limit="0" data-active="true">
     <template id="<?= $this->printHtml($this->getId()); ?>-tagTemplate">

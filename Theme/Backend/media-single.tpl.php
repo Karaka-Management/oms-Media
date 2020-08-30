@@ -43,11 +43,11 @@ echo $this->getData('nav')->render();
             <div class="portlet-body">
                 <table class="list w-100">
                     <tbody>
-                        <tr><td><?= $this->getHtml('Name') ?><td class="wf-100"><?= $this->printHtml($media->getName()); ?>
-                        <tr><td><?= $this->getHtml('Size') ?><td class="wf-100"><?= $this->printHtml($media->getSize()); ?>
-                        <tr><td><?= $this->getHtml('Created') ?><td><?= $this->printHtml($media->getCreatedAt()->format('Y-m-d')); ?>
-                        <tr><td><?= $this->getHtml('Creator') ?><td><?= $this->printHtml($media->getCreatedBy()->getName1()); ?>
-                        <tr><td colspan="2"><?= $this->getHtml('Description') ?>
+                        <tr><td><?= $this->getHtml('Name'); ?><td class="wf-100"><?= $this->printHtml($media->getName()); ?>
+                        <tr><td><?= $this->getHtml('Size'); ?><td class="wf-100"><?= $this->printHtml($media->getSize()); ?>
+                        <tr><td><?= $this->getHtml('Created'); ?><td><?= $this->printHtml($media->getCreatedAt()->format('Y-m-d')); ?>
+                        <tr><td><?= $this->getHtml('Creator'); ?><td><?= $this->printHtml($media->getCreatedBy()->getName1()); ?>
+                        <tr><td colspan="2"><?= $this->getHtml('Description'); ?>
                         <tr><td colspan="2"><?= $media->getDescription(); ?>
                 </table>
             </div>
@@ -61,9 +61,9 @@ echo $this->getData('nav')->render();
                 data-tag="form"
                 data-method="POST"
                 data-uri="<?= UriFactory::build('{/api}media?{?}&csrf={$CSRF}'); ?>">
-                <button class="save hidden"><?= $this->getHtml('Save', '0', '0') ?></button>
-                <button class="cancel hidden"><?= $this->getHtml('Cancel', '0', '0') ?></button>
-                <button class="update"><?= $this->getHtml('Edit', '0', '0') ?></button>
+                <button class="save hidden"><?= $this->getHtml('Save', '0', '0'); ?></button>
+                <button class="cancel hidden"><?= $this->getHtml('Cancel', '0', '0'); ?></button>
+                <button class="update"><?= $this->getHtml('Edit', '0', '0'); ?></button>
             </div>
             <?php endif; ?>
         </section>
@@ -75,15 +75,15 @@ echo $this->getData('nav')->render();
     <div class="col-xs-12">
         <section class="portlet">
             <table class="default">
-                <caption><?= $this->getHtml('Media') ?><i class="fa fa-download floatRight download btn"></i></caption>
+                <caption><?= $this->getHtml('Media'); ?><i class="fa fa-download floatRight download btn"></i></caption>
                 <thead>
                 <tr>
                     <td>
-                    <td class="wf-100"><?= $this->getHtml('Name') ?>
-                    <td><?= $this->getHtml('Type') ?>
-                    <td><?= $this->getHtml('Size') ?>
-                    <td><?= $this->getHtml('Creator') ?>
-                    <td><?= $this->getHtml('Created') ?>
+                    <td class="wf-100"><?= $this->getHtml('Name'); ?>
+                    <td><?= $this->getHtml('Type'); ?>
+                    <td><?= $this->getHtml('Size'); ?>
+                    <td><?= $this->getHtml('Creator'); ?>
+                    <td><?= $this->getHtml('Created'); ?>
                 <tbody>
                     <?php
                         if (!\is_dir($media->isAbsolute() ? $media->getPath() : __DIR__ . '/../../../../' . \ltrim($media->getPath(), '//'))

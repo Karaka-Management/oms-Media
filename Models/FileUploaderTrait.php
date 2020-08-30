@@ -28,7 +28,6 @@ use phpOMS\Message\ResponseAbstract;
  */
 trait FileUploaderTrait
 {
-
     /**
      * Setup file uploader.
      *

@@ -20,6 +20,7 @@ namespace Modules\Media\tests\Admin;
 class AdminTest extends \PHPUnit\Framework\TestCase
 {
     protected const MODULE_NAME = 'Media';
+
     protected const URI_LOAD = 'http://127.0.0.1/en/backend/media';
 
     use \Modules\tests\ModuleTestTrait;

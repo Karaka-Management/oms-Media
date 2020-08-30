@@ -36,21 +36,21 @@ use phpOMS\Uri\UriFactory;
     <div class="col-xs-12 col-md-6">
         <form method="PUT" id="media-uploader" action="<?= UriFactory::build('{/api}media'); ?>">
             <div class="portlet">
-                <div class="portlet-head"><?= $this->getHtml('Upload') ?></div>
+                <div class="portlet-head"><?= $this->getHtml('Upload'); ?></div>
                 <div class="portlet-body">
                     <table class="layout wf-100">
-                    <tr><td><label for="iVirtualPath"><?= $this->getHtml('VirtualPath') ?></label>
+                    <tr><td><label for="iVirtualPath"><?= $this->getHtml('VirtualPath'); ?></label>
                         <tr><td><input type="text" id="iVirtualPath" name="virtualPath" value="<?= empty($this->request->getUri()->getQuery('path')) ? '/' : $this->request->getUri()->getQuery('path'); ?>" disabled>
-                        <tr><td><label for="iPath"><?= $this->getHtml('Path') ?></label>
+                        <tr><td><label for="iPath"><?= $this->getHtml('Path'); ?></label>
                         <tr><td><input type="text" id="iPath" name="path" value="<?= empty($this->request->getUri()->getQuery('path')) ? '/' : $this->request->getUri()->getQuery('path'); ?>">
-                        <tr><td><label><?= $this->getHtml('Settings') ?></label>
+                        <tr><td><label><?= $this->getHtml('Settings'); ?></label>
                         <tr><td>
                                 <label class="checkbox" for="iAddCollection">
                                     <input type="checkbox" id="iAddCollection" name="addcollection" checked>
                                     <span class="checkmark"></span>
-                                    <?= $this->getHtml('AddToCollection') ?>
+                                    <?= $this->getHtml('AddToCollection'); ?>
                                 </label>
-                        <tr><td><label for="iFiles"><?= $this->getHtml('Files') ?></label>
+                        <tr><td><label for="iFiles"><?= $this->getHtml('Files'); ?></label>
                         <tr><td><input type="file" id="iFiles" name="files" multiple>
                     </table>
                 </div>

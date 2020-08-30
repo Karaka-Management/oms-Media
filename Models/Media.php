@@ -340,7 +340,7 @@ class Media implements \JsonSerializable
         return $this->isAbsolute ? $this->path : \ltrim($this->path, '\\/');
     }
 
-     /**
+    /**
      * @return string
      *
      * @since 1.0.0

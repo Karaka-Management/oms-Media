@@ -27,6 +27,8 @@ use phpOMS\Stdlib\Base\Enum;
 abstract class PathSettings extends Enum
 {
     public const FILE_PATH       = 1;
+
     public const RANDOM_PATH     = 2;
+
     public const COLLECTION_PATH = 3;
 }

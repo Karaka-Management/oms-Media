@@ -61,7 +61,7 @@ $next     = empty($media) ? '{/prefix}media/list' : '{/prefix}media/list?{?}&id=
 
                         $url = UriFactory::build('{/prefix}media/list?path=' . $subPath);
                 ?>
-                    <li data-href="<?= $url; ?>"<?= $i === $length - 1 ? 'class="active"' : '' ?>><a href="<?= $url; ?>"><?= $this->printHtml($paths[$i]); ?></a></li>
+                    <li data-href="<?= $url; ?>"<?= $i === $length - 1 ? 'class="active"' : ''; ?>><a href="<?= $url; ?>"><?= $this->printHtml($paths[$i]); ?></a></li>
                 <?php endfor; ?>
             </ul>
         </div>
@@ -71,16 +71,16 @@ $next     = empty($media) ? '{/prefix}media/list' : '{/prefix}media/list?{?}&id=
 <div class="row">
     <div class="col-xs-12">
         <div class="portlet">
-            <div class="portlet-head"><?= $this->getHtml('Media') ?><i class="fa fa-download floatRight download btn"></i></div>
+            <div class="portlet-head"><?= $this->getHtml('Media'); ?><i class="fa fa-download floatRight download btn"></i></div>
             <table id="mediaList" class="default">
                 <thead>
                 <tr>
                     <td>
-                    <td class="wf-100"><?= $this->getHtml('Name') ?>
-                    <td><?= $this->getHtml('Type') ?>
-                    <td><?= $this->getHtml('Size') ?>
-                    <td><?= $this->getHtml('Creator') ?>
-                    <td><?= $this->getHtml('Created') ?>
+                    <td class="wf-100"><?= $this->getHtml('Name'); ?>
+                    <td><?= $this->getHtml('Type'); ?>
+                    <td><?= $this->getHtml('Size'); ?>
+                    <td><?= $this->getHtml('Creator'); ?>
+                    <td><?= $this->getHtml('Created'); ?>
                 <tbody>
                     <?php $count = 0;
                         foreach ($media as $key => $value) :
@@ -99,18 +99,18 @@ $next     = empty($media) ? '{/prefix}media/list' : '{/prefix}media/list?{?}&id=
                             $icon = $fileIconFunction(FileUtils::getExtensionType($value->getExtension()));
                         ?>
                     <tr tabindex="0" data-href="<?= $url; ?>">
-                        <td data-label="<?= $this->getHtml('Type') ?>"><a href="<?= $url; ?>"><i class="fa fa-<?= $this->printHtml($icon); ?>"></i></a>
-                        <td data-label="<?= $this->getHtml('Name') ?>"><a href="<?= $url; ?>">
+                        <td data-label="<?= $this->getHtml('Type'); ?>"><a href="<?= $url; ?>"><i class="fa fa-<?= $this->printHtml($icon); ?>"></i></a>
+                        <td data-label="<?= $this->getHtml('Name'); ?>"><a href="<?= $url; ?>">
                             <?= $this->printHtml(
                                 $value->getExtension() !== 'collection'
                                     ? $value->getName() . (
                                         $value->getExtension() !== '' ? '.' . $value->getExtension() : ''
                                     ) : $value->getName()); ?>
                             </a>
-                        <td data-label="<?= $this->getHtml('Extension') ?>"><a href="<?= $url; ?>"><?= $this->printHtml($value->getExtension()); ?></a>
-                        <td data-label="<?= $this->getHtml('Size') ?>"><a href="<?= $url; ?>"><?= $this->printHtml($value->getSize()); ?></a>
-                        <td data-label="<?= $this->getHtml('Creator') ?>"><a href="<?= $url; ?>"><?= $this->printHtml($value->getCreatedBy()->getName1()); ?></a>
-                        <td data-label="<?= $this->getHtml('Created') ?>"><a href="<?= $url; ?>"><?= $this->printHtml($value->getCreatedAt()->format('Y-m-d H:i:s')); ?></a>
+                        <td data-label="<?= $this->getHtml('Extension'); ?>"><a href="<?= $url; ?>"><?= $this->printHtml($value->getExtension()); ?></a>
+                        <td data-label="<?= $this->getHtml('Size'); ?>"><a href="<?= $url; ?>"><?= $this->printHtml($value->getSize()); ?></a>
+                        <td data-label="<?= $this->getHtml('Creator'); ?>"><a href="<?= $url; ?>"><?= $this->printHtml($value->getCreatedBy()->getName1()); ?></a>
+                        <td data-label="<?= $this->getHtml('Created'); ?>"><a href="<?= $url; ?>"><?= $this->printHtml($value->getCreatedAt()->format('Y-m-d H:i:s')); ?></a>
                         <?php endforeach; ?>
                     <?php if ($count === 0) : ?>
                         <tr><td colspan="6" class="empty"><?= $this->getHtml('Empty', '0', '0'); ?>

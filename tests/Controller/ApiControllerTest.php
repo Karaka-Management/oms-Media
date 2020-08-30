@@ -30,6 +30,7 @@ use phpOMS\Router\WebRouter;
 class ApiControllerTest extends \PHPUnit\Framework\TestCase
 {
     protected $app    = null;
+
     protected $module = null;
 
     protected function setUp() : void

@@ -8,7 +8,7 @@
         <div class="portlet-body">
             <table class="layout wf-100">
                 <tbody>
-                <tr><td><label for="iMedia"><?= $this->getHtml('Media') ?></label>
+                <tr><td><label for="iMedia"><?= $this->getHtml('Media'); ?></label>
                 <tr><td>
                     <div class="ipt-wrap">
                         <div class="ipt-first">
@@ -37,9 +37,9 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="ipt-second"><button><?= $this->getHtml('Select', 'Media') ?></button></div>
+                        <div class="ipt-second"><button><?= $this->getHtml('Select', 'Media'); ?></button></div>
                     </div>
-                <tr><td><label for="iUpload"><?= $this->getHtml('Upload', 'Media') ?></label>
+                <tr><td><label for="iUpload"><?= $this->getHtml('Upload', 'Media'); ?></label>
                 <tr><td>
                     <input type="hidden" name="virtualPath" form="<?= $this->form; ?>" value="<?= $this->virtualPath; ?>">
                     <input type="file" id="iUpload" name="upload" form="<?= $this->form; ?>" multiple>
