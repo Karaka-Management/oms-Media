@@ -200,7 +200,6 @@ final class BackendController extends Controller
         $id    = (int) $request->getData('id');
         $media = MediaMapper::get($id);
         if ($media->getExtension() === 'collection') {
-
             $media = MediaMapper::getByVirtualPath(
                 $media->getVirtualPath() . ($media->getVirtualPath() !== '/' ? '/' : '') . $media->getName()
             );

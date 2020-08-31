@@ -16,7 +16,6 @@ namespace Modules\Media\Admin;
 
 use Modules\Admin\Models\NullAccount;
 use Modules\Media\Models\Collection;
-
 use Modules\Media\Models\CollectionMapper;
 use phpOMS\DataStorage\Database\DatabasePool;
 use phpOMS\Module\InstallerAbstract;

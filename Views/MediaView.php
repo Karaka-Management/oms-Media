@@ -19,7 +19,6 @@ use phpOMS\System\File\ExtensionType;
 use phpOMS\System\File\FileUtils;
 use phpOMS\System\File\Local\File;
 use phpOMS\Utils\StringUtils;
-
 use phpOMS\Views\View;
 
 /**

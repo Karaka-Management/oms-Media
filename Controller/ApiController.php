@@ -25,7 +25,6 @@ use Modules\Media\Models\NullMedia;
 use Modules\Media\Models\PathSettings;
 use Modules\Media\Models\PermissionState;
 use Modules\Media\Models\UploadFile;
-
 use Modules\Media\Models\UploadStatus;
 use phpOMS\Account\PermissionType;
 use phpOMS\Message\NotificationLevel;
