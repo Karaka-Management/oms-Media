@@ -43,18 +43,18 @@ trait ApiControllerCollectionTrait
 
         $files = [
             [
-                'error' => \UPLOAD_ERR_OK,
-                'type' => 'txt',
-                'name' => 'testFile1.txt',
+                'error'    => \UPLOAD_ERR_OK,
+                'type'     => 'txt',
+                'name'     => 'testFile1.txt',
                 'tmp_name' => __DIR__ . '/temp/testFile1.txt',
-                'size' => \filesize(__DIR__ . '/testFile1.txt'),
+                'size'     => \filesize(__DIR__ . '/testFile1.txt'),
             ],
             [
-                'error' => \UPLOAD_ERR_OK,
-                'type' => 'txt',
-                'name' => 'testFile2.txt',
+                'error'    => \UPLOAD_ERR_OK,
+                'type'     => 'txt',
+                'name'     => 'testFile2.txt',
                 'tmp_name' => __DIR__ . '/temp/testFile2.txt',
-                'size' => \filesize(__DIR__ . '/testFile2.txt'),
+                'size'     => \filesize(__DIR__ . '/testFile2.txt'),
             ],
         ];
 
@@ -66,7 +66,7 @@ trait ApiControllerCollectionTrait
             Directory::delete(__DIR__ . '/temp');
         }
 
-        $media = [];
+        $media        = [];
         $createdMedia = $response->get('')['response'];
         foreach ($createdMedia as $file) {
             $media[] = $file;

@@ -31,28 +31,28 @@ trait ApiControllerMediaTrait
     {
         $status = [
             [
-                'status' => UploadStatus::OK,
+                'status'    => UploadStatus::OK,
                 'extension' => 'png',
-                'filename' => 'logo.png',
-                'name' => 'logo.png',
-                'path' => 'Modules/tests/Media/Files/',
-                'size' => 90210,
+                'filename'  => 'logo.png',
+                'name'      => 'logo.png',
+                'path'      => 'Modules/tests/Media/Files/',
+                'size'      => 90210,
             ],
             [
-                'status' => UploadStatus::FAILED_HASHING,
+                'status'    => UploadStatus::FAILED_HASHING,
                 'extension' => 'png',
-                'filename' => 'logo.png',
-                'name' => 'logo.png',
-                'path' => 'Modules/tests/Media/Files/',
-                'size' => 90210,
+                'filename'  => 'logo.png',
+                'name'      => 'logo.png',
+                'path'      => 'Modules/tests/Media/Files/',
+                'size'      => 90210,
             ],
             [
-                'status' => UploadStatus::OK,
+                'status'    => UploadStatus::OK,
                 'extension' => 'png',
-                'filename' => 'logo2.png',
-                'name' => 'logo2.png',
-                'path' => 'Modules/tests/Media/Files/',
-                'size' => 90210,
+                'filename'  => 'logo2.png',
+                'name'      => 'logo2.png',
+                'path'      => 'Modules/tests/Media/Files/',
+                'size'      => 90210,
             ],
         ];
 
@@ -81,18 +81,18 @@ trait ApiControllerMediaTrait
 
         $files = [
             [
-                'error' => \UPLOAD_ERR_OK,
-                'type' => 'txt',
-                'name' => 'testFile1.txt',
+                'error'    => \UPLOAD_ERR_OK,
+                'type'     => 'txt',
+                'name'     => 'testFile1.txt',
                 'tmp_name' => __DIR__ . '/temp/testFile1.txt',
-                'size' => \filesize(__DIR__ . '/testFile1.txt'),
+                'size'     => \filesize(__DIR__ . '/testFile1.txt'),
             ],
             [
-                'error' => \UPLOAD_ERR_OK,
-                'type' => 'txt',
-                'name' => 'testFile2.txt',
+                'error'    => \UPLOAD_ERR_OK,
+                'type'     => 'txt',
+                'name'     => 'testFile2.txt',
                 'tmp_name' => __DIR__ . '/temp/testFile2.txt',
-                'size' => \filesize(__DIR__ . '/testFile2.txt'),
+                'size'     => \filesize(__DIR__ . '/testFile2.txt'),
             ],
         ];
 

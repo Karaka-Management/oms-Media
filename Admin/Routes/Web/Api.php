@@ -8,54 +8,54 @@ use phpOMS\Router\RouteVerb;
 return [
     '^.*/media(\?+.*|$)' => [
         [
-            'dest' => '\Modules\Media\Controller\ApiController:apiMediaUpload',
-            'verb' => RouteVerb::PUT,
+            'dest'       => '\Modules\Media\Controller\ApiController:apiMediaUpload',
+            'verb'       => RouteVerb::PUT,
             'permission' => [
                 'module' => ApiController::MODULE_NAME,
-                'type'  => PermissionType::CREATE,
-                'state' => PermissionState::MEDIA,
+                'type'   => PermissionType::CREATE,
+                'state'  => PermissionState::MEDIA,
             ],
         ],
         [
-            'dest' => '\Modules\Media\Controller\ApiController:apiMediaUpdate',
-            'verb' => RouteVerb::SET,
+            'dest'       => '\Modules\Media\Controller\ApiController:apiMediaUpdate',
+            'verb'       => RouteVerb::SET,
             'permission' => [
                 'module' => ApiController::MODULE_NAME,
-                'type'  => PermissionType::CREATE,
-                'state' => PermissionState::MEDIA,
+                'type'   => PermissionType::CREATE,
+                'state'  => PermissionState::MEDIA,
             ],
         ],
     ],
     '^.*/media/file(\?+.*|$)' => [
         [
-            'dest' => '\Modules\Media\Controller\ApiController:apiMediaCreate',
-            'verb' => RouteVerb::PUT,
+            'dest'       => '\Modules\Media\Controller\ApiController:apiMediaCreate',
+            'verb'       => RouteVerb::PUT,
             'permission' => [
                 'module' => ApiController::MODULE_NAME,
-                'type'  => PermissionType::CREATE,
-                'state' => PermissionState::MEDIA,
+                'type'   => PermissionType::CREATE,
+                'state'  => PermissionState::MEDIA,
             ],
         ],
     ],
     '^.*/media/collection(\?+.*|$)' => [
         [
-            'dest' => '\Modules\Media\Controller\ApiController:apiCollectionCreate',
-            'verb' => RouteVerb::PUT,
+            'dest'       => '\Modules\Media\Controller\ApiController:apiCollectionCreate',
+            'verb'       => RouteVerb::PUT,
             'permission' => [
                 'module' => ApiController::MODULE_NAME,
-                'type'  => PermissionType::CREATE,
-                'state' => PermissionState::MEDIA,
+                'type'   => PermissionType::CREATE,
+                'state'  => PermissionState::MEDIA,
             ],
         ],
     ],
     '^.*/media/find.*$' => [
         [
-            'dest' => '\Modules\Media\Controller\ApiController:apiMediaFind',
-            'verb' => RouteVerb::GET,
+            'dest'       => '\Modules\Media\Controller\ApiController:apiMediaFind',
+            'verb'       => RouteVerb::GET,
             'permission' => [
                 'module' => ApiController::MODULE_NAME,
-                'type'  => PermissionType::READ,
-                'state' => PermissionState::MEDIA,
+                'type'   => PermissionType::READ,
+                'state'  => PermissionState::MEDIA,
             ],
         ],
     ],

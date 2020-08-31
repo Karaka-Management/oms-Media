@@ -16,9 +16,9 @@ use phpOMS\Uri\UriFactory;
             <td><?= $this->getHtml('Created', 'Media'); ?>
         <tbody>
             <?php $count = 0; foreach ($this->media as $key => $value) : ++$count;
-                $url = UriFactory::build('{/prefix}media/single?{?}&id=' . $value->getId());
+                $url     = UriFactory::build('{/prefix}media/single?{?}&id=' . $value->getId());
 
-                $icon = '';
+                $icon          = '';
                 $extensionType = FileUtils::getExtensionType($value->getExtension());
 
                 if ($extensionType === ExtensionType::CODE) {

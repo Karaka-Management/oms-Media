@@ -101,7 +101,7 @@ echo $this->getData('nav')->render();
                             <td><a href="<?= $url; ?>"><?= $this->printHtml($value->getCreatedBy()->getName1()); ?></a>
                             <td><a href="<?= $url; ?>"><?= $this->printHtml($value->getCreatedAt()->format('Y-m-d H:i:s')); ?></a>
                     <?php endforeach; else : $path = $this->dirPathFunction($media, $this->request->getData('sub') ?? ''); ?>
-                        <?php $list = \phpOMS\System\File\Local\Directory::list($path);
+                        <?php $list                = \phpOMS\System\File\Local\Directory::list($path);
                             foreach ($list as $key => $value) :
                                 $url  = UriFactory::build('{/prefix}media/single?{?}&id=' . $media->getId() . '&sub=' . \substr($value, \strlen($media->getPath())));
                                 $icon = $fileIconFunction(FileUtils::getExtensionType(!\is_dir($value) ? File::extension($value) : 'collection'));
