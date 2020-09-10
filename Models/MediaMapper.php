@@ -49,7 +49,7 @@ class MediaMapper extends DataMapperAbstract
         'media_extension'       => ['name' => 'media_extension',       'type' => 'string',   'internal' => 'extension'],
         'media_size'            => ['name' => 'media_size',            'type' => 'int',      'internal' => 'size'],
         'media_created_by'      => ['name' => 'media_created_by',      'type' => 'int',      'internal' => 'createdBy', 'readonly' => true],
-        'media_created_at'      => ['name' => 'media_created_at',      'type' => 'DateTime', 'internal' => 'createdAt', 'readonly' => true],
+        'media_created_at'      => ['name' => 'media_created_at',      'type' => 'DateTimeImmutable', 'internal' => 'createdAt', 'readonly' => true],
     ];
 
     /**
