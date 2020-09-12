@@ -14,6 +14,8 @@ declare(strict_types=1);
 
 use phpOMS\System\File\FileUtils;
 use phpOMS\Uri\UriFactory;
+use phpOMS\Utils\Converter\FileSizeType;
+use phpOMS\Utils\Converter\Measurement;
 
 include __DIR__ . '/template-functions.php';
 
@@ -108,7 +110,9 @@ $next     = empty($media) ? '{/prefix}media/list' : '{/prefix}media/list?{?}&id=
                                     ) : $value->getName()); ?>
                             </a>
                         <td data-label="<?= $this->getHtml('Extension'); ?>"><a href="<?= $url; ?>"><?= $this->printHtml($value->getExtension()); ?></a>
-                        <td data-label="<?= $this->getHtml('Size'); ?>"><a href="<?= $url; ?>"><?= $this->printHtml($value->getSize()); ?></a>
+                        <td data-label="<?= $this->getHtml('Size'); ?>"><a href="<?= $url; ?>"><?php
+                            $size = FileSizeType::autoFormat($value->getSize());
+                            echo $this->printHtml($value->getExtension() !== 'collection' ? \number_format($size[0], 1, '.', ','). $size[1] : ''); ?></a>
                         <td data-label="<?= $this->getHtml('Creator'); ?>"><a href="<?= $url; ?>"><?= $this->printHtml($value->getCreatedBy()->getName1()); ?></a>
                         <td data-label="<?= $this->getHtml('Created'); ?>"><a href="<?= $url; ?>"><?= $this->printHtml($value->getCreatedAt()->format('Y-m-d H:i:s')); ?></a>
                         <?php endforeach; ?>
