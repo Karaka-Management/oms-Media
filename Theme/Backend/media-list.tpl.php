@@ -15,7 +15,6 @@ declare(strict_types=1);
 use phpOMS\System\File\FileUtils;
 use phpOMS\Uri\UriFactory;
 use phpOMS\Utils\Converter\FileSizeType;
-use phpOMS\Utils\Converter\Measurement;
 
 include __DIR__ . '/template-functions.php';
 

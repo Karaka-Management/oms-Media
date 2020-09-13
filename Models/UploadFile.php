@@ -16,8 +16,8 @@ declare(strict_types=1);
 
 namespace Modules\Media\Models;
 
-use phpOMS\System\File\Local\Directory;
 use phpOMS\Log\FileLogger;
+use phpOMS\System\File\Local\Directory;
 
 /**
  * Upload.
@@ -107,7 +107,7 @@ class UploadFile
         bool $absolute = false,
         string $encryptionKey = '',
         string $encoding = 'UTF-8'
-    ): array {
+    ) : array {
         $result = [];
 
         if (\count($files) === \count($files, \COUNT_RECURSIVE)) {
@@ -255,7 +255,7 @@ class UploadFile
      *
      * @since 1.0.0
      */
-    private function createFileName(string $path, string $tempName, string $extension): string
+    private function createFileName(string $path, string $tempName, string $extension) : string
     {
         $rnd   = '';
         $limit = 0;
@@ -290,7 +290,7 @@ class UploadFile
      *
      * @since 1.0.0
      */
-    private function interlace(string $extension, string $path): void
+    private function interlace(string $extension, string $path) : void
     {
         if ($extension === 'png') {
             $img = \imagecreatefrompng($path);
@@ -324,7 +324,7 @@ class UploadFile
      *
      * @since 1.0.0
      */
-    private function findOutputDir(): string
+    private function findOutputDir() : string
     {
         do {
             $rndPath = \str_pad(\dechex(\mt_rand(0, 65535)), 4, '0', \STR_PAD_LEFT);
@@ -342,7 +342,7 @@ class UploadFile
      *
      * @since 1.0.0
      */
-    private function getUploadError($error): int
+    private function getUploadError($error) : int
     {
         switch ($error) {
             case \UPLOAD_ERR_NO_FILE:
@@ -360,7 +360,7 @@ class UploadFile
      *
      * @since 1.0.0
      */
-    public function getMaxSize(): int
+    public function getMaxSize() : int
     {
         return $this->maxSize;
     }
@@ -372,7 +372,7 @@ class UploadFile
      *
      * @since 1.0.0
      */
-    public function setInterlaced(bool $isInterlaced): void
+    public function setInterlaced(bool $isInterlaced) : void
     {
         $this->isInterlaced = $isInterlaced;
     }
@@ -384,7 +384,7 @@ class UploadFile
      *
      * @since 1.0.0
      */
-    public function setMaxSize(int $maxSize): void
+    public function setMaxSize(int $maxSize) : void
     {
         $this->maxSize = $maxSize;
     }
@@ -394,7 +394,7 @@ class UploadFile
      *
      * @since 1.0.0
      */
-    public function getAllowedTypes(): array
+    public function getAllowedTypes() : array
     {
         return $this->allowedTypes;
     }
@@ -406,7 +406,7 @@ class UploadFile
      *
      * @since 1.0.0
      */
-    public function setAllowedTypes(array $allowedTypes): void
+    public function setAllowedTypes(array $allowedTypes) : void
     {
         $this->allowedTypes = $allowedTypes;
     }
@@ -418,7 +418,7 @@ class UploadFile
      *
      * @since 1.0.0
      */
-    public function addAllowedTypes(string $allowedTypes): void
+    public function addAllowedTypes(string $allowedTypes) : void
     {
         $this->allowedTypes[] = $allowedTypes;
     }
@@ -428,7 +428,7 @@ class UploadFile
      *
      * @since 1.0.0
      */
-    public function getOutputDir(): string
+    public function getOutputDir() : string
     {
         return $this->outputDir;
     }
@@ -442,7 +442,7 @@ class UploadFile
      *
      * @since 1.0.0
      */
-    public function setOutputDir(string $outputDir): void
+    public function setOutputDir(string $outputDir) : void
     {
         $this->outputDir = $outputDir;
     }
@@ -452,7 +452,7 @@ class UploadFile
      *
      * @since 1.0.0
      */
-    public function getFileName(): string
+    public function getFileName() : string
     {
         return $this->fileName;
     }
@@ -466,7 +466,7 @@ class UploadFile
      *
      * @since 1.0.0
      */
-    public function setFileName(string $fileName): void
+    public function setFileName(string $fileName) : void
     {
         $this->fileName = $fileName;
     }
@@ -480,7 +480,7 @@ class UploadFile
      *
      * @since 1.0.0
      */
-    public function setPreserveFileName(bool $preserveFileName): void
+    public function setPreserveFileName(bool $preserveFileName) : void
     {
         $this->preserveFileName = $preserveFileName;
     }
