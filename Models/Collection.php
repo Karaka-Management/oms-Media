@@ -41,14 +41,6 @@ class Collection extends Media implements \Iterator
     protected string $extension = 'collection';
 
     /**
-     * Versioned.
-     *
-     * @var bool
-     * @since 1.0.0
-     */
-    protected bool $versioned = false;
-
-    /**
      * Constructor.
      *
      * @since 1.0.0

@@ -128,7 +128,7 @@ final class BackendController extends Controller
         $path = (string) ($request->getData('path') ?? '/');
 
         /** @var Media[] $media */
-        $media = MediaMapper::getByVirtualPath($path);
+        $media = MediaMapper::getByVirtualPath(\str_replace('+', ' ', $path));
 
         $collection = CollectionMapper::getParentCollection(\str_replace('+', ' ', $path));
 
