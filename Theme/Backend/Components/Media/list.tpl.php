@@ -1,7 +1,8 @@
 <?php declare(strict_types=1);
-use phpOMS\System\File\ExtensionType;
 use phpOMS\System\File\FileUtils;
 use phpOMS\Uri\UriFactory;
+
+include __DIR__ . '/../template-functions.php';
 
 ?>
 <div class="portlet">
@@ -20,30 +21,7 @@ use phpOMS\Uri\UriFactory;
 
                 $icon          = '';
                 $extensionType = FileUtils::getExtensionType($value->getExtension());
-
-                if ($extensionType === ExtensionType::CODE) {
-                    $icon = 'file-code-o';
-                } elseif ($extensionType === ExtensionType::TEXT) {
-                    $icon = 'file-text-o';
-                } elseif ($extensionType === ExtensionType::PRESENTATION) {
-                   $icon = 'file-powerpoint-o';
-                } elseif ($extensionType === ExtensionType::PDF) {
-                    $icon = 'file-pdf-o';
-                } elseif ($extensionType === ExtensionType::ARCHIVE) {
-                    $icon = 'file-zip-o';
-                } elseif ($extensionType === ExtensionType::AUDIO) {
-                    $icon = 'file-audio-o';
-                } elseif ($extensionType === ExtensionType::VIDEO) {
-                    $icon = 'file-video-o';
-                } elseif ($extensionType === ExtensionType::IMAGE) {
-                    $icon = 'file-image-o';
-                } elseif ($extensionType === ExtensionType::SPREADSHEET) {
-                    $icon = 'file-excel-o';
-                } elseif ($value->getExtension() === 'collection') {
-                    $icon = 'folder-open-o';
-                } else {
-                    $icon = 'file-o';
-                }
+                $icon          = $fileIconFunction($extensionType);
         ?>
         <tr data-href="<?= $url; ?>">
             <td data-label="<?= $this->getHtml('Type'); ?>"><a href="<?= $url; ?>"><i class="fa fa-<?= $this->printHtml($icon); ?>"></i></a>

@@ -17,26 +17,26 @@ use \phpOMS\System\File\ExtensionType;
 $fileIconFunction = function (int $extensionType) : string
 {
     if ($extensionType === ExtensionType::CODE) {
-        return 'file-code-o';
+        return 'file-code';
     } elseif ($extensionType === ExtensionType::TEXT) {
-        return 'file-text-o';
+        return 'file-text';
     } elseif ($extensionType === ExtensionType::PRESENTATION) {
-       return 'file-powerpoint-o';
+       return 'file-powerpoint';
     } elseif ($extensionType === ExtensionType::PDF) {
-        return 'file-pdf-o';
+        return 'file-pdf';
     } elseif ($extensionType === ExtensionType::ARCHIVE) {
-        return 'file-zip-o';
+        return 'file-zip';
     } elseif ($extensionType === ExtensionType::AUDIO) {
-        return 'file-audio-o';
+        return 'file-audio';
     } elseif ($extensionType === ExtensionType::VIDEO) {
-        return 'file-video-o';
+        return 'file-video';
     } elseif ($extensionType === ExtensionType::IMAGE) {
         return 'file-image-o';
     } elseif ($extensionType === ExtensionType::SPREADSHEET) {
-        return 'file-excel-o';
+        return 'file-excel';
     } elseif ($extensionType === ExtensionType::DIRECTORY) {
-        return 'folder-open-o';
+        return 'folder-open';
     }
 
-    return 'file-o';
+    return 'file';
 };
