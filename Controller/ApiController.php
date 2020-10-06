@@ -34,6 +34,7 @@ use phpOMS\Model\Message\FormValidation;
 use phpOMS\System\File\Local\Directory;
 use phpOMS\System\MimeType;
 use phpOMS\Utils\Parser\Markdown\Markdown;
+use phpOMS\Message\Http\RequestStatusCode;
 
 /**
  * Media class.
@@ -378,6 +379,7 @@ final class ApiController extends Controller
     {
         if (!empty($val = $this->validateCollectionCreate($request))) {
             $response->set('collection_create', new FormValidation($val));
+            $response->getHeader()->setStatusCode(RequestStatusCode::R_400);
 
             return;
         }
