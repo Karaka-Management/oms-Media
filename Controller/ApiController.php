@@ -27,6 +27,7 @@ use Modules\Media\Models\PermissionState;
 use Modules\Media\Models\UploadFile;
 use Modules\Media\Models\UploadStatus;
 use phpOMS\Account\PermissionType;
+use phpOMS\Message\Http\RequestStatusCode;
 use phpOMS\Message\NotificationLevel;
 use phpOMS\Message\RequestAbstract;
 use phpOMS\Message\ResponseAbstract;
@@ -34,7 +35,6 @@ use phpOMS\Model\Message\FormValidation;
 use phpOMS\System\File\Local\Directory;
 use phpOMS\System\MimeType;
 use phpOMS\Utils\Parser\Markdown\Markdown;
-use phpOMS\Message\Http\RequestStatusCode;
 
 /**
  * Media class.
