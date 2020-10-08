@@ -52,9 +52,13 @@ final class Installer extends InstallerAbstract
             return; // @codeCoverageIgnore
         }
 
+        if (!\is_file($data['path'] ?? '')) {
+            throw new PathException($data['path'] ?? '');
+        }
+
         $mediaFile = \file_get_contents($data['path'] ?? '');
         if ($mediaFile === false) {
-            throw new PathException($data['path'] ?? '');
+            throw new PathException($data['path'] ?? ''); // @codeCoverageIgnore
         }
 
         $mediaData = \json_decode($mediaFile, true);

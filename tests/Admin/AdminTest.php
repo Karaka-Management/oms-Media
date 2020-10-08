@@ -36,7 +36,7 @@ class AdminTest extends \PHPUnit\Framework\TestCase
 
     public function testInvalidMediaInstallJsonFile() : void
     {
-        $this->expectException(\PathException::class);
+        $this->expectException(\Exception::class);
 
         Installer::installExternal($GLOBALS['dbpool'], ['path' => 'invalidJson.json']);
     }
