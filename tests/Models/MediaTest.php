@@ -29,6 +29,10 @@ class MediaTest extends \PHPUnit\Framework\TestCase
         $this->media = new Media();
     }
 
+    /**
+     * @covers Modules\Media\Models\Media
+     * @group module
+     */
     public function testDefault() : void
     {
         self::assertEquals(0, $this->media->getId());
@@ -45,18 +49,30 @@ class MediaTest extends \PHPUnit\Framework\TestCase
         self::assertFalse($this->media->isVersioned());
     }
 
+    /**
+     * @covers Modules\Media\Models\Media
+     * @group module
+     */
     public function testCreatedByInputOutput() : void
     {
         $this->media->setCreatedBy(new NullAccount(1));
         self::assertEquals(1, $this->media->getCreatedBy()->getId());
     }
 
+    /**
+     * @covers Modules\Media\Models\Media
+     * @group module
+     */
     public function testExtensionInputOutput() : void
     {
         $this->media->setExtension('pdf');
         self::assertEquals('pdf', $this->media->getExtension());
     }
 
+    /**
+     * @covers Modules\Media\Models\Media
+     * @group module
+     */
     public function testPathInputOutput() : void
     {
         $this->media->setPath('/home/root');
@@ -66,48 +82,80 @@ class MediaTest extends \PHPUnit\Framework\TestCase
         self::assertEquals('/home/root', $this->media->getPath());
     }
 
+    /**
+     * @covers Modules\Media\Models\Media
+     * @group module
+     */
     public function testAbsolutePathInputOutput() : void
     {
         $this->media->setAbsolute(true);
         self::assertTrue($this->media->isAbsolute());
     }
 
+    /**
+     * @covers Modules\Media\Models\Media
+     * @group module
+     */
     public function testNameInputOutput() : void
     {
         $this->media->setName('Report');
         self::assertEquals('Report', $this->media->getName());
     }
 
+    /**
+     * @covers Modules\Media\Models\Media
+     * @group module
+     */
     public function testDescriptionInputOutput() : void
     {
         $this->media->setDescription('This is a description');
         self::assertEquals('This is a description', $this->media->getDescription());
     }
 
+    /**
+     * @covers Modules\Media\Models\Media
+     * @group module
+     */
     public function testDescriptionRawInputOutput() : void
     {
         $this->media->setDescriptionRaw('This is a description raw');
         self::assertEquals('This is a description raw', $this->media->getDescriptionRaw());
     }
 
+    /**
+     * @covers Modules\Media\Models\Media
+     * @group module
+     */
     public function testSizeInputOutput() : void
     {
         $this->media->setSize(11);
         self::assertEquals(11, $this->media->getSize());
     }
 
+    /**
+     * @covers Modules\Media\Models\Media
+     * @group module
+     */
     public function testVersionedInputOutput() : void
     {
         $this->media->setVersioned(true);
         self::assertTrue($this->media->isVersioned());
     }
 
+    /**
+     * @covers Modules\Media\Models\Media
+     * @group module
+     */
     public function testVirtualPathInputOutput() : void
     {
         $this->media->setVirtualPath('/test/path');
         self::assertEquals('/test/path', $this->media->getVirtualPath());
     }
 
+    /**
+     * @covers Modules\Media\Models\Media
+     * @group module
+     */
     public function testHiddenInputOutput() : void
     {
         $this->media->setHidden(true);

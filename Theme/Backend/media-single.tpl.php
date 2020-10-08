@@ -131,7 +131,7 @@ echo $this->getData('nav')->render();
                 <?php elseif ($this->isTextFile($media, $path)) : ?>
                     <!-- if markdown show markdown editor, if image show image editor, if text file show textarea only on edit -->
 
-                    <?php if (!\file_exists(($media->isAbsolute() ? '' : __DIR__ . '/../../../../') . $media->getPath())) : ?>
+                    <?php if (!\is_file(($media->isAbsolute() ? '' : __DIR__ . '/../../../../') . $media->getPath())) : ?>
                         <div class="centerText"><i class="fa fa-question fa-5x"></i></div>
                     <?php else : ?>
                         <template id="iMediaUpdateTpl">

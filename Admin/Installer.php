@@ -49,17 +49,15 @@ final class Installer extends InstallerAbstract
          try {
             $dbPool->get()->con->query('select 1 from `media`');
         } catch (\Exception $e) {
-            return;
+            return; // @codeCoverageIgnore
         }
 
         $mediaFile = \file_get_contents($data['path'] ?? '');
-
         if ($mediaFile === false) {
             throw new PathException($data['path'] ?? '');
         }
 
         $mediaData = \json_decode($mediaFile, true);
-
         if ($mediaData === false) {
             throw new \Exception();
         }

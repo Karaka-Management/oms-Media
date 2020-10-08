@@ -34,7 +34,7 @@ trait ApiControllerCollectionTrait
         $request->getHeader()->setAccount(1);
         $request->setData('name', 'Test Upload');
 
-        if (!\file_exists(__DIR__ . '/temp')) {
+        if (!\is_dir(__DIR__ . '/temp')) {
             \mkdir(__DIR__ . '/temp');
         }
 
@@ -62,7 +62,7 @@ trait ApiControllerCollectionTrait
 
         $this->module->apiMediaUpload($request, $response);
 
-        if (\file_exists(__DIR__ . '/temp')) {
+        if (\is_dir(__DIR__ . '/temp')) {
             Directory::delete(__DIR__ . '/temp');
         }
 

@@ -158,7 +158,7 @@ class UploadFile
                 $result[$key]['filename'] = $this->fileName;
             }
 
-            if (empty($this->fileName) || \file_exists($path . '/' . $this->fileName)) {
+            if (empty($this->fileName) || \is_file($path . '/' . $this->fileName)) {
                 try {
                     $this->fileName           = $this->createFileName($path, $f['tmp_name'], $extension);
                     $result[$key]['filename'] = $this->fileName;
@@ -271,7 +271,7 @@ class UploadFile
             $fileName = $sha;
             $rnd      = \mt_rand();
             ++$limit;
-        } while (\file_exists($path . '/' . $fileName) && $limit < self::PATH_GENERATION_LIMIT);
+        } while (\is_file($path . '/' . $fileName) && $limit < self::PATH_GENERATION_LIMIT);
 
         if ($limit >= self::PATH_GENERATION_LIMIT) {
             throw new \Exception('No file path could be found. Potential attack!');
@@ -328,7 +328,7 @@ class UploadFile
     {
         do {
             $rndPath = \str_pad(\dechex(\mt_rand(0, 65535)), 4, '0', \STR_PAD_LEFT);
-        } while (\file_exists($this->outputDir . '/' . $rndPath));
+        } while (\is_dir($this->outputDir . '/' . $rndPath));
 
         return $this->outputDir . '/' . $rndPath;
     }

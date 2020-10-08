@@ -30,6 +30,10 @@ class CollectionTest extends \PHPUnit\Framework\TestCase
         $this->media = new Collection();
     }
 
+    /**
+     * @covers Modules\Media\Models\Collection
+     * @group module
+     */
     public function testDefault() : void
     {
         self::assertEquals(0, $this->media->getId());
@@ -44,18 +48,30 @@ class CollectionTest extends \PHPUnit\Framework\TestCase
         self::assertEquals([], $this->media->getSources());
     }
 
+    /**
+     * @covers Modules\Media\Models\Collection
+     * @group module
+     */
     public function testCreatedByInputOutput() : void
     {
         $this->media->setCreatedBy(new NullAccount(1));
         self::assertEquals(1, $this->media->getCreatedBy()->getId());
     }
 
+    /**
+     * @covers Modules\Media\Models\Collection
+     * @group module
+     */
     public function testExtensionInputOutput() : void
     {
         $this->media->setExtension('pdf');
         self::assertEquals('collection', $this->media->getExtension());
     }
 
+    /**
+     * @covers Modules\Media\Models\Collection
+     * @group module
+     */
     public function testPathInputOutput() : void
     {
         $this->media->setPath('/home/root');
@@ -65,30 +81,50 @@ class CollectionTest extends \PHPUnit\Framework\TestCase
         self::assertEquals('/home/root', $this->media->getPath());
     }
 
+    /**
+     * @covers Modules\Media\Models\Collection
+     * @group module
+     */
     public function testDescriptionInputOutput() : void
     {
         $this->media->setDescription('This is a description');
         self::assertEquals('This is a description', $this->media->getDescription());
     }
 
+    /**
+     * @covers Modules\Media\Models\Collection
+     * @group module
+     */
     public function testSizeInputOutput() : void
     {
         $this->media->setSize(11);
         self::assertEquals(11, $this->media->getSize());
     }
 
+    /**
+     * @covers Modules\Media\Models\Collection
+     * @group module
+     */
     public function testVersionedInputOutput() : void
     {
         $this->media->setVersioned(true);
         self::assertFalse($this->media->isVersioned());
     }
 
+    /**
+     * @covers Modules\Media\Models\Collection
+     * @group module
+     */
     public function testSourceInputOutput() : void
     {
         $this->media->setSources([$a = new NullMedia(1), $b = new NullMedia(2), $c = new NullMedia(3)]);
         self::assertEquals([$a, $b, $c], $this->media->getSources());
     }
 
+    /**
+     * @covers Modules\Media\Models\Collection
+     * @group module
+     */
     public function testSourceAddInputOutput() : void
     {
         $this->media->setSources([$a = new NullMedia(1), $b = new NullMedia(2), $c = new NullMedia(3)]);

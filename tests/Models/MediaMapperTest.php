@@ -23,6 +23,10 @@ use Modules\Media\Models\MediaMapper;
  */
 class MediaMapperTest extends \PHPUnit\Framework\TestCase
 {
+    /**
+     * @covers Modules\Media\Models\MediaMapper
+     * @group module
+     */
     public function testCR() : void
     {
         $media = new Media();
@@ -50,6 +54,10 @@ class MediaMapperTest extends \PHPUnit\Framework\TestCase
         self::assertEquals($media->getName(), $mediaR->getName());
     }
 
+    /**
+     * @covers Modules\Media\Models\MediaMapper
+     * @group module
+     */
     public function testAbsolute() : void
     {
         $media = new Media();
@@ -76,6 +84,10 @@ class MediaMapperTest extends \PHPUnit\Framework\TestCase
         self::assertEquals($media->getName(), $mediaR->getName());
     }
 
+    /**
+     * @covers Modules\Media\Models\MediaMapper
+     * @group module
+     */
     public function testDirectoryMapping() : void
     {
         $media = new Media();
