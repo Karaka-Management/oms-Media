@@ -61,9 +61,9 @@ final class Installer extends InstallerAbstract
             throw new PathException($data['path'] ?? ''); // @codeCoverageIgnore
         }
 
-        $mediaData = \json_decode($mediaFile, true);
+        $mediaData = \json_decode($mediaFile, true) ?? [];
         if ($mediaData === false) {
-            throw new \Exception();
+            throw new \Exception(); // @codeCoverageIgnore
         }
 
         foreach ($mediaData as $media) {

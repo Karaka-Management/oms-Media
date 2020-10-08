@@ -249,7 +249,7 @@ class Media implements \JsonSerializable
      */
     public function setPassword(?string $password) : void
     {
-        $this->password = $password;
+        $this->password = \password_hash($password, \PASSWORD_DEFAULT);
     }
 
     /**
@@ -546,6 +546,8 @@ class Media implements \JsonSerializable
             'hidden'         => $this->hidden,
             'path'           => $this->path,
             'absolute'       => $this->isAbsolute,
+            'createdBy'      => $this->createdBy,
+            'createdAt'      => $this->createdAt,
         ];
     }
 

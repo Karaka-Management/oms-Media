@@ -47,6 +47,8 @@ class MediaTest extends \PHPUnit\Framework\TestCase
         self::assertEquals('/', $this->media->getVirtualPath());
         self::assertEquals(0, $this->media->getSize());
         self::assertFalse($this->media->isVersioned());
+        self::assertFalse($this->media->compareNonce('something'));
+        self::assertFalse($this->media->isEncrypted());
     }
 
     /**
@@ -160,5 +162,68 @@ class MediaTest extends \PHPUnit\Framework\TestCase
     {
         $this->media->setHidden(true);
         self::assertTrue($this->media->isHidden());
+    }
+
+    /**
+     * @covers Modules\Media\Models\Media
+     * @group module
+     */
+    public function testNonceInputOutput() : void
+    {
+        $this->media->setNonce('test');
+        self::assertTrue($this->media->compareNonce('test'));
+        self::assertFalse($this->media->compareNonce('test2'));
+        self::assertTrue($this->media->isEncrypted());
+    }
+
+    /**
+     * @covers Modules\Media\Models\Media
+     * @group module
+     */
+    public function testPasswordInputOutput() : void
+    {
+        $this->media->setPassword('test');
+        self::assertTrue($this->media->comparePassword('test'));
+        self::assertFalse($this->media->comparePassword('test2'));
+    }
+
+    /**
+     * @covers Modules\Media\Models\Media
+     * @group module
+     */
+    public function testSerialize() : void
+    {
+        $this->media->setCreatedBy($acc = new NullAccount(1));
+        $this->media->setExtension('pdf');
+        $this->media->setPath('/home/root');
+        $this->media->setAbsolute(true);
+        $this->media->setName('Report');
+        $this->media->setDescription('This is a description');
+        $this->media->setDescriptionRaw('This is a description raw');
+        $this->media->setSize(11);
+        $this->media->setVersioned(true);
+        $this->media->setVirtualPath('/test/path');
+        $this->media->setHidden(true);
+
+        self::assertEquals($this->media->toArray(), $this->media->jsonSerialize());
+
+        $arr = $this->media->toArray();
+        unset($arr['createdAt']);
+        self::assertEquals(
+            [
+                'id'             => 0,
+                'createdBy'      => $acc,
+                'name'           => 'Report',
+                'description'    => 'This is a description',
+                'descriptionRaw' => 'This is a description raw',
+                'extension'      => 'pdf',
+                'virtualpath'    => '/test/path',
+                'size'           => 11,
+                'hidden'         => true,
+                'path'           => '/home/root',
+                'absolute'       => true,
+            ],
+            $arr
+        );
     }
 }

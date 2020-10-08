@@ -4,7 +4,7 @@
  *
  * PHP Version 7.4
  *
- * @package   Modules\Media\Models
+ * @package   Modules\Media\Controller
  * @copyright Dennis Eichhorn
  * @license   OMS License 1.0
  * @version   1.0.0
@@ -12,7 +12,7 @@
  */
 declare(strict_types=1);
 
-namespace Modules\Media\Models;
+namespace Modules\Media\Controller;
 
 use phpOMS\Asset\AssetType;
 use phpOMS\Message\RequestAbstract;
@@ -21,7 +21,7 @@ use phpOMS\Message\ResponseAbstract;
 /**
  * Options trait.
  *
- * @package Modules\Media\Models
+ * @package Modules\Media\Controller
  * @license OMS License 1.0
  * @link    https://orange-management.org
  * @since   1.0.0
@@ -38,8 +38,9 @@ trait FileUploaderTrait
      * @return void
      *
      * @since 1.0.0
+     * @codeCoverageIgnore
      */
-    public function setUpFileUploader(RequestAbstract $request, ResponseAbstract $response, $data = null) : void
+    public function setUpFileUploaderTrait(RequestAbstract $request, ResponseAbstract $response, $data = null) : void
     {
         $head = $response->getHead();
         $head->addAsset(AssetType::JS, '/Modules/Media/ModuleMedia.js');

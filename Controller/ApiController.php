@@ -72,30 +72,6 @@ use phpOMS\Utils\Parser\Markdown\Markdown;
 final class ApiController extends Controller
 {
     /**
-     * Api method to find media
-     *
-     * @param RequestAbstract  $request  Request
-     * @param ResponseAbstract $response Response
-     * @param mixed            $data     Generic data
-     *
-     * @return void
-     *
-     * @api
-     *
-     * @since 1.0.0
-     */
-    public function apiMediaFind(RequestAbstract $request, ResponseAbstract $response, $data = null) : void
-    {
-        $response->getHeader()->set('Content-Type', MimeType::M_JSON, true);
-        $response->set(
-            $request->getUri()->__toString(),
-            \array_values(
-                MediaMapper::find((string) ($request->getData('search') ?? ''))
-            )
-        );
-    }
-
-    /**
      * Api method to upload media file.
      *
      * @param RequestAbstract  $request  Request

@@ -131,4 +131,21 @@ class CollectionTest extends \PHPUnit\Framework\TestCase
         $this->media->addSource($d = new NullMedia(4));
         self::assertEquals([$a, $b, $c, $d], $this->media->getSources());
     }
+
+    /**
+     * @covers Modules\Media\Models\Collection
+     * @group module
+     */
+    public function testIteration() : void
+    {
+        $this->media->setSources([$a = new NullMedia(1), $b = new NullMedia(2), $c = new NullMedia(3)]);
+
+        foreach ($this->media as $key => $media) {
+            if ($media->getId() !== $key + 1) {
+                self::assertEquals($key + 1, $media->getId());
+            }
+        }
+
+        self::assertTrue(true);
+    }
 }

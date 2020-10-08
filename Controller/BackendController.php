@@ -21,7 +21,6 @@ use Modules\Media\Models\Media;
 use Modules\Media\Models\MediaMapper;
 use Modules\Media\Models\NullMedia;
 use Modules\Media\Views\MediaView;
-use phpOMS\Asset\AssetType;
 use phpOMS\Contract\RenderableInterface;
 use phpOMS\Message\RequestAbstract;
 use phpOMS\Message\ResponseAbstract;
@@ -89,24 +88,7 @@ final class BackendController extends Controller
      */
     protected static array $dependencies = [];
 
-    /**
-     * Routing end-point for application behaviour.
-     *
-     * @param RequestAbstract  $request  Request
-     * @param ResponseAbstract $response Response
-     * @param mixed            $data     Generic data
-     *
-     * @return void
-     *
-     * @since 1.0.0
-     * @codeCoverageIgnore
-     */
-    public static function setUpFileUploader(RequestAbstract $request, ResponseAbstract $response, $data = null) : void
-    {
-        /** @var \phpOMS\Model\Html\Head $head */
-        $head = $response->get('Content')->getData('head');
-        $head->addAsset(AssetType::JSLATE, 'Modules/Media/Controller.js', ['type' => 'module']);
-    }
+    use FileUploaderTrait;
 
     /**
      * Routing end-point for application behaviour.

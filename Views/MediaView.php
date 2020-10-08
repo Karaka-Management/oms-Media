@@ -87,10 +87,10 @@ class MediaView extends View
      *
      * @since 1.0.0
      */
-    protected function isCollectionFunction(Media $media, string $sub) : bool
+    protected function isCollectionFunction(Media $media, string $sub = null) : bool
     {
         return ($media->getExtension() === 'collection'
-                && !\is_file($media->getPath() . $sub))
+                && !\is_file($media->getPath() . ($sub ?? '')))
             || (\is_dir($media->getPath())
                 && ($sub === null || \is_dir($media->getPath() . $sub))
         );
@@ -107,15 +107,16 @@ class MediaView extends View
      */
     protected function getFileContent(string $path) : string
     {
-        $output = \file_get_contents($path);
-
-        if ($output === false) {
+        if (!\is_file($path)) {
             return '';
         }
 
-        $output = \str_replace(["\r\n", "\r"], "\n", $output);
+        $output = \file_get_contents($path);
+        if ($output === false) {
+            return ''; // @codeCoverageIgnore
+        }
 
-        return $output;
+        return \str_replace(["\r\n", "\r"], "\n", $output);
     }
 
     /**
@@ -129,10 +130,13 @@ class MediaView extends View
      */
     protected function lineContentFunction(string $path) : array
     {
-        $output = \file_get_contents($path);
-
-        if ($output === false) {
+        if (!\is_file($path)) {
             return [];
+        }
+
+        $output = \file_get_contents($path);
+        if ($output === false) {
+            return []; // @codeCoverageIgnore
         }
 
         $output = \str_replace(["\r\n", "\r"], "\n", $output);
@@ -150,7 +154,7 @@ class MediaView extends View
      *
      * @since 1.0.0
      */
-    protected function isImageFile(Media $media, string $path) : bool
+    protected function isImageFile(Media $media, string $path = '') : bool
     {
         return FileUtils::getExtensionType($media->getExtension()) === ExtensionType::IMAGE
             || FileUtils::getExtensionType(File::extension($path)) === ExtensionType::IMAGE;
@@ -166,7 +170,7 @@ class MediaView extends View
      *
      * @since 1.0.0
      */
-    protected function isTextFile(Media $media, string $path) : bool
+    protected function isTextFile(Media $media, string $path = '') : bool
     {
         $mediaExtension = FileUtils::getExtensionType($media->getExtension());
         $pathExtension  = FileUtils::getExtensionType(File::extension($path));
