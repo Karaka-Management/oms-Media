@@ -15,18 +15,18 @@ declare(strict_types=1);
 namespace Modules\Media\tests\Controller;
 
 use Model\CoreSettings;
+use Modules\Admin\Models\AccountPermission;
 use Modules\Media\tests\Controller\Api\ApiControllerCollectionTrait;
 use Modules\Media\tests\Controller\Api\ApiControllerMediaTrait;
+use phpOMS\Account\Account;
 use phpOMS\Account\AccountManager;
+use phpOMS\Account\PermissionType;
 use phpOMS\Application\ApplicationAbstract;
 use phpOMS\Dispatcher\Dispatcher;
 use phpOMS\Event\EventManager;
 use phpOMS\Module\ModuleManager;
 use phpOMS\Router\WebRouter;
-use phpOMS\Account\Account;
 use phpOMS\Utils\TestUtils;
-use phpOMS\Account\PermissionType;
-use Modules\Admin\Models\AccountPermission;
 
 /**
  * @internal

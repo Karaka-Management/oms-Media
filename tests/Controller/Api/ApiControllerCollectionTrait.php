@@ -14,16 +14,16 @@ declare(strict_types=1);
 
 namespace Modules\Media\tests\Controller\Api;
 
+use Modules\Admin\Models\NullAccount;
+use Modules\Media\Models\Media;
+use Modules\Media\Models\MediaMapper;
+use Modules\Media\Models\NullCollection;
 use phpOMS\Message\Http\HttpRequest;
 use phpOMS\Message\Http\HttpResponse;
+use phpOMS\Message\Http\RequestStatusCode;
 use phpOMS\System\File\Local\Directory;
 use phpOMS\Uri\HttpUri;
 use phpOMS\Utils\TestUtils;
-use phpOMS\Message\Http\RequestStatusCode;
-use Modules\Media\Models\MediaMapper;
-use Modules\Media\Models\Media;
-use Modules\Admin\Models\NullAccount;
-use Modules\Media\Models\NullCollection;
 
 trait ApiControllerCollectionTrait
 {

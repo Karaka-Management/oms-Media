@@ -15,10 +15,10 @@ declare(strict_types=1);
 namespace Modules\Media\tests\Models;
 
 use Modules\Admin\Models\NullAccount;
+use Modules\Media\Models\Collection;
+use Modules\Media\Models\CollectionMapper;
 use Modules\Media\Models\Media;
 use Modules\Media\Models\MediaMapper;
-use Modules\Media\Models\CollectionMapper;
-use Modules\Media\Models\Collection;
 
 /**
  * @internal

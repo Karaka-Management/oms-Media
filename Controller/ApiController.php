@@ -33,7 +33,6 @@ use phpOMS\Message\RequestAbstract;
 use phpOMS\Message\ResponseAbstract;
 use phpOMS\Model\Message\FormValidation;
 use phpOMS\System\File\Local\Directory;
-use phpOMS\System\MimeType;
 use phpOMS\Utils\Parser\Markdown\Markdown;
 
 /**

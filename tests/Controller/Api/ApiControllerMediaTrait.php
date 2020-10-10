@@ -14,6 +14,7 @@ declare(strict_types=1);
 
 namespace Modules\Media\tests\Controller\Api;
 
+use Modules\Media\Models\MediaMapper;
 use Modules\Media\Models\PathSettings;
 use Modules\Media\Models\UploadStatus;
 use phpOMS\Message\Http\HttpRequest;
@@ -21,7 +22,6 @@ use phpOMS\Message\Http\HttpResponse;
 use phpOMS\System\File\Local\Directory;
 use phpOMS\Uri\HttpUri;
 use phpOMS\Utils\TestUtils;
-use Modules\Media\Models\MediaMapper;
 
 trait ApiControllerMediaTrait
 {
@@ -218,7 +218,7 @@ trait ApiControllerMediaTrait
         TestUtils::setMember($request, 'files', $files);
         $this->module->apiMediaUpload($request, $response);
 
-        $id = \reset($response->get('')['response']);
+        $id       = \reset($response->get('')['response']);
         $response = new HttpResponse();
         $request  = new HttpRequest(new HttpUri(''));
 
