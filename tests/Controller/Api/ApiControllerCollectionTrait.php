@@ -19,6 +19,11 @@ use phpOMS\Message\Http\HttpResponse;
 use phpOMS\System\File\Local\Directory;
 use phpOMS\Uri\HttpUri;
 use phpOMS\Utils\TestUtils;
+use phpOMS\Message\Http\RequestStatusCode;
+use Modules\Media\Models\MediaMapper;
+use Modules\Media\Models\Media;
+use Modules\Admin\Models\NullAccount;
+use Modules\Media\Models\NullCollection;
 
 trait ApiControllerCollectionTrait
 {
@@ -26,7 +31,7 @@ trait ApiControllerCollectionTrait
      * @covers Modules\Media\Controller\ApiController
      * @group module
      */
-    public function testApiCollectionCreate() : void
+    public function testApiCollectionCreateWitRandomPath() : void
     {
         $response = new HttpResponse();
         $request  = new HttpRequest(new HttpUri(''));
@@ -85,5 +90,73 @@ trait ApiControllerCollectionTrait
         $collection = $response->get('')['response'];
         self::assertEquals('Test Collection', $collection->getName());
         self::assertCount(2, $collection->getSources());
+    }
+
+    /**
+     * @covers Modules\Media\Controller\ApiController
+     * @group module
+     */
+    public function testApiCollectionCreateInvalid() : void
+    {
+        $response = new HttpResponse();
+        $request  = new HttpRequest(new HttpUri(''));
+
+        $request->getHeader()->setAccount(1);
+
+        $this->module->apiCollectionCreate($request, $response);
+        self::assertEquals(RequestStatusCode::R_400, $response->getHeader()->getStatusCode());
+    }
+
+    /**
+     * @covers Modules\Media\Controller\ApiController
+     * @group module
+     */
+    public function testApiCollectionCreateWithPath() : void
+    {
+        $response = new HttpResponse();
+        $request  = new HttpRequest(new HttpUri(''));
+
+        $request->getHeader()->setAccount(1);
+        $request->setData('name', 'Test Collection');
+        $request->setData('path', '/test/path');
+
+        $this->module->apiCollectionCreate($request, $response);
+
+        $collection = $response->get('')['response'];
+        self::assertTrue(\is_dir(__DIR__ . '/../../../Files/test/path'));
+
+        Directory::delete(__DIR__ . '/../../../Files/test/path');
+    }
+
+    /**
+     * @covers Modules\Media\Controller\ApiController
+     * @group module
+     */
+    public function testApiCollectionFromMedia() : void
+    {
+        $media = new Media();
+        $media->setCreatedBy(new NullAccount(1));
+        $media->setDescription('desc');
+        $media->setDescriptionRaw('descRaw');
+        $media->setPath('some/path');
+        $media->setSize(11);
+        $media->setExtension('png');
+        $media->setName('Media for collection');
+        $id = MediaMapper::create($media);
+
+        self::assertGreaterThan(0, $media->getId());
+        self::assertEquals($id, $media->getId());
+
+        $collection = $this->module->createMediaCollectionFromMedia('Collection With Media', '', [$media], 1);
+
+        self::assertEquals('Collection With Media', $collection->getName());
+        self::assertCount(1, $collection->getSources());
+
+        self::assertInstanceOf(
+            NullCollection::class,
+            $this->module->createMediaCollectionFromMedia('Collection With Media', '', [], 1)
+        );
+
+        Directory::delete(__DIR__ . '/../../../Files/test/path');
     }
 }

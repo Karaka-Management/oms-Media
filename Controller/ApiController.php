@@ -90,8 +90,8 @@ final class ApiController extends Controller
             $request->getData('name') === null || $request->getFiles() !== null ? '' : $request->getData('name'),
             $request->getFiles(),
             $request->getHeader()->getAccount(),
-            __DIR__ . '/../../../Modules/Media/Files' . ((string) ($request->getData('path') ?? '')),
-            (string) ($request->getData('virtualPath') ?? ''),
+            __DIR__ . '/../../../Modules/Media/Files' . \urldecode((string) ($request->getData('path') ?? '')),
+            \urldecode((string) ($request->getData('virtualpath') ?? '')),
             (string) ($request->getData('password') ?? ''),
             (string) ($request->getData('encrypt') ?? ''),
             (int) ($request->getData('pathsettings') ?? PathSettings::RANDOM_PATH)
@@ -143,7 +143,7 @@ final class ApiController extends Controller
             if ($pathSettings === PathSettings::RANDOM_PATH) {
                 $outputDir = self::createMediaPath($basePath);
             } elseif ($pathSettings === PathSettings::FILE_PATH) {
-                $outputDir = \rtrim($basePath, '/\\') . $virtualPath;
+                $outputDir = \rtrim($basePath, '/\\');
                 $absolute  = true;
             } else {
                 return $mediaCreated;
@@ -255,9 +255,8 @@ final class ApiController extends Controller
     private static function normalizeDbPath(string $path) : string
     {
         $realpath = \realpath(__DIR__ . '/../../../');
-
         if ($realpath === false) {
-            throw new \Exception();
+            throw new \Exception(); // @codeCoverageIgnore
         }
 
         return \str_replace('\\', '/',
@@ -308,22 +307,22 @@ final class ApiController extends Controller
         /** @var Media $media */
         $media = MediaMapper::get($id);
         $media->setName((string) ($request->getData('name') ?? $media->getName()));
+        $media->setDescription((string) ($request->getData('description') ?? $media->getDescription()));
+        $media->setPath((string) ($request->getData('path') ?? $media->getPath()));
         $media->setVirtualPath(\urldecode((string) ($request->getData('virtualpath') ?? $media->getVirtualPath())));
 
-        if ($id == 0) {
-            $path = \urldecode($request->getData('path'));
+        // @todo: implement a security check to ensure the user is allowed to write to the file. Right now you could overwrite ANY file with a malicious $path
+        if ($id === 0
+            && $media instanceof NullMedia
+            && \is_file(__DIR__ . '/../Files' . ($path = \urldecode($request->getData('path'))))
+        ) {
+            $name = \explode('.', \basename($path));
 
-            if ($media instanceof NullMedia
-                && \is_file(__DIR__ . '/../Files' . $path)
-            ) {
-                $name = \explode('.', \basename($path));
-
-                $media->setName($name[0]);
-                $media->setExtension($name[1] ?? '');
-                $media->setVirtualPath(\dirname($path));
-                $media->setPath('/Modules/Media/Files/' . \ltrim($path, '\\/'));
-                $media->setAbsolute(false);
-            }
+            $media->setName($name[0]);
+            $media->setExtension($name[1] ?? '');
+            $media->setVirtualPath(\dirname($path));
+            $media->setPath('/Modules/Media/Files/' . \ltrim($path, '\\/'));
+            $media->setAbsolute(false);
         }
 
         if ($request->getData('content') !== null) {
@@ -429,6 +428,8 @@ final class ApiController extends Controller
     /**
      * Method to create media collection from request.
      *
+     * This doesn't create a database entry only the collection model.
+     *
      * @param string  $name        Collection name
      * @param string  $description Description
      * @param Media[] $media       Media files to create the collection from
@@ -440,13 +441,9 @@ final class ApiController extends Controller
      */
     public function createMediaCollectionFromMedia(string $name, string $description, array $media, int $account) : Collection
     {
-        if (empty($media)) {
-            return new NullCollection();
-        }
-
-        // is allowed to create media file
-        if (!$this->app->accountManager->get($account)->hasPermission(
-            PermissionType::CREATE, $this->app->orgId, null, self::MODULE_NAME, PermissionState::COLLECTION, null)
+        if (empty($media)
+            || !$this->app->accountManager->get($account)->hasPermission(
+                PermissionType::CREATE, $this->app->orgId, null, self::MODULE_NAME, PermissionState::COLLECTION, null)
         ) {
             return new NullCollection();
         }
@@ -481,7 +478,7 @@ final class ApiController extends Controller
     {
         $path        = \urldecode((string) ($request->getData('path') ?? ''));
         $virtualPath = \urldecode((string) ($request->getData('virtualpath') ?? ''));
-        $fileName    = (string) ($request->getData('fileName') ?? ($request->getData('name') ?? ''));
+        $fileName    = (string) ($request->getData('filename') ?? ($request->getData('name') ?? ''));
         $fileName   .= \strripos($fileName, '.') === false ? '.txt' : '';
 
         $outputDir = '';
@@ -495,7 +492,7 @@ final class ApiController extends Controller
             $created = Directory::create($outputDir, 0775, true);
 
             if (!$created) {
-                throw new \Exception('Couldn\'t create outputdir: "' . $outputDir . '"');
+                throw new \Exception('Couldn\'t create outputdir: "' . $outputDir . '"'); // @codeCoverageIgnore
             }
         }
 

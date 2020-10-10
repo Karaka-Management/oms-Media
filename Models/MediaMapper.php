@@ -126,7 +126,7 @@ class MediaMapper extends DataMapperAbstract
         $query->where(self::$table . '_' . $depth . '.media_virtual', '=', $virtualPath);
 
         if ($hidden === false) {
-            $query->where(self::$table . '_' . $depth . '.media_hidden', '=', (int) $hidden);
+            $query->andWhere(self::$table . '_' . $depth . '.media_hidden', '=', (int) $hidden);
         }
 
         return self::getAllByQuery($query, RelationType::ALL, $depth);

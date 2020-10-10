@@ -126,11 +126,11 @@ class MediaMapperTest extends \PHPUnit\Framework\TestCase
         $media->setCreatedBy(new NullAccount(1));
         $media->setDescription('desc');
         $media->setPath('https://avatars0.githubusercontent.com/u/16034994');
-        $media->setVirtualPath('/test/path');
+        $media->setVirtualPath('/mediamappertest/path');
         $media->setAbsolute(true);
         $media->setSize(11);
         $media->setExtension('png');
-        $media->setName('Absolute path');
+        $media->setName('With virtual path');
         $id = MediaMapper::create($media);
 
         self::assertGreaterThan(0, $media->getId());
