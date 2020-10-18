@@ -40,9 +40,9 @@ trait FileUploaderTrait
      * @since 1.0.0
      * @codeCoverageIgnore
      */
-    public function setUpFileUploaderTrait(RequestAbstract $request, ResponseAbstract $response, $data = null) : void
+    public static function setUpFileUploaderTrait(RequestAbstract $request, ResponseAbstract $response, $data = null) : void
     {
-        $head = $response->getHead();
+        $head = $response->get('Content')->getData('head');
         $head->addAsset(AssetType::JS, '/Modules/Media/ModuleMedia.js');
     }
 }
