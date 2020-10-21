@@ -44,6 +44,14 @@ class Media implements \JsonSerializable
     protected string $name = '';
 
     /**
+     * Type.
+     *
+     * @var string
+     * @since 1.0.0
+     */
+    protected string $type = '';
+
+    /**
      * Extension.
      *
      * @var string
@@ -365,6 +373,16 @@ class Media implements \JsonSerializable
      *
      * @since 1.0.0
      */
+    public function getType() : string
+    {
+        return $this->type;
+    }
+
+    /**
+     * @return string
+     *
+     * @since 1.0.0
+     */
     public function getDescription() : string
     {
         return $this->description;
@@ -459,6 +477,19 @@ class Media implements \JsonSerializable
     {
         $this->name = $name;
     }
+
+    /**
+     * @param string $type Media type
+     *
+     * @return void
+     *
+     * @since 1.0.0
+     */
+    public function setType(string $type) : void
+    {
+        $this->type = $type;
+    }
+
 
     /**
      * @param string $description Media description

@@ -28,6 +28,14 @@ use phpOMS\Module\WebInterface;
 class Controller extends ModuleAbstract implements WebInterface
 {
     /**
+     * File path
+     * 
+     * @var string
+     * @since 1.0.0
+     */
+    public const FILE_PATH = __DIR__ . '/../Files';
+
+    /**
      * Module path.
      *
      * @var string

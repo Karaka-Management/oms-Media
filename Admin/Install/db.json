@@ -14,6 +14,11 @@
                 "type": "VARCHAR(255)",
                 "null": false
             },
+            "media_type": {
+                "name": "media_type",
+                "type": "VARCHAR(255)",
+                "null": false
+            },
             "media_description": {
                 "name": "media_description",
                 "type": "TEXT",

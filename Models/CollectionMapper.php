@@ -34,8 +34,8 @@ final class CollectionMapper extends MediaMapper
         'sources' => [
             'mapper'   => MediaMapper::class,
             'table'    => 'media_relation',
-            'external' => 'media_relation_dst',
-            'self'     => 'media_relation_src',
+            'external' => 'media_relation_src',
+            'self'     => 'media_relation_dst',
         ],
     ];
 
