@@ -490,7 +490,6 @@ class Media implements \JsonSerializable
         $this->type = $type;
     }
 
-
     /**
      * @param string $description Media description
      *
