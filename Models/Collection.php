@@ -140,7 +140,7 @@ class Collection extends Media implements \Iterator
     /**
      * {@inheritdoc}
      */
-    public function valid()
+    public function valid() : bool
     {
         return \current($this->sources) !== false;
     }
