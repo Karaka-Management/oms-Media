@@ -41,6 +41,14 @@ class Collection extends Media implements \Iterator
     protected string $extension = 'collection';
 
     /**
+     * Is collection.
+     *
+     * @var int
+     * @since 1.0.0
+     */
+    protected int $collection = 1;
+
+    /**
      * Constructor.
      *
      * @since 1.0.0

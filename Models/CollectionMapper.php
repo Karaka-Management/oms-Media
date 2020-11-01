@@ -14,6 +14,9 @@ declare(strict_types=1);
 
 namespace Modules\Media\Models;
 
+use phpOMS\DataStorage\Database\RelationType;
+use Modules\Admin\Models\Account;
+
 /**
  * Mapper class.
  *
@@ -70,4 +73,106 @@ final class CollectionMapper extends MediaMapper
      * @since 1.0.0
      */
     protected static string $primaryField = 'media_id';
+
+    /**
+     * Get media based on virtual path.
+     *
+     * The virtual path is equivalent to the directory path on a file system.
+     *
+     * A media model also has a file path, this however doesn't have to be the same as the virtual path
+     * and in fact most of the time it is different. This is because the location on a hard drive or web
+     * drive should not have any impact on the media file/media structure in the application.
+     *
+     * As a result media files are structured by virutal path in the app, by file path on the file system
+     * and by Collections which can have sub-collections as well. Collections allow to reference files
+     * in a different virtual path and are therfore similar to "symlinks", except that they don't reference
+     * a file but create a new virtual media model which groups other media models together in a new virtual
+     * path if so desired without deleting or moving the orginal media files.
+     *
+     * @param string $virtualPath Virtual path
+     * @param bool   $hidden      Get hidden files
+     *
+     * @return array
+     *
+     * @since 1.0.0
+     */
+    public static function getByVirtualPath(string $virtualPath = '/', bool $hidden = false) : array
+    {
+        $depth = 3;
+        $query = self::getQuery();
+        $query->where(self::$table . '_' . $depth . '.media_virtual', '=', $virtualPath);
+        $query->where(self::$table . '_' . $depth . '.media_collection', '=', 1);
+
+        if ($hidden === false) {
+            $query->andWhere(self::$table . '_' . $depth . '.media_hidden', '=', (int) $hidden);
+        }
+
+        return self::getAllByQuery($query, RelationType::ALL, $depth);
+    }
+
+    /**
+     * Get collections and optionally hard drive directories.
+     *
+     * @param string $virtualPath     Virtual path
+     * @param bool   $showDirectories Show local hard drive directories
+     *
+     * @return array
+     *
+     * @since 1.0.0
+     */
+    public static function getCollectionsByPath(string $path, bool $showDirectories = false) : array
+    {
+        $collection = CollectionMapper::getByVirtualPath($path);
+        $parent     = [];
+
+        if ($showDirectories) {
+            $parent = CollectionMapper::getParentCollection($path);
+            if (\is_array($parent) && \is_dir(__DIR__ . '/../../Media/Files' . $path)) {
+                $parent = new Collection();
+                $parent->setName(\basename($path));
+                $parent->setVirtualPath(\dirname($path));
+                $parent->setPath(\dirname($path));
+                $parent->setAbsolute(false);
+            }
+
+            if ($parent instanceof Collection) {
+                $collection += $parent->getSources();
+
+                /** @var string[] $glob */
+                $glob = $parent->isAbsolute()
+                    ? $parent->getPath() . '/' . $parent->getName() . '/*'
+                    : \glob(__DIR__ . '/../Files/' . \rtrim($parent->getPath(), '/') . '/' . $parent->getName() . '/*');
+                $glob = $glob === false ? [] : $glob;
+
+                foreach ($glob as $file) {
+                    if (!\is_dir($file)) {
+                        continue;
+                    }
+
+                    foreach ($collection as $obj) {
+                        if (($obj->getExtension() !== 'collection'
+                                && !empty($obj->getExtension())
+                                && $obj->getName() . '.' . $obj->getExtension() === \basename($file))
+                            || ($obj->getExtension() === 'collection'
+                                && $obj->getName() === \basename($file))
+                        ) {
+                            continue 2;
+                        }
+                    }
+
+                    $pathinfo = \pathinfo($file);
+
+                    $localMedia = new Collection();
+                    $localMedia->setName($pathinfo['filename']);
+                    $localMedia->setExtension(\is_dir($file) ? 'collection' : $pathinfo['extension'] ?? '');
+                    $localMedia->setVirtualPath($path);
+                    $localMedia->setCreatedBy(new Account());
+
+                    $collection[] = $localMedia;
+                }
+            }
+        }
+
+        return [$collection, $parent];
+    }
 }

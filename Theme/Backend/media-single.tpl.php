@@ -46,7 +46,9 @@ echo $this->getData('nav')->render();
                         <tr><td><?= $this->getHtml('Name'); ?><td class="wf-100"><?= $this->printHtml($media->getName()); ?>
                         <tr><td><?= $this->getHtml('Size'); ?><td class="wf-100"><?= $this->printHtml($media->getSize()); ?>
                         <tr><td><?= $this->getHtml('Created'); ?><td><?= $this->printHtml($media->getCreatedAt()->format('Y-m-d')); ?>
-                        <tr><td><?= $this->getHtml('Creator'); ?><td><a href="<?= UriFactory::build('{/prefix}profile/single?for=' . $media->getCreatedBy()->getId()); ?>"><?= $this->printHtml($media->getCreatedBy()->getName2() . ', ' . $media->getCreatedBy()->getName1()); ?></a>
+                        <tr><td><?= $this->getHtml('Creator'); ?><td><a href="<?= UriFactory::build('{/prefix}profile/single?for=' . $media->getCreatedBy()->getId()); ?>"><?= $this->printHtml(
+                                \ltrim($media->getCreatedBy()->getName2() . ', ' . $media->getCreatedBy()->getName1(), ', ')
+                            ); ?></a>
                         <tr><td colspan="2"><?= $this->getHtml('Description'); ?>
                         <tr><td colspan="2"><?= $media->getDescription(); ?>
                 </table>

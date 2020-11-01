@@ -156,6 +156,14 @@ class Media implements \JsonSerializable
     protected bool $hidden = false;
 
     /**
+     * Is collection.
+     *
+     * @var int
+     * @since 1.0.0
+     */
+    protected int $collection = 0;
+
+    /**
      * Constructor.
      *
      * @since 1.0.0

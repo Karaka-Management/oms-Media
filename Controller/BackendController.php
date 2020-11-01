@@ -107,12 +107,11 @@ final class BackendController extends Controller
         $view = new View($this->app->l11nManager, $request, $response);
         $view->setTemplate('/Modules/Media/Theme/Backend/media-list');
 
-        $path = (string) ($request->getData('path') ?? '/');
+        $path = \str_replace('+', ' ', (string) ($request->getData('path') ?? '/'));
 
         /** @var Media[] $media */
-        $media = MediaMapper::getByVirtualPath(\str_replace('+', ' ', $path));
-
-        $collection = CollectionMapper::getParentCollection(\str_replace('+', ' ', $path));
+        $media      = MediaMapper::getByVirtualPath($path);
+        $collection = CollectionMapper::getParentCollection($path);
 
         if (\is_array($collection) && \is_dir(__DIR__ . '/../Files' . $path)) {
             $collection = new Collection();
