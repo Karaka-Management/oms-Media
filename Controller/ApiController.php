@@ -91,6 +91,7 @@ final class ApiController extends Controller
             $request->getHeader()->getAccount(),
             __DIR__ . '/../../../Modules/Media/Files' . \urldecode((string) ($request->getData('path') ?? '')),
             \urldecode((string) ($request->getData('virtualpath') ?? '')),
+            (string) ($request->getData('type') ?? ''),
             (string) ($request->getData('password') ?? ''),
             (string) ($request->getData('encrypt') ?? ''),
             (int) ($request->getData('pathsettings') ?? PathSettings::RANDOM_PATH)
@@ -112,6 +113,7 @@ final class ApiController extends Controller
      * @param int    $account       Uploader
      * @param string $basePath      Base path. The path which is used for the upload.
      * @param string $virtualPath   Virtual path The path which is used to visually structure the files, like directories.
+     * @param string $type          Media type (internal/custom media categorization)
      *                              The file storage on the system can be different
      * @param string $password      File password. The password to protect the file (only database)
      * @param string $encryptionKey Encryption key. Used to encrypt the file on the local file storage.
@@ -129,33 +131,33 @@ final class ApiController extends Controller
         int $account,
         string $basePath = '/Modules/Media/Files',
         string $virtualPath = '',
+        string $type = '',
         string $password = '',
         string $encryptionKey = '',
         int $pathSettings = PathSettings::RANDOM_PATH
     ) : array {
-        $mediaCreated = [];
-
-        if (!empty($files)) {
-            $outputDir = '';
-            $absolute  = false;
-
-            if ($pathSettings === PathSettings::RANDOM_PATH) {
-                $outputDir = self::createMediaPath($basePath);
-            } elseif ($pathSettings === PathSettings::FILE_PATH) {
-                $outputDir = \rtrim($basePath, '/\\');
-                $absolute  = true;
-            } else {
-                return $mediaCreated;
-            }
-
-            $upload = new UploadFile();
-            $upload->setOutputDir($outputDir);
-
-            $status       = $upload->upload($files, $name, $absolute, $encryptionKey);
-            $mediaCreated = $this->createDbEntries($status, $account, $virtualPath);
+        if (empty($files)) {
+            return [];
         }
 
-        return $mediaCreated;
+        $outputDir = '';
+        $absolute  = false;
+
+        if ($pathSettings === PathSettings::RANDOM_PATH) {
+            $outputDir = self::createMediaPath($basePath);
+        } elseif ($pathSettings === PathSettings::FILE_PATH) {
+            $outputDir = \rtrim($basePath, '/\\');
+            $absolute  = true;
+        } else {
+            return [];
+        }
+
+        $upload = new UploadFile();
+        $upload->setOutputDir($outputDir);
+
+        $status = $upload->upload($files, $name, $absolute, $encryptionKey);
+
+        return $this->createDbEntries($status, $account, $virtualPath, $type);
     }
 
     /**
@@ -177,18 +179,24 @@ final class ApiController extends Controller
      * @param array  $status      Files
      * @param int    $account     Uploader
      * @param string $virtualPath Virtual path
+     * @param string $type        Media type (internal categorization)
      * @param string $ip          Ip
      *
      * @return Media[]
      *
      * @since 1.0.0
      */
-    public function createDbEntries(array $status, int $account, string $virtualPath = '', string $ip = '127.0.0.1') : array
-    {
+    public function createDbEntries(
+        array $status,
+        int $account,
+        string $virtualPath = '',
+        string $type = '',
+        string $ip = '127.0.0.1'
+    ) : array {
         $mediaCreated = [];
 
         foreach ($status as $uFile) {
-            if (($created = self::createDbEntry($uFile, $account, $virtualPath)) !== null) {
+            if (($created = self::createDbEntry($uFile, $account, $virtualPath, $type)) !== null) {
                 $mediaCreated[] = $created;
 
                 $this->app->moduleManager->get('Admin')->createAccountModelPermission(
@@ -217,27 +225,29 @@ final class ApiController extends Controller
      * @param array  $status      Files
      * @param int    $account     Uploader
      * @param string $virtualPath Virtual path (not on the hard-drive)
+     * @param string $type        Media type (internal categorization)
      *
      * @return null|Media
      *
      * @since 1.0.0
      */
-    public static function createDbEntry(array $status, int $account, string $virtualPath = '') : ?Media
+    public static function createDbEntry(array $status, int $account, string $virtualPath = '', string $type = '') : ?Media
     {
-        $media = null;
-
-        if ($status['status'] === UploadStatus::OK) {
-            $media = new Media();
-
-            $media->setPath(self::normalizeDbPath($status['path']) . '/' . $status['filename']);
-            $media->setName($status['name']);
-            $media->setSize($status['size']);
-            $media->setCreatedBy(new NullAccount($account));
-            $media->setExtension($status['extension']);
-            $media->setVirtualPath($virtualPath);
-
-            MediaMapper::create($media);
+        if ($status['status'] !== UploadStatus::OK) {
+            return null;
         }
+
+        $media = new Media();
+
+        $media->setPath(self::normalizeDbPath($status['path']) . '/' . $status['filename']);
+        $media->setName($status['name']);
+        $media->setSize($status['size']);
+        $media->setCreatedBy(new NullAccount($account));
+        $media->setExtension($status['extension']);
+        $media->setVirtualPath($virtualPath);
+        $media->setType($type)
+
+        MediaMapper::create($media);
 
         return $media;
     }
@@ -484,7 +494,15 @@ final class ApiController extends Controller
         if (empty($request->getData('path'))) {
             $outputDir = self::createMediaPath(__DIR__ . '/../../../Modules/Media/Files');
         } else {
-            $outputDir = __DIR__ . '/../../../Modules/Media/Files/' . \ltrim($path, '\\/');
+            if (\stripos(
+                    FileUtils::absolute(__DIR__ . '/../../../Modules/Media/Files/' . \ltrim($path, '\\/')),
+                    FileUtils::absolute(__DIR__ . '/../../../Modules/Media/Files/')
+                ) !== 0
+            ) {
+                $outputDir = self::createMediaPath(__DIR__ . '/../../../Modules/Media/Files');
+            } else {
+                $outputDir = __DIR__ . '/../../../Modules/Media/Files/' . \ltrim($path, '\\/');
+            }
         }
 
         if (!\is_dir($outputDir)) {
@@ -509,7 +527,7 @@ final class ApiController extends Controller
             ],
         ];
 
-        $created = $this->createDbEntries($status, $request->getHeader()->getAccount(), $virtualPath);
+        $created = $this->createDbEntries($status, $request->getHeader()->getAccount(), $virtualPath, $request->getData('type') ?? '');
 
         $ids = [];
         foreach ($created as $file) {
