@@ -245,7 +245,7 @@ final class ApiController extends Controller
         $media->setCreatedBy(new NullAccount($account));
         $media->setExtension($status['extension']);
         $media->setVirtualPath($virtualPath);
-        $media->setType($type)
+        $media->setType($type);
 
         MediaMapper::create($media);
 
