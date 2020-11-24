@@ -31,15 +31,15 @@ class MediaMapperTest extends \PHPUnit\Framework\TestCase
      */
     public function testCR() : void
     {
-        $media = new Media();
-        $media->createdBy = new NullAccount(1);
-        $media->description = 'desc';
+        $media                 = new Media();
+        $media->createdBy      = new NullAccount(1);
+        $media->description    = 'desc';
         $media->descriptionRaw = 'descRaw';
         $media->setPath('some/path');
-        $media->size = 11;
+        $media->size      = 11;
         $media->extension = 'png';
-        $media->name = 'Image';
-        $id = MediaMapper::create($media);
+        $media->name      = 'Image';
+        $id               = MediaMapper::create($media);
 
         self::assertGreaterThan(0, $media->getId());
         self::assertEquals($id, $media->getId());
@@ -62,15 +62,15 @@ class MediaMapperTest extends \PHPUnit\Framework\TestCase
      */
     public function testAbsolute() : void
     {
-        $media = new Media();
-        $media->createdBy = new NullAccount(1);
+        $media              = new Media();
+        $media->createdBy   = new NullAccount(1);
         $media->description = 'desc';
         $media->setPath('https://avatars0.githubusercontent.com/u/16034994');
         $media->isAbsolute = true;
-        $media->size = 11;
-        $media->extension = 'png';
-        $media->name = 'Absolute path';
-        $id = MediaMapper::create($media);
+        $media->size       = 11;
+        $media->extension  = 'png';
+        $media->name       = 'Absolute path';
+        $id                = MediaMapper::create($media);
 
         self::assertGreaterThan(0, $media->getId());
         self::assertEquals($id, $media->getId());
@@ -92,15 +92,15 @@ class MediaMapperTest extends \PHPUnit\Framework\TestCase
      */
     public function testDirectoryMapping() : void
     {
-        $media = new Media();
-        $media->createdBy = new NullAccount(1);
+        $media              = new Media();
+        $media->createdBy   = new NullAccount(1);
         $media->description = 'desc';
         $media->setPath(\realpath(__DIR__ . '/../../../../../'));
         $media->isAbsolute = true;
-        $media->size = 11;
-        $media->extension = 'collection';
-        $media->name = 'Directory';
-        $id = MediaMapper::create($media);
+        $media->size       = 11;
+        $media->extension  = 'collection';
+        $media->name       = 'Directory';
+        $id                = MediaMapper::create($media);
 
         self::assertGreaterThan(0, $media->getId());
         self::assertEquals($id, $media->getId());
@@ -122,16 +122,16 @@ class MediaMapperTest extends \PHPUnit\Framework\TestCase
      */
     public function testGetVirtualPath() : void
     {
-        $media = new Media();
-        $media->createdBy = new NullAccount(1);
+        $media              = new Media();
+        $media->createdBy   = new NullAccount(1);
         $media->description = 'desc';
         $media->setPath('https://avatars0.githubusercontent.com/u/16034994');
         $media->setVirtualPath('/mediamappertest/path');
         $media->isAbsolute = true;
-        $media->size = 11;
-        $media->extension = 'png';
-        $media->name = 'With virtual path';
-        $id = MediaMapper::create($media);
+        $media->size       = 11;
+        $media->extension  = 'png';
+        $media->name       = 'With virtual path';
+        $id                = MediaMapper::create($media);
 
         self::assertGreaterThan(0, $media->getId());
         self::assertEquals($id, $media->getId());
@@ -154,29 +154,29 @@ class MediaMapperTest extends \PHPUnit\Framework\TestCase
      */
     public function testParentcollection() : void
     {
-        $collection = new Collection();
-        $collection->createdBy = new NullAccount(1);
-        $collection->description = 'desc';
+        $collection                 = new Collection();
+        $collection->createdBy      = new NullAccount(1);
+        $collection->description    = 'desc';
         $collection->descriptionRaw = 'descRaw';
         $collection->setPath('some/path');
         $collection->setVirtualPath('/virtual/path');
         $collection->size = 11;
         $collection->name = 'Collection';
-        $idCollection = CollectionMapper::create($collection);
+        $idCollection     = CollectionMapper::create($collection);
 
         self::assertGreaterThan(0, $collection->getId());
         self::assertEquals($idCollection, $collection->getId());
 
-        $media = new Media();
-        $media->createdBy = new NullAccount(1);
+        $media              = new Media();
+        $media->createdBy   = new NullAccount(1);
         $media->description = 'desc';
         $media->setPath('https://avatars0.githubusercontent.com/u/16034994');
         $media->setVirtualPath('/virtual/path/Collection');
         $media->isAbsolute = true;
-        $media->size = 11;
-        $media->extension = 'png';
-        $media->name = 'Absolute path';
-        $idMedia = MediaMapper::create($media);
+        $media->size       = 11;
+        $media->extension  = 'png';
+        $media->name       = 'Absolute path';
+        $idMedia           = MediaMapper::create($media);
 
         self::assertGreaterThan(0, $media->getId());
         self::assertEquals($idMedia, $media->getId());

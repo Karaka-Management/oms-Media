@@ -29,14 +29,14 @@ class CollectionMapperTest extends \PHPUnit\Framework\TestCase
      */
     public function testCR() : void
     {
-        $media = new Collection();
-        $media->createdBy = new NullAccount(1);
-        $media->description = 'desc';
+        $media                 = new Collection();
+        $media->createdBy      = new NullAccount(1);
+        $media->description    = 'desc';
         $media->descriptionRaw = 'descRaw';
         $media->setPath('some/path');
         $media->size = 11;
         $media->name = 'Collection';
-        $id = CollectionMapper::create($media);
+        $id          = CollectionMapper::create($media);
 
         self::assertGreaterThan(0, $media->getId());
         self::assertEquals($id, $media->getId());

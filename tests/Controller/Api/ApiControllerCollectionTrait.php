@@ -134,15 +134,15 @@ trait ApiControllerCollectionTrait
      */
     public function testApiCollectionFromMedia() : void
     {
-        $media = new Media();
-        $media->createdBy = new NullAccount(1);
-        $media->description = 'desc';
+        $media                 = new Media();
+        $media->createdBy      = new NullAccount(1);
+        $media->description    = 'desc';
         $media->descriptionRaw = 'descRaw';
         $media->setPath('some/path');
-        $media->size = 11;
+        $media->size      = 11;
         $media->extension = 'png';
-        $media->name = 'Media for collection';
-        $id = MediaMapper::create($media);
+        $media->name      = 'Media for collection';
+        $id               = MediaMapper::create($media);
 
         self::assertGreaterThan(0, $media->getId());
         self::assertEquals($id, $media->getId());

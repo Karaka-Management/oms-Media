@@ -32,9 +32,9 @@ use phpOMS\Message\NotificationLevel;
 use phpOMS\Message\RequestAbstract;
 use phpOMS\Message\ResponseAbstract;
 use phpOMS\Model\Message\FormValidation;
+use phpOMS\System\File\FileUtils;
 use phpOMS\System\File\Local\Directory;
 use phpOMS\Utils\Parser\Markdown\Markdown;
-use phpOMS\System\File\FileUtils;
 
 /**
  * Media class.
@@ -113,7 +113,7 @@ final class ApiController extends Controller
      * @param array  $files         Files
      * @param int    $account       Uploader
      * @param string $basePath      Base path. The path which is used for the upload.
-     * @param string $virtualPath   Virtual path The path which is used to visually structure the files, like directories.
+     * @param string $virtualPath   virtual path The path which is used to visually structure the files, like directories
      * @param string $type          Media type (internal/custom media categorization)
      *                              The file storage on the system can be different
      * @param string $password      File password. The password to protect the file (only database)
@@ -241,8 +241,8 @@ final class ApiController extends Controller
         $media = new Media();
 
         $media->setPath(self::normalizeDbPath($status['path']) . '/' . $status['filename']);
-        $media->name = $status['name'];
-        $media->size = $status['size'];
+        $media->name      = $status['name'];
+        $media->size      = $status['size'];
         $media->createdBy = new NullAccount($account);
         $media->extension = $status['extension'];
         $media->setVirtualPath($virtualPath);
@@ -315,8 +315,8 @@ final class ApiController extends Controller
         $id = (int) $request->getData('id');
 
         /** @var Media $media */
-        $media = MediaMapper::get($id);
-        $media->name = (string) ($request->getData('name') ?? $media->name);
+        $media              = MediaMapper::get($id);
+        $media->name        = (string) ($request->getData('name') ?? $media->name);
         $media->description = (string) ($request->getData('description') ?? $media->description);
         $media->setPath((string) ($request->getData('path') ?? $media->getPath()));
         $media->setVirtualPath(\urldecode((string) ($request->getData('virtualpath') ?? $media->getVirtualPath())));
@@ -328,7 +328,7 @@ final class ApiController extends Controller
         ) {
             $name = \explode('.', \basename($path));
 
-            $media->name = $name[0];
+            $media->name      = $name[0];
             $media->extension = $name[1] ?? '';
             $media->setVirtualPath(\dirname($path));
             $media->setPath('/Modules/Media/Files/' . \ltrim($path, '\\/'));
@@ -404,11 +404,11 @@ final class ApiController extends Controller
      */
     private function createCollectionFromRequest(RequestAbstract $request) : Collection
     {
-        $mediaCollection = new Collection();
-        $mediaCollection->name = $request->getData('name') ?? '';
-        $mediaCollection->description = ($description = Markdown::parse($request->getData('description') ?? ''));
+        $mediaCollection                 = new Collection();
+        $mediaCollection->name           = $request->getData('name') ?? '';
+        $mediaCollection->description    = ($description = Markdown::parse($request->getData('description') ?? ''));
         $mediaCollection->descriptionRaw = $description;
-        $mediaCollection->createdBy = new NullAccount($request->header->account);
+        $mediaCollection->createdBy      = new NullAccount($request->header->account);
 
         $media = $request->getDataJson('media-list');
         foreach ($media as $file) {
@@ -459,11 +459,11 @@ final class ApiController extends Controller
         }
 
         /* Create collection */
-        $mediaCollection = new Collection();
-        $mediaCollection->name = $name;
-        $mediaCollection->description = Markdown::parse($description);
+        $mediaCollection                 = new Collection();
+        $mediaCollection->name           = $name;
+        $mediaCollection->description    = Markdown::parse($description);
         $mediaCollection->descriptionRaw = $description;
-        $mediaCollection->createdBy = new NullAccount($account);
+        $mediaCollection->createdBy      = new NullAccount($account);
         $mediaCollection->setSources($media);
         $mediaCollection->setVirtualPath('/');
         $mediaCollection->setPath('/Modules/Media/Files');

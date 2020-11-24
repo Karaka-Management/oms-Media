@@ -196,12 +196,12 @@ class MediaTest extends \PHPUnit\Framework\TestCase
         $this->media->createdBy = $acc = new NullAccount(1);
         $this->media->extension = 'pdf';
         $this->media->setPath('/home/root');
-        $this->media->isAbsolute = true;
-        $this->media->name = 'Report';
-        $this->media->description = 'This is a description';
+        $this->media->isAbsolute     = true;
+        $this->media->name           = 'Report';
+        $this->media->description    = 'This is a description';
         $this->media->descriptionRaw = 'This is a description raw';
-        $this->media->size = 11;
-        $this->media->isVersioned = true;
+        $this->media->size           = 11;
+        $this->media->isVersioned    = true;
         $this->media->setVirtualPath('/test/path');
         $this->media->isHidden = true;
 

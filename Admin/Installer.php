@@ -83,7 +83,7 @@ final class Installer extends InstallerAbstract
      */
     private static function installMedia($dbPool, $data) : void
     {
-        $collection = new Collection();
+        $collection       = new Collection();
         $collection->name = (string) $data['name'] ?? '';
         $collection->setVirtualPath((string) $data['virtualPath'] ?? '/');
         $collection->setPath((string) ($data['path'] ?? '/Modules/Media/Files/' . ((string) $data['name'] ?? '')));

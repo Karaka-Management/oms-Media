@@ -14,8 +14,8 @@ declare(strict_types=1);
 
 namespace Modules\Media\Models;
 
-use phpOMS\DataStorage\Database\RelationType;
 use Modules\Admin\Models\Account;
+use phpOMS\DataStorage\Database\RelationType;
 
 /**
  * Mapper class.
@@ -122,13 +122,13 @@ final class CollectionMapper extends MediaMapper
      */
     public static function getCollectionsByPath(string $path, bool $showDirectories = false) : array
     {
-        $collection = CollectionMapper::getByVirtualPath($path);
+        $collection = self::getByVirtualPath($path);
         $parent     = [];
 
         if ($showDirectories) {
-            $parent = CollectionMapper::getParentCollection($path);
+            $parent = self::getParentCollection($path);
             if (\is_array($parent) && \is_dir(__DIR__ . '/../../Media/Files' . $path)) {
-                $parent = new Collection();
+                $parent       = new Collection();
                 $parent->name = \basename($path);
                 $parent->setVirtualPath(\dirname($path));
                 $parent->setPath(\dirname($path));
@@ -162,8 +162,8 @@ final class CollectionMapper extends MediaMapper
 
                     $pathinfo = \pathinfo($file);
 
-                    $localMedia = new Collection();
-                    $localMedia->name = $pathinfo['filename'];
+                    $localMedia            = new Collection();
+                    $localMedia->name      = $pathinfo['filename'];
                     $localMedia->extension = \is_dir($file) ? 'collection' : $pathinfo['extension'] ?? '';
                     $localMedia->setVirtualPath($path);
                     $localMedia->createdBy = new Account();

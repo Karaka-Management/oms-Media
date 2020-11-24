@@ -114,7 +114,7 @@ final class BackendController extends Controller
         $collection = CollectionMapper::getParentCollection($path);
 
         if (\is_array($collection) && \is_dir(__DIR__ . '/../Files' . $path)) {
-            $collection = new Collection();
+            $collection       = new Collection();
             $collection->name = \basename($path);
             $collection->setVirtualPath(\dirname($path));
             $collection->setPath(\dirname($path));
@@ -144,8 +144,8 @@ final class BackendController extends Controller
 
                 $pathinfo = \pathinfo($file);
 
-                $localMedia = new Media();
-                $localMedia->name = $pathinfo['filename'];
+                $localMedia            = new Media();
+                $localMedia->name      = $pathinfo['filename'];
                 $localMedia->extension = \is_dir($file) ? 'collection' : $pathinfo['extension'] ?? '';
                 $localMedia->setVirtualPath($path);
                 $localMedia->createdBy = new Account();
@@ -200,7 +200,7 @@ final class BackendController extends Controller
             ) {
                 $name = \explode('.', \basename($path));
 
-                $media->name = $name[0];
+                $media->name      = $name[0];
                 $media->extension = $name[1] ?? '';
                 $media->setVirtualPath(\dirname($path));
                 $media->setPath('/Modules/Media/Files/' . \ltrim($path, '\\/'));
