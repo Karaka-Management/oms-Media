@@ -87,33 +87,33 @@ $next     = empty($media) ? '{/prefix}media/list' : '{/prefix}media/list?{?}&id=
                         foreach ($media as $key => $value) :
                             ++$count;
 
-                            $url = $value->getExtension() === 'collection'
-                                ? UriFactory::build('{/prefix}media/list?path=' . \rtrim($value->getVirtualPath(), '/') . '/' . $value->getName())
+                            $url = $value->extension === 'collection'
+                                ? UriFactory::build('{/prefix}media/list?path=' . \rtrim($value->getVirtualPath(), '/') . '/' . $value->name)
                                 : UriFactory::build('{/prefix}media/single?id=' . $value->getId()
                                     . '&path={?path}' . (
                                             $value->getId() === 0
-                                                ? '/' . $value->getName() . (!empty($value->getExtension()) ? '.' . $value->getExtension() : '')
+                                                ? '/' . $value->name . (!empty($value->extension) ? '.' . $value->extension : '')
                                                 : ''
                                         )
                                 );
 
-                            $icon = $fileIconFunction(FileUtils::getExtensionType($value->getExtension()));
+                            $icon = $fileIconFunction(FileUtils::getExtensionType($value->extension));
                         ?>
                     <tr tabindex="0" data-href="<?= $url; ?>">
                         <td data-label="<?= $this->getHtml('Type'); ?>"><a href="<?= $url; ?>"><i class="fa fa-<?= $this->printHtml($icon); ?>"></i></a>
                         <td data-label="<?= $this->getHtml('Name'); ?>"><a href="<?= $url; ?>">
                             <?= $this->printHtml(
-                                $value->getExtension() !== 'collection'
-                                    ? $value->getName() . (
-                                        $value->getExtension() !== '' ? '.' . $value->getExtension() : ''
-                                    ) : $value->getName()); ?>
+                                $value->extension !== 'collection'
+                                    ? $value->name . (
+                                        $value->extension !== '' ? '.' . $value->extension : ''
+                                    ) : $value->name); ?>
                             </a>
-                        <td data-label="<?= $this->getHtml('Extension'); ?>"><a href="<?= $url; ?>"><?= $this->printHtml($value->getExtension()); ?></a>
+                        <td data-label="<?= $this->getHtml('Extension'); ?>"><a href="<?= $url; ?>"><?= $this->printHtml($value->extension); ?></a>
                         <td data-label="<?= $this->getHtml('Size'); ?>"><a href="<?= $url; ?>"><?php
-                            $size = FileSizeType::autoFormat($value->getSize());
-                            echo $this->printHtml($value->getExtension() !== 'collection' ? \number_format($size[0], 1, '.', ','). $size[1] : ''); ?></a>
-                        <td data-label="<?= $this->getHtml('Creator'); ?>"><a href="<?= $url; ?>"><?= $this->printHtml($value->getCreatedBy()->getName1()); ?></a>
-                        <td data-label="<?= $this->getHtml('Created'); ?>"><a href="<?= $url; ?>"><?= $this->printHtml($value->getCreatedAt()->format('Y-m-d H:i:s')); ?></a>
+                            $size = FileSizeType::autoFormat($value->size);
+                            echo $this->printHtml($value->extension !== 'collection' ? \number_format($size[0], 1, '.', ','). $size[1] : ''); ?></a>
+                        <td data-label="<?= $this->getHtml('Creator'); ?>"><a href="<?= $url; ?>"><?= $this->printHtml($value->createdBy->name1); ?></a>
+                        <td data-label="<?= $this->getHtml('Created'); ?>"><a href="<?= $url; ?>"><?= $this->printHtml($value->createdAt->format('Y-m-d H:i:s')); ?></a>
                         <?php endforeach; ?>
                     <?php if ($count === 0) : ?>
                         <tr><td colspan="6" class="empty"><?= $this->getHtml('Empty', '0', '0'); ?>

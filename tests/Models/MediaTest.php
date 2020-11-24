@@ -36,17 +36,17 @@ class MediaTest extends \PHPUnit\Framework\TestCase
     public function testDefault() : void
     {
         self::assertEquals(0, $this->media->getId());
-        self::assertEquals(0, $this->media->getCreatedBy()->getId());
-        self::assertEquals((new \DateTime('now'))->format('Y-m-d'), $this->media->getCreatedAt()->format('Y-m-d'));
-        self::assertEquals('', $this->media->getExtension());
+        self::assertEquals(0, $this->media->createdBy->getId());
+        self::assertEquals((new \DateTime('now'))->format('Y-m-d'), $this->media->createdAt->format('Y-m-d'));
+        self::assertEquals('', $this->media->extension);
         self::assertEquals('', $this->media->getPath());
-        self::assertFalse($this->media->isAbsolute());
-        self::assertEquals('', $this->media->getName());
-        self::assertEquals('', $this->media->getDescription());
-        self::assertEquals('', $this->media->getDescriptionRaw());
+        self::assertFalse($this->media->isAbsolute);
+        self::assertEquals('', $this->media->name);
+        self::assertEquals('', $this->media->description);
+        self::assertEquals('', $this->media->descriptionRaw);
         self::assertEquals('/', $this->media->getVirtualPath());
-        self::assertEquals(0, $this->media->getSize());
-        self::assertFalse($this->media->isVersioned());
+        self::assertEquals(0, $this->media->size);
+        self::assertFalse($this->media->isVersioned);
         self::assertFalse($this->media->compareNonce('something'));
         self::assertFalse($this->media->isEncrypted());
     }
@@ -57,8 +57,8 @@ class MediaTest extends \PHPUnit\Framework\TestCase
      */
     public function testCreatedByInputOutput() : void
     {
-        $this->media->setCreatedBy(new NullAccount(1));
-        self::assertEquals(1, $this->media->getCreatedBy()->getId());
+        $this->media->createdBy = new NullAccount(1);
+        self::assertEquals(1, $this->media->createdBy->getId());
     }
 
     /**
@@ -67,8 +67,8 @@ class MediaTest extends \PHPUnit\Framework\TestCase
      */
     public function testExtensionInputOutput() : void
     {
-        $this->media->setExtension('pdf');
-        self::assertEquals('pdf', $this->media->getExtension());
+        $this->media->extension = 'pdf';
+        self::assertEquals('pdf', $this->media->extension);
     }
 
     /**
@@ -80,7 +80,7 @@ class MediaTest extends \PHPUnit\Framework\TestCase
         $this->media->setPath('/home/root');
         self::assertEquals('home/root', $this->media->getPath());
 
-        $this->media->setAbsolute(true);
+        $this->media->isAbsolute = true;
         self::assertEquals('/home/root', $this->media->getPath());
     }
 
@@ -90,8 +90,8 @@ class MediaTest extends \PHPUnit\Framework\TestCase
      */
     public function testAbsolutePathInputOutput() : void
     {
-        $this->media->setAbsolute(true);
-        self::assertTrue($this->media->isAbsolute());
+        $this->media->isAbsolute = true;
+        self::assertTrue($this->media->isAbsolute);
     }
 
     /**
@@ -100,8 +100,8 @@ class MediaTest extends \PHPUnit\Framework\TestCase
      */
     public function testNameInputOutput() : void
     {
-        $this->media->setName('Report');
-        self::assertEquals('Report', $this->media->getName());
+        $this->media->name = 'Report';
+        self::assertEquals('Report', $this->media->name);
     }
 
     /**
@@ -110,8 +110,8 @@ class MediaTest extends \PHPUnit\Framework\TestCase
      */
     public function testDescriptionInputOutput() : void
     {
-        $this->media->setDescription('This is a description');
-        self::assertEquals('This is a description', $this->media->getDescription());
+        $this->media->description = 'This is a description';
+        self::assertEquals('This is a description', $this->media->description);
     }
 
     /**
@@ -120,8 +120,8 @@ class MediaTest extends \PHPUnit\Framework\TestCase
      */
     public function testDescriptionRawInputOutput() : void
     {
-        $this->media->setDescriptionRaw('This is a description raw');
-        self::assertEquals('This is a description raw', $this->media->getDescriptionRaw());
+        $this->media->descriptionRaw = 'This is a description raw';
+        self::assertEquals('This is a description raw', $this->media->descriptionRaw);
     }
 
     /**
@@ -130,8 +130,8 @@ class MediaTest extends \PHPUnit\Framework\TestCase
      */
     public function testSizeInputOutput() : void
     {
-        $this->media->setSize(11);
-        self::assertEquals(11, $this->media->getSize());
+        $this->media->size = 11;
+        self::assertEquals(11, $this->media->size);
     }
 
     /**
@@ -140,8 +140,8 @@ class MediaTest extends \PHPUnit\Framework\TestCase
      */
     public function testVersionedInputOutput() : void
     {
-        $this->media->setVersioned(true);
-        self::assertTrue($this->media->isVersioned());
+        $this->media->isVersioned = true;
+        self::assertTrue($this->media->isVersioned);
     }
 
     /**
@@ -160,8 +160,8 @@ class MediaTest extends \PHPUnit\Framework\TestCase
      */
     public function testHiddenInputOutput() : void
     {
-        $this->media->setHidden(true);
-        self::assertTrue($this->media->isHidden());
+        $this->media->isHidden = true;
+        self::assertTrue($this->media->isHidden);
     }
 
     /**
@@ -193,17 +193,17 @@ class MediaTest extends \PHPUnit\Framework\TestCase
      */
     public function testSerialize() : void
     {
-        $this->media->setCreatedBy($acc = new NullAccount(1));
-        $this->media->setExtension('pdf');
+        $this->media->createdBy = $acc = new NullAccount(1);
+        $this->media->extension = 'pdf';
         $this->media->setPath('/home/root');
-        $this->media->setAbsolute(true);
-        $this->media->setName('Report');
-        $this->media->setDescription('This is a description');
-        $this->media->setDescriptionRaw('This is a description raw');
-        $this->media->setSize(11);
-        $this->media->setVersioned(true);
+        $this->media->isAbsolute = true;
+        $this->media->name = 'Report';
+        $this->media->description = 'This is a description';
+        $this->media->descriptionRaw = 'This is a description raw';
+        $this->media->size = 11;
+        $this->media->isVersioned = true;
         $this->media->setVirtualPath('/test/path');
-        $this->media->setHidden(true);
+        $this->media->isHidden = true;
 
         self::assertEquals($this->media->toArray(), $this->media->jsonSerialize());
 

@@ -71,7 +71,7 @@ trait ApiControllerMediaTrait
         $response = new HttpResponse();
         $request  = new HttpRequest(new HttpUri(''));
 
-        $request->getHeader()->setAccount(1);
+        $request->header->account = 1;
         $request->setData('name', 'Test Upload');
 
         if (!\is_dir(__DIR__ . '/temp')) {
@@ -119,7 +119,7 @@ trait ApiControllerMediaTrait
         $response = new HttpResponse();
         $request  = new HttpRequest(new HttpUri(''));
 
-        $request->getHeader()->setAccount(1);
+        $request->header->account = 1;
         $request->setData('name', 'Test Upload');
         $request->setData('pathsettings', PathSettings::FILE_PATH);
         $request->setData('path', '/../tests/Controller/test/path'); // change path from Media/Files to this path
@@ -185,7 +185,7 @@ trait ApiControllerMediaTrait
         $response = new HttpResponse();
         $request  = new HttpRequest(new HttpUri(''));
 
-        $request->getHeader()->setAccount(1);
+        $request->header->account = 1;
         $request->setData('name', 'Test Media');
         $request->setData('pathsettings', PathSettings::FILE_PATH);
         $request->setData('path', '/../tests/Controller/test/path'); // change path from Media/Files to this path
@@ -222,14 +222,14 @@ trait ApiControllerMediaTrait
         $response = new HttpResponse();
         $request  = new HttpRequest(new HttpUri(''));
 
-        $request->getHeader()->setAccount(1);
+        $request->header->account = 1;
         $request->setData('id', $id);
         $request->setData('name', 'Test Changed');
         $request->setData('content', 'Test Content');
         $this->module->apiMediaUpdate($request, $response);
 
         $media = MediaMapper::get($id);
-        self::assertEquals('Test Changed', $media->getName());
+        self::assertEquals('Test Changed', $media->name);
         self::assertEquals('Test Content', \file_get_contents(__DIR__ . '/../test/path/testFile1.txt'));
 
         Directory::delete(__DIR__ . '/../test');
@@ -244,7 +244,7 @@ trait ApiControllerMediaTrait
         $response = new HttpResponse();
         $request  = new HttpRequest(new HttpUri(''));
 
-        $request->getHeader()->setAccount(1);
+        $request->header->account = 1;
         $request->setData('name', 'Created File');
         $request->setData('content', 'file content');
         $request->setData('filename', 'created.md');

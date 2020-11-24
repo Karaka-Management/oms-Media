@@ -38,7 +38,7 @@ class Collection extends Media implements \Iterator
      * @var string
      * @since 1.0.0
      */
-    protected string $extension = 'collection';
+    public string $extension = 'collection';
 
     /**
      * Is collection.
@@ -47,17 +47,6 @@ class Collection extends Media implements \Iterator
      * @since 1.0.0
      */
     protected int $collection = 1;
-
-    /**
-     * Constructor.
-     *
-     * @since 1.0.0
-     */
-    public function __construct()
-    {
-        parent::__construct();
-        $this->setExtension('colection');
-    }
 
     /**
      * Set sources.

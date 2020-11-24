@@ -115,28 +115,28 @@ final class BackendController extends Controller
 
         if (\is_array($collection) && \is_dir(__DIR__ . '/../Files' . $path)) {
             $collection = new Collection();
-            $collection->setName(\basename($path));
+            $collection->name = \basename($path);
             $collection->setVirtualPath(\dirname($path));
             $collection->setPath(\dirname($path));
-            $collection->setAbsolute(false);
+            $collection->isAbsolute = false;
         }
 
         if ($collection instanceof Collection) {
             $media += $collection->getSources();
 
             /** @var string[] $glob */
-            $glob = $collection->isAbsolute()
-                ? $collection->getPath() . '/' . $collection->getName() . '/*'
-                : \glob(__DIR__ . '/../Files/' . \rtrim($collection->getPath(), '/') . '/' . $collection->getName() . '/*');
+            $glob = $collection->isAbsolute
+                ? $collection->getPath() . '/' . $collection->name . '/*'
+                : \glob(__DIR__ . '/../Files/' . \rtrim($collection->getPath(), '/') . '/' . $collection->name . '/*');
             $glob = $glob === false ? [] : $glob;
 
             foreach ($glob as $file) {
                 foreach ($media as $obj) {
-                    if (($obj->getExtension() !== 'collection'
-                            && !empty($obj->getExtension())
-                            && $obj->getName() . '.' . $obj->getExtension() === \basename($file))
-                        || ($obj->getExtension() === 'collection'
-                            && $obj->getName() === \basename($file))
+                    if (($obj->extension !== 'collection'
+                            && !empty($obj->extension)
+                            && $obj->name . '.' . $obj->extension === \basename($file))
+                        || ($obj->extension === 'collection'
+                            && $obj->name === \basename($file))
                     ) {
                         continue 2;
                     }
@@ -145,10 +145,10 @@ final class BackendController extends Controller
                 $pathinfo = \pathinfo($file);
 
                 $localMedia = new Media();
-                $localMedia->setName($pathinfo['filename']);
-                $localMedia->setExtension(\is_dir($file) ? 'collection' : $pathinfo['extension'] ?? '');
+                $localMedia->name = $pathinfo['filename'];
+                $localMedia->extension = \is_dir($file) ? 'collection' : $pathinfo['extension'] ?? '';
                 $localMedia->setVirtualPath($path);
-                $localMedia->setCreatedBy(new Account());
+                $localMedia->createdBy = new Account();
 
                 $media[] = $localMedia;
             }
@@ -180,15 +180,15 @@ final class BackendController extends Controller
 
         $id    = (int) $request->getData('id');
         $media = MediaMapper::get($id);
-        if ($media->getExtension() === 'collection') {
+        if ($media->extension === 'collection') {
             $media = MediaMapper::getByVirtualPath(
-                $media->getVirtualPath() . ($media->getVirtualPath() !== '/' ? '/' : '') . $media->getName()
+                $media->getVirtualPath() . ($media->getVirtualPath() !== '/' ? '/' : '') . $media->name
             );
 
             $collection = CollectionMapper::get((int) $request->getData('id'));
             $media      = \array_merge($media, $collection->getSources());
 
-            $view->addData('path', $collection->getVirtualPath() . '/' . $collection->getName());
+            $view->addData('path', $collection->getVirtualPath() . '/' . $collection->name);
             $view->setTemplate('/Modules/Media/Theme/Backend/media-list');
         }
 
@@ -200,11 +200,11 @@ final class BackendController extends Controller
             ) {
                 $name = \explode('.', \basename($path));
 
-                $media->setName($name[0]);
-                $media->setExtension($name[1] ?? '');
+                $media->name = $name[0];
+                $media->extension = $name[1] ?? '';
                 $media->setVirtualPath(\dirname($path));
                 $media->setPath('/Modules/Media/Files/' . \ltrim($path, '\\/'));
-                $media->setAbsolute(false);
+                $media->isAbsolute = false;
             }
         }
 

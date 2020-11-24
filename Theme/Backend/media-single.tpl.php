@@ -39,18 +39,18 @@ echo $this->getData('nav')->render();
 <div class="row">
     <div class="col-xs-12">
         <section class="portlet">
-            <div class="portlet-head"><?= $this->printHtml($media->getName()); ?></div>
+            <div class="portlet-head"><?= $this->printHtml($media->name); ?></div>
             <div class="portlet-body">
                 <table class="list w-100">
                     <tbody>
-                        <tr><td><?= $this->getHtml('Name'); ?><td class="wf-100"><?= $this->printHtml($media->getName()); ?>
-                        <tr><td><?= $this->getHtml('Size'); ?><td class="wf-100"><?= $this->printHtml($media->getSize()); ?>
-                        <tr><td><?= $this->getHtml('Created'); ?><td><?= $this->printHtml($media->getCreatedAt()->format('Y-m-d')); ?>
-                        <tr><td><?= $this->getHtml('Creator'); ?><td><a href="<?= UriFactory::build('{/prefix}profile/single?for=' . $media->getCreatedBy()->getId()); ?>"><?= $this->printHtml(
-                                \ltrim($media->getCreatedBy()->getName2() . ', ' . $media->getCreatedBy()->getName1(), ', ')
+                        <tr><td><?= $this->getHtml('Name'); ?><td class="wf-100"><?= $this->printHtml($media->name); ?>
+                        <tr><td><?= $this->getHtml('Size'); ?><td class="wf-100"><?= $this->printHtml($media->size); ?>
+                        <tr><td><?= $this->getHtml('Created'); ?><td><?= $this->printHtml($media->createdAt->format('Y-m-d')); ?>
+                        <tr><td><?= $this->getHtml('Creator'); ?><td><a href="<?= UriFactory::build('{/prefix}profile/single?for=' . $media->createdBy->getId()); ?>"><?= $this->printHtml(
+                                \ltrim($media->createdBy->name2 . ', ' . $media->createdBy->name1, ', ')
                             ); ?></a>
                         <tr><td colspan="2"><?= $this->getHtml('Description'); ?>
-                        <tr><td colspan="2"><?= $media->getDescription(); ?>
+                        <tr><td colspan="2"><?= $media->description; ?>
                 </table>
             </div>
             <?php
@@ -88,20 +88,20 @@ echo $this->getData('nav')->render();
                     <td><?= $this->getHtml('Created'); ?>
                 <tbody>
                     <?php
-                        if (!\is_dir($media->isAbsolute() ? $media->getPath() : __DIR__ . '/../../../../' . \ltrim($media->getPath(), '//'))
+                        if (!\is_dir($media->isAbsolute ? $media->getPath() : __DIR__ . '/../../../../' . \ltrim($media->getPath(), '//'))
                             || $media->getPath() === ''
                         ) :
                             foreach ($media as $key => $value) :
                                 $url  = UriFactory::build('{/prefix}media/single?{?}&id=' . $value->getId());
-                                $icon = $fileIconFunction(FileUtils::getExtensionType($value->getExtension()));
+                                $icon = $fileIconFunction(FileUtils::getExtensionType($value->extension));
                         ?>
                         <tr data-href="<?= $url; ?>">
                             <td><a href="<?= $url; ?>"><i class="fa fa-<?= $this->printHtml($icon); ?>"></i></a>
-                            <td><a href="<?= $url; ?>"><?= $this->printHtml($value->getName()); ?></a>
-                            <td><a href="<?= $url; ?>"><?= $this->printHtml($value->getExtension()); ?></a>
-                            <td><a href="<?= $url; ?>"><?= $this->printHtml($value->getSize()); ?></a>
-                            <td><a href="<?= $url; ?>"><?= $this->printHtml($value->getCreatedBy()->getName1()); ?></a>
-                            <td><a href="<?= $url; ?>"><?= $this->printHtml($value->getCreatedAt()->format('Y-m-d H:i:s')); ?></a>
+                            <td><a href="<?= $url; ?>"><?= $this->printHtml($value->name); ?></a>
+                            <td><a href="<?= $url; ?>"><?= $this->printHtml($value->extension); ?></a>
+                            <td><a href="<?= $url; ?>"><?= $this->printHtml($value->size); ?></a>
+                            <td><a href="<?= $url; ?>"><?= $this->printHtml($value->createdBy->name1); ?></a>
+                            <td><a href="<?= $url; ?>"><?= $this->printHtml($value->createdAt->format('Y-m-d H:i:s')); ?></a>
                     <?php endforeach; else : $path = $this->dirPathFunction($media, $this->request->getData('sub') ?? ''); ?>
                         <?php $list                = \phpOMS\System\File\Local\Directory::list($path);
                             foreach ($list as $key => $value) :
@@ -128,19 +128,19 @@ echo $this->getData('nav')->render();
 
                 if ($this->isImageFile($media, $path)) : ?>
                     <div class="h-overflow centerText">
-                        <img style="max-width: 100%" src="<?= $media->getPath(); ?>" alt="<?= $this->printHtml($media->getName()); ?>">
+                        <img style="max-width: 100%" src="<?= $media->getPath(); ?>" alt="<?= $this->printHtml($media->name); ?>">
                     </div>
                 <?php elseif ($this->isTextFile($media, $path)) : ?>
                     <!-- if markdown show markdown editor, if image show image editor, if text file show textarea only on edit -->
 
-                    <?php if (!\is_file(($media->isAbsolute() ? '' : __DIR__ . '/../../../../') . $media->getPath())) : ?>
+                    <?php if (!\is_file(($media->isAbsolute ? '' : __DIR__ . '/../../../../') . $media->getPath())) : ?>
                         <div class="centerText"><i class="fa fa-question fa-5x"></i></div>
                     <?php else : ?>
                         <template id="iMediaUpdateTpl">
                             <textarea class="textContent" form="iMediaFileUpdate" data-tpl-text="/media/content" data-tpl-value="/media/content" data-marker="tpl" name="content"></textarea>
                         </template>
                         <pre class="textContent" data-tpl-text="/media/content" data-tpl-value="/media/content"><?= $this->printHtml(
-                            $this->getFileContent(($media->isAbsolute() ? '' : __DIR__ . '/../../../../') . $media->getPath())
+                            $this->getFileContent(($media->isAbsolute ? '' : __DIR__ . '/../../../../') . $media->getPath())
                         ); ?></pre>
                     <?php endif; ?>
                 <?php endif; ?>

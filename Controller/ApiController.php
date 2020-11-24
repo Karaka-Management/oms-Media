@@ -34,6 +34,7 @@ use phpOMS\Message\ResponseAbstract;
 use phpOMS\Model\Message\FormValidation;
 use phpOMS\System\File\Local\Directory;
 use phpOMS\Utils\Parser\Markdown\Markdown;
+use phpOMS\System\File\FileUtils;
 
 /**
  * Media class.
@@ -88,7 +89,7 @@ final class ApiController extends Controller
         $uploads = $this->uploadFiles(
             $request->getData('name') === null || $request->getFiles() !== null ? '' : $request->getData('name'),
             $request->getFiles(),
-            $request->getHeader()->getAccount(),
+            $request->header->account,
             __DIR__ . '/../../../Modules/Media/Files' . \urldecode((string) ($request->getData('path') ?? '')),
             \urldecode((string) ($request->getData('virtualpath') ?? '')),
             (string) ($request->getData('type') ?? ''),
@@ -240,12 +241,12 @@ final class ApiController extends Controller
         $media = new Media();
 
         $media->setPath(self::normalizeDbPath($status['path']) . '/' . $status['filename']);
-        $media->setName($status['name']);
-        $media->setSize($status['size']);
-        $media->setCreatedBy(new NullAccount($account));
-        $media->setExtension($status['extension']);
+        $media->name = $status['name'];
+        $media->size = $status['size'];
+        $media->createdBy = new NullAccount($account);
+        $media->extension = $status['extension'];
         $media->setVirtualPath($virtualPath);
-        $media->setType($type);
+        $media->type = $type;
 
         MediaMapper::create($media);
 
@@ -296,7 +297,7 @@ final class ApiController extends Controller
         /** @var Media $new */
         $new = $this->updateMediaFromRequest($request);
 
-        $this->updateModel($request->getHeader()->getAccount(), $old, $new, MediaMapper::class, 'media', $request->getOrigin());
+        $this->updateModel($request->header->account, $old, $new, MediaMapper::class, 'media', $request->getOrigin());
         $this->fillJsonResponse($request, $response, NotificationLevel::OK, 'Media', 'Media successfully updated', $new);
     }
 
@@ -315,8 +316,8 @@ final class ApiController extends Controller
 
         /** @var Media $media */
         $media = MediaMapper::get($id);
-        $media->setName((string) ($request->getData('name') ?? $media->getName()));
-        $media->setDescription((string) ($request->getData('description') ?? $media->getDescription()));
+        $media->name = (string) ($request->getData('name') ?? $media->name);
+        $media->description = (string) ($request->getData('description') ?? $media->description);
         $media->setPath((string) ($request->getData('path') ?? $media->getPath()));
         $media->setVirtualPath(\urldecode((string) ($request->getData('virtualpath') ?? $media->getVirtualPath())));
 
@@ -327,20 +328,20 @@ final class ApiController extends Controller
         ) {
             $name = \explode('.', \basename($path));
 
-            $media->setName($name[0]);
-            $media->setExtension($name[1] ?? '');
+            $media->name = $name[0];
+            $media->extension = $name[1] ?? '';
             $media->setVirtualPath(\dirname($path));
             $media->setPath('/Modules/Media/Files/' . \ltrim($path, '\\/'));
-            $media->setAbsolute(false);
+            $media->isAbsolute = false;
         }
 
         if ($request->getData('content') !== null) {
             \file_put_contents(
-                $media->isAbsolute() ? $media->getPath() : __DIR__ . '/../../../' . \ltrim($media->getPath(), '\\/'),
+                $media->isAbsolute ? $media->getPath() : __DIR__ . '/../../../' . \ltrim($media->getPath(), '\\/'),
                 $request->getData('content')
             );
 
-            $media->setSize(\strlen($request->getData('content')));
+            $media->size = \strlen($request->getData('content'));
         }
 
         return $media;
@@ -363,13 +364,13 @@ final class ApiController extends Controller
     {
         if (!empty($val = $this->validateCollectionCreate($request))) {
             $response->set('collection_create', new FormValidation($val));
-            $response->getHeader()->setStatusCode(RequestStatusCode::R_400);
+            $response->header->status = RequestStatusCode::R_400;
 
             return;
         }
 
         $collection = $this->createCollectionFromRequest($request);
-        $this->createModel($request->getHeader()->getAccount(), $collection, CollectionMapper::class, 'collection', $request->getOrigin());
+        $this->createModel($request->header->account, $collection, CollectionMapper::class, 'collection', $request->getOrigin());
         $this->fillJsonResponse($request, $response, NotificationLevel::OK, 'Collection', 'Collection successfully created.', $collection);
     }
 
@@ -404,10 +405,10 @@ final class ApiController extends Controller
     private function createCollectionFromRequest(RequestAbstract $request) : Collection
     {
         $mediaCollection = new Collection();
-        $mediaCollection->setName($request->getData('name') ?? '');
-        $mediaCollection->setDescription($description = Markdown::parse($request->getData('description') ?? ''));
-        $mediaCollection->setDescriptionRaw($description);
-        $mediaCollection->setCreatedBy(new NullAccount($request->getHeader()->getAccount()));
+        $mediaCollection->name = $request->getData('name') ?? '';
+        $mediaCollection->description = ($description = Markdown::parse($request->getData('description') ?? ''));
+        $mediaCollection->descriptionRaw = $description;
+        $mediaCollection->createdBy = new NullAccount($request->header->account);
 
         $media = $request->getDataJson('media-list');
         foreach ($media as $file) {
@@ -459,10 +460,10 @@ final class ApiController extends Controller
 
         /* Create collection */
         $mediaCollection = new Collection();
-        $mediaCollection->setName($name);
-        $mediaCollection->setDescription(Markdown::parse($description));
-        $mediaCollection->setDescriptionRaw($description);
-        $mediaCollection->setCreatedBy(new NullAccount($account));
+        $mediaCollection->name = $name;
+        $mediaCollection->description = Markdown::parse($description);
+        $mediaCollection->descriptionRaw = $description;
+        $mediaCollection->createdBy = new NullAccount($account);
         $mediaCollection->setSources($media);
         $mediaCollection->setVirtualPath('/');
         $mediaCollection->setPath('/Modules/Media/Files');
@@ -496,7 +497,7 @@ final class ApiController extends Controller
         } else {
             if (\stripos(
                     FileUtils::absolute(__DIR__ . '/../../../Modules/Media/Files/' . \ltrim($path, '\\/')),
-                    FileUtils::absolute(__DIR__ . '/../../../Modules/Media/Files/')
+                    FileUtils::absolute(__DIR__ . '/../../../')
                 ) !== 0
             ) {
                 $outputDir = self::createMediaPath(__DIR__ . '/../../../Modules/Media/Files');
@@ -527,7 +528,7 @@ final class ApiController extends Controller
             ],
         ];
 
-        $created = $this->createDbEntries($status, $request->getHeader()->getAccount(), $virtualPath, $request->getData('type') ?? '');
+        $created = $this->createDbEntries($status, $request->header->account, $virtualPath, $request->getData('type') ?? '');
 
         $ids = [];
         foreach ($created as $file) {

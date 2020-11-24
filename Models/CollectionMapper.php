@@ -129,19 +129,19 @@ final class CollectionMapper extends MediaMapper
             $parent = CollectionMapper::getParentCollection($path);
             if (\is_array($parent) && \is_dir(__DIR__ . '/../../Media/Files' . $path)) {
                 $parent = new Collection();
-                $parent->setName(\basename($path));
+                $parent->name = \basename($path);
                 $parent->setVirtualPath(\dirname($path));
                 $parent->setPath(\dirname($path));
-                $parent->setAbsolute(false);
+                $parent->isAbsolute = false;
             }
 
             if ($parent instanceof Collection) {
                 $collection += $parent->getSources();
 
                 /** @var string[] $glob */
-                $glob = $parent->isAbsolute()
-                    ? $parent->getPath() . '/' . $parent->getName() . '/*'
-                    : \glob(__DIR__ . '/../Files/' . \rtrim($parent->getPath(), '/') . '/' . $parent->getName() . '/*');
+                $glob = $parent->isAbsolute
+                    ? $parent->getPath() . '/' . $parent->name . '/*'
+                    : \glob(__DIR__ . '/../Files/' . \rtrim($parent->getPath(), '/') . '/' . $parent->name . '/*');
                 $glob = $glob === false ? [] : $glob;
 
                 foreach ($glob as $file) {
@@ -150,11 +150,11 @@ final class CollectionMapper extends MediaMapper
                     }
 
                     foreach ($collection as $obj) {
-                        if (($obj->getExtension() !== 'collection'
-                                && !empty($obj->getExtension())
-                                && $obj->getName() . '.' . $obj->getExtension() === \basename($file))
-                            || ($obj->getExtension() === 'collection'
-                                && $obj->getName() === \basename($file))
+                        if (($obj->extension !== 'collection'
+                                && !empty($obj->extension)
+                                && $obj->name . '.' . $obj->extension === \basename($file))
+                            || ($obj->extension === 'collection'
+                                && $obj->name === \basename($file))
                         ) {
                             continue 2;
                         }
@@ -163,10 +163,10 @@ final class CollectionMapper extends MediaMapper
                     $pathinfo = \pathinfo($file);
 
                     $localMedia = new Collection();
-                    $localMedia->setName($pathinfo['filename']);
-                    $localMedia->setExtension(\is_dir($file) ? 'collection' : $pathinfo['extension'] ?? '');
+                    $localMedia->name = $pathinfo['filename'];
+                    $localMedia->extension = \is_dir($file) ? 'collection' : $pathinfo['extension'] ?? '';
                     $localMedia->setVirtualPath($path);
-                    $localMedia->setCreatedBy(new Account());
+                    $localMedia->createdBy = new Account();
 
                     $collection[] = $localMedia;
                 }

@@ -46,7 +46,7 @@ class MediaViewTest extends \PHPUnit\Framework\TestCase
         );
 
         $media->setPath(__DIR__);
-        $media->setAbsolute(true);
+        $media->isAbsolute = true;
         self::assertEquals(
             __DIR__ . '/MediaViewTest.php',
             $method->invoke($this->view, $media, '/MediaViewTest.php')
@@ -70,7 +70,7 @@ class MediaViewTest extends \PHPUnit\Framework\TestCase
         );
 
         $media->setPath(\realpath(__DIR__ . '/../'));
-        $media->setAbsolute(true);
+        $media->isAbsolute = true;
         self::assertEquals(
             \realpath(__DIR__ . '/../Controller'),
             $method->invoke($this->view, $media, '/Controller')
@@ -88,27 +88,27 @@ class MediaViewTest extends \PHPUnit\Framework\TestCase
 
         $media = new Media();
         $media->setPath(__DIR__);
-        $media->setAbsolute(true);
+        $media->isAbsolute = true;
         self::assertFalse(
             $method->invoke($this->view, $media, '/sub/path')
         );
 
         $media->setPath(__DIR__);
-        $media->setAbsolute(true);
-        $media->setExtension('collection');
+        $media->isAbsolute = true;
+        $media->extension = 'collection';
         self::assertFalse(
             $method->invoke($this->view, $media, '/MediaViewTest.php')
         );
 
         $media->setPath(__DIR__ . '/../');
-        $media->setAbsolute(true);
+        $media->isAbsolute = true;
         self::assertTrue(
             $method->invoke($this->view, $media, '/Views/')
         );
 
         $media->setPath(__DIR__);
-        $media->setAbsolute(true);
-        $media->setExtension('collection');
+        $media->isAbsolute = true;
+        $media->extension = 'collection';
         self::assertTrue(
             $method->invoke($this->view, $media, '/something')
         );
@@ -188,14 +188,14 @@ class MediaViewTest extends \PHPUnit\Framework\TestCase
 
         $media = new Media();
         $media->setPath(__DIR__ . '/test.md');
-        $media->setAbsolute(true);
+        $media->isAbsolute = true;
         self::assertFalse(
             $method->invoke($this->view, $media)
         );
 
         $media->setPath(__DIR__ . '/test.jpg');
-        $media->setExtension('jpg');
-        $media->setAbsolute(true);
+        $media->extension = 'jpg';
+        $media->isAbsolute = true;
         self::assertTrue(
             $method->invoke($this->view, $media)
         );
@@ -212,21 +212,21 @@ class MediaViewTest extends \PHPUnit\Framework\TestCase
 
         $media = new Media();
         $media->setPath(__DIR__ . '/test.jpg');
-        $media->setAbsolute(true);
+        $media->isAbsolute = true;
         self::assertFalse(
             $method->invoke($this->view, $media)
         );
 
         $media->setPath(__DIR__ . '/test.md');
-        $media->setExtension('md');
-        $media->setAbsolute(true);
+        $media->extension = 'md';
+        $media->isAbsolute = true;
         self::assertTrue(
             $method->invoke($this->view, $media)
         );
 
         $media->setPath(__DIR__ . '/test.jpg');
-        $media->setExtension('jpg');
-        $media->setAbsolute(true);
+        $media->extension = 'jpg';
+        $media->isAbsolute = true;
         self::assertTrue(
             $method->invoke($this->view, $media, __DIR__ . '/test.md')
         );

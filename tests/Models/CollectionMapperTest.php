@@ -30,26 +30,26 @@ class CollectionMapperTest extends \PHPUnit\Framework\TestCase
     public function testCR() : void
     {
         $media = new Collection();
-        $media->setCreatedBy(new NullAccount(1));
-        $media->setDescription('desc');
-        $media->setDescriptionRaw('descRaw');
+        $media->createdBy = new NullAccount(1);
+        $media->description = 'desc';
+        $media->descriptionRaw = 'descRaw';
         $media->setPath('some/path');
-        $media->setSize(11);
-        $media->setName('Collection');
+        $media->size = 11;
+        $media->name = 'Collection';
         $id = CollectionMapper::create($media);
 
         self::assertGreaterThan(0, $media->getId());
         self::assertEquals($id, $media->getId());
 
         $mediaR = CollectionMapper::get($media->getId());
-        self::assertEquals($media->getCreatedAt()->format('Y-m-d'), $mediaR->getCreatedAt()->format('Y-m-d'));
-        self::assertEquals($media->getCreatedBy()->getId(), $mediaR->getCreatedBy()->getId());
-        self::assertEquals($media->getDescription(), $mediaR->getDescription());
-        self::assertEquals($media->getDescriptionRaw(), $mediaR->getDescriptionRaw());
+        self::assertEquals($media->createdAt->format('Y-m-d'), $mediaR->createdAt->format('Y-m-d'));
+        self::assertEquals($media->createdBy->getId(), $mediaR->createdBy->getId());
+        self::assertEquals($media->description, $mediaR->description);
+        self::assertEquals($media->descriptionRaw, $mediaR->descriptionRaw);
         self::assertEquals($media->getPath(), $mediaR->getPath());
-        self::assertEquals($media->isAbsolute(), $mediaR->isAbsolute());
-        self::assertEquals($media->getSize(), $mediaR->getSize());
-        self::assertEquals($media->getExtension(), $mediaR->getExtension());
-        self::assertEquals($media->getName(), $mediaR->getName());
+        self::assertEquals($media->isAbsolute, $mediaR->isAbsolute);
+        self::assertEquals($media->size, $mediaR->size);
+        self::assertEquals($media->extension, $mediaR->extension);
+        self::assertEquals($media->name, $mediaR->name);
     }
 }

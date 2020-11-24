@@ -48,9 +48,9 @@ use phpOMS\Uri\UriFactory;
                 <div class="portlet-body">
                     <table class="layout wf-100">
                         <tr><td><label for="iVirtualPath"><?= $this->getHtml('VirtualPath'); ?></label>
-                            <tr><td><input type="text" id="iVirtualPath" name="virtualPath" value="<?= empty($this->request->getUri()->getQuery('path')) ? '/' : $this->request->getUri()->getQuery('path'); ?>" disabled>
+                            <tr><td><input type="text" id="iVirtualPath" name="virtualPath" value="<?= empty($this->request->uri->getQuery('path')) ? '/' : $this->request->uri->getQuery('path'); ?>" disabled>
                             <tr><td><label for="iPath"><?= $this->getHtml('Path'); ?></label>
-                            <tr><td><input type="text" id="iPath" name="path" value="<?= empty($this->request->getUri()->getQuery('path')) ? '/' : $this->request->getUri()->getQuery('path'); ?>">
+                            <tr><td><input type="text" id="iPath" name="path" value="<?= empty($this->request->uri->getQuery('path')) ? '/' : $this->request->uri->getQuery('path'); ?>">
                         <tr><td><label><?= $this->getHtml('Settings'); ?></label>
                         <tr><td>
                                 <label class="checkbox" for="iAddCollection">

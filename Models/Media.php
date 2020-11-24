@@ -41,7 +41,7 @@ class Media implements \JsonSerializable
      * @var string
      * @since 1.0.0
      */
-    protected string $name = '';
+    public string $name = '';
 
     /**
      * Type.
@@ -49,7 +49,7 @@ class Media implements \JsonSerializable
      * @var string
      * @since 1.0.0
      */
-    protected string $type = '';
+    public string $type = '';
 
     /**
      * Extension.
@@ -57,7 +57,7 @@ class Media implements \JsonSerializable
      * @var string
      * @since 1.0.0
      */
-    protected string $extension = '';
+    public string $extension = '';
 
     /**
      * File size in bytes.
@@ -65,7 +65,7 @@ class Media implements \JsonSerializable
      * @var int
      * @since 1.0.0
      */
-    protected int $size = 0;
+    public int $size = 0;
 
     /**
      * Author.
@@ -73,7 +73,7 @@ class Media implements \JsonSerializable
      * @var Account
      * @since 1.0.0
      */
-    protected Account $createdBy;
+    public Account $createdBy;
 
     /**
      * Uploaded.
@@ -81,7 +81,7 @@ class Media implements \JsonSerializable
      * @var \DateTimeImmutable
      * @since 1.0.0
      */
-    protected \DateTimeImmutable $createdAt;
+    public \DateTimeImmutable $createdAt;
 
     /**
      * Resource path.
@@ -105,7 +105,7 @@ class Media implements \JsonSerializable
      * @var bool
      * @since 1.0.0
      */
-    protected bool $isAbsolute = false;
+    public bool $isAbsolute = false;
 
     /**
      * Is versioned.
@@ -113,7 +113,7 @@ class Media implements \JsonSerializable
      * @var bool
      * @since 1.0.0
      */
-    protected bool $versioned = false;
+    public bool $isVersioned = false;
 
     /**
      * Media Description.
@@ -121,7 +121,7 @@ class Media implements \JsonSerializable
      * @var string
      * @since 1.0.0
      */
-    protected string $description = '';
+    public string $description = '';
 
     /**
      * Media Description.
@@ -129,7 +129,7 @@ class Media implements \JsonSerializable
      * @var string
      * @since 1.0.0
      */
-    protected string $descriptionRaw = '';
+    public string $descriptionRaw = '';
 
     /**
      * Media encryption nonce.
@@ -153,7 +153,7 @@ class Media implements \JsonSerializable
      * @var bool
      * @since 1.0.0
      */
-    protected bool $hidden = false;
+    public bool $isHidden = false;
 
     /**
      * Is collection.
@@ -299,56 +299,6 @@ class Media implements \JsonSerializable
     }
 
     /**
-     * @return bool
-     *
-     * @since 1.0.0
-     */
-    public function isAbsolute() : bool
-    {
-        return $this->isAbsolute;
-    }
-
-    /**
-     * @return void
-     *
-     * @since 1.0.0
-     */
-    public function setAbsolute(bool $absolute) : void
-    {
-        $this->isAbsolute = $absolute;
-    }
-
-    /**
-     * @return Account
-     *
-     * @since 1.0.0
-     */
-    public function getCreatedBy() : Account
-    {
-        return $this->createdBy;
-    }
-
-    /**
-     * @return \DateTimeImmutable
-     *
-     * @since 1.0.0
-     */
-    public function getCreatedAt() : \DateTimeImmutable
-    {
-        return $this->createdAt;
-    }
-
-    /**
-     * @return string
-     *
-     * @since 1.0.0
-     */
-    public function getExtension() : string
-    {
-        return $this->extension;
-    }
-
-    /**
      * @return string
      *
      * @since 1.0.0
@@ -366,90 +316,6 @@ class Media implements \JsonSerializable
     public function getVirtualPath() : string
     {
         return $this->virtualPath;
-    }
-
-    /**
-     * @return string
-     *
-     * @since 1.0.0
-     */
-    public function getName() : string
-    {
-        return $this->name;
-    }
-
-    /**
-     * @return string
-     *
-     * @since 1.0.0
-     */
-    public function getType() : string
-    {
-        return $this->type;
-    }
-
-    /**
-     * @return string
-     *
-     * @since 1.0.0
-     */
-    public function getDescription() : string
-    {
-        return $this->description;
-    }
-
-    /**
-     * @return string
-     *
-     * @since 1.0.0
-     */
-    public function getDescriptionRaw() : string
-    {
-        return $this->descriptionRaw;
-    }
-
-    /**
-     * @return int
-     *
-     * @since 1.0.0
-     */
-    public function getSize() : int
-    {
-        return $this->size;
-    }
-
-    /**
-     * @return bool
-     *
-     * @since 1.0.0
-     */
-    public function isVersioned() : bool
-    {
-        return $this->versioned;
-    }
-
-    /**
-     * @param Account $createdBy Creator
-     *
-     * @return void
-     *
-     * @since 1.0.0
-     */
-    public function setCreatedBy(Account $createdBy) : void
-    {
-        $this->createdBy = $createdBy;
-    }
-
-    /**
-     * @param string $extension Extension
-     *
-     * @return void
-     *
-     * @since 1.0.0
-     */
-    public function setExtension(string $extension) : void
-    {
-        $this->extension = $extension;
     }
 
     /**
@@ -477,100 +343,6 @@ class Media implements \JsonSerializable
     }
 
     /**
-     * @param string $name Media name (not file name)
-     *
-     * @return void
-     *
-     * @since 1.0.0
-     */
-    public function setName(string $name) : void
-    {
-        $this->name = $name;
-    }
-
-    /**
-     * @param string $type Media type
-     *
-     * @return void
-     *
-     * @since 1.0.0
-     */
-    public function setType(string $type) : void
-    {
-        $this->type = $type;
-    }
-
-    /**
-     * @param string $description Media description
-     *
-     * @return void
-     *
-     * @since 1.0.0
-     */
-    public function setDescription(string $description) : void
-    {
-        $this->description = $description;
-    }
-
-    /**
-     * @param string $description Media description
-     *
-     * @return void
-     *
-     * @since 1.0.0
-     */
-    public function setDescriptionRaw(string $description) : void
-    {
-        $this->descriptionRaw = $description;
-    }
-
-    /**
-     * @param int $size Filesize
-     *
-     * @return void
-     *
-     * @since 1.0.0
-     */
-    public function setSize(int $size) : void
-    {
-        $this->size = $size;
-    }
-
-    /**
-     * @param bool $versioned File is version controlled
-     *
-     * @return void
-     *
-     * @since 1.0.0
-     */
-    public function setVersioned(bool $versioned) : void
-    {
-        $this->versioned = $versioned;
-    }
-
-    /**
-     * @return bool
-     *
-     * @since 1.0.0
-     */
-    public function isHidden() : bool
-    {
-        return $this->hidden;
-    }
-
-    /**
-     * @param bool $hidden File is hidden
-     *
-     * @return void
-     *
-     * @since 1.0.0
-     */
-    public function setHidden(bool $hidden) : void
-    {
-        $this->hidden = $hidden;
-    }
-
-    /**
      * {@inheritdoc}
      */
     public function toArray() : array
@@ -583,7 +355,7 @@ class Media implements \JsonSerializable
             'extension'      => $this->extension,
             'virtualpath'    => $this->virtualPath,
             'size'           => $this->size,
-            'hidden'         => $this->hidden,
+            'hidden'         => $this->isHidden,
             'path'           => $this->path,
             'absolute'       => $this->isAbsolute,
             'createdBy'      => $this->createdBy,

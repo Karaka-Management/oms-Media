@@ -261,7 +261,7 @@ class UploadFile
         $limit = 0;
 
         do {
-            $sha = \sha1_file($tempName . $rnd);
+            $sha = \sha1($tempName . $rnd);
 
             if ($sha === false) {
                 throw new \Exception('No file path could be found. Potential attack!');

@@ -89,7 +89,7 @@ class MediaView extends View
      */
     protected function isCollectionFunction(Media $media, string $sub = null) : bool
     {
-        return ($media->getExtension() === 'collection'
+        return ($media->extension === 'collection'
                 && !\is_file($media->getPath() . ($sub ?? '')))
             || (\is_dir($media->getPath())
                 && ($sub === null || \is_dir($media->getPath() . $sub))
@@ -156,7 +156,7 @@ class MediaView extends View
      */
     protected function isImageFile(Media $media, string $path = '') : bool
     {
-        return FileUtils::getExtensionType($media->getExtension()) === ExtensionType::IMAGE
+        return FileUtils::getExtensionType($media->extension) === ExtensionType::IMAGE
             || FileUtils::getExtensionType(File::extension($path)) === ExtensionType::IMAGE;
     }
 
@@ -172,7 +172,7 @@ class MediaView extends View
      */
     protected function isTextFile(Media $media, string $path = '') : bool
     {
-        $mediaExtension = FileUtils::getExtensionType($media->getExtension());
+        $mediaExtension = FileUtils::getExtensionType($media->extension);
         $pathExtension  = FileUtils::getExtensionType(File::extension($path));
 
         return $mediaExtension === ExtensionType::TEXT || $pathExtension === ExtensionType::TEXT

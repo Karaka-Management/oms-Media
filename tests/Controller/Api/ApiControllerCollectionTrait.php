@@ -36,7 +36,7 @@ trait ApiControllerCollectionTrait
         $response = new HttpResponse();
         $request  = new HttpRequest(new HttpUri(''));
 
-        $request->getHeader()->setAccount(1);
+        $request->header->account = 1;
         $request->setData('name', 'Test Upload');
 
         if (!\is_dir(__DIR__ . '/temp')) {
@@ -80,7 +80,7 @@ trait ApiControllerCollectionTrait
         $response = new HttpResponse();
         $request  = new HttpRequest(new HttpUri(''));
 
-        $request->getHeader()->setAccount(1);
+        $request->header->account = 1;
         $request->setData('name', 'Test Collection');
         $request->setData('virtualpath', '/');
         $request->setData('media-list', \json_encode($media));
@@ -88,7 +88,7 @@ trait ApiControllerCollectionTrait
         $this->module->apiCollectionCreate($request, $response);
 
         $collection = $response->get('')['response'];
-        self::assertEquals('Test Collection', $collection->getName());
+        self::assertEquals('Test Collection', $collection->name);
         self::assertCount(2, $collection->getSources());
     }
 
@@ -101,10 +101,10 @@ trait ApiControllerCollectionTrait
         $response = new HttpResponse();
         $request  = new HttpRequest(new HttpUri(''));
 
-        $request->getHeader()->setAccount(1);
+        $request->header->account = 1;
 
         $this->module->apiCollectionCreate($request, $response);
-        self::assertEquals(RequestStatusCode::R_400, $response->getHeader()->getStatusCode());
+        self::assertEquals(RequestStatusCode::R_400, $response->header->status);
     }
 
     /**
@@ -116,7 +116,7 @@ trait ApiControllerCollectionTrait
         $response = new HttpResponse();
         $request  = new HttpRequest(new HttpUri(''));
 
-        $request->getHeader()->setAccount(1);
+        $request->header->account = 1;
         $request->setData('name', 'Test Collection');
         $request->setData('path', '/test/path');
 
@@ -135,13 +135,13 @@ trait ApiControllerCollectionTrait
     public function testApiCollectionFromMedia() : void
     {
         $media = new Media();
-        $media->setCreatedBy(new NullAccount(1));
-        $media->setDescription('desc');
-        $media->setDescriptionRaw('descRaw');
+        $media->createdBy = new NullAccount(1);
+        $media->description = 'desc';
+        $media->descriptionRaw = 'descRaw';
         $media->setPath('some/path');
-        $media->setSize(11);
-        $media->setExtension('png');
-        $media->setName('Media for collection');
+        $media->size = 11;
+        $media->extension = 'png';
+        $media->name = 'Media for collection';
         $id = MediaMapper::create($media);
 
         self::assertGreaterThan(0, $media->getId());
@@ -149,7 +149,7 @@ trait ApiControllerCollectionTrait
 
         $collection = $this->module->createMediaCollectionFromMedia('Collection With Media', '', [$media], 1);
 
-        self::assertEquals('Collection With Media', $collection->getName());
+        self::assertEquals('Collection With Media', $collection->name);
         self::assertCount(1, $collection->getSources());
 
         self::assertInstanceOf(
