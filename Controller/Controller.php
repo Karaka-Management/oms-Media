@@ -25,11 +25,11 @@ use phpOMS\Module\WebInterface;
  * @link    https://orange-management.org
  * @since   1.0.0
  */
-class Controller extends ModuleAbstract implements WebInterface
+class Controller extends ModuleAbstract
 {
     /**
      * File path
-     * 
+     *
      * @var string
      * @since 1.0.0
      */
