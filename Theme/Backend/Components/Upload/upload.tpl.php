@@ -1,7 +1,3 @@
-<!--
-@todo Orange-Management/Modules#58
-    Implement drag/drop upload
--->
 <div class="portlet">
     <div class="portlet-head"><?= $this->getHtml('Media'); ?></div>
     <form id="<?= $this->form; ?>-upload">

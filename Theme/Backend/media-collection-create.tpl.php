@@ -15,11 +15,6 @@ declare(strict_types=1);
 use phpOMS\Uri\UriFactory;
 
 /**
- * @todo Orange-Management/Modules#58
- *  Implement drag/drop upload
- */
-
-/**
  * @var \phpOMS\Views\View $this
  */
 ?>

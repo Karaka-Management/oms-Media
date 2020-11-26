@@ -210,26 +210,12 @@ class UploadFile
                 $result[$key]['nonce'] = $nonce;
             }
 
-            /**
-             * @todo Orange-Management/Modules#203
-             *  Automatically enable image interlacing
-             *  Interlacing png images currently messes up the images.
-             */
             /*
             if ($this->isInterlaced && \in_array($extension, FileUtils::IMAGE_EXTENSION)) {
                 //$this->interlace($extension, $dest);
             }
             */
 
-            /**
-             * @todo Orange-Management/Modules#204
-             *  Automatically change the file encoding of text files
-             *  Basic text files should be converted to utf-8. E.g.
-             *  * csv
-             *  * log
-             *  * txt
-             *  * ...
-             */
             /*
             if ($encoding !== '') {
                 // changing encoding bugs out image files
