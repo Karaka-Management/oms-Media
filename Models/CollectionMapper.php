@@ -120,18 +120,19 @@ final class CollectionMapper extends MediaMapper
      *
      * @since 1.0.0
      */
-    public static function getCollectionsByPath(string $path, bool $showDirectories = false) : array
+    public static function getCollectionsByPath(string $virtualPath, bool $showDirectories = false) : array
     {
-        $collection = self::getByVirtualPath($path);
+        /** @var Media[] $collection */
+        $collection = self::getByVirtualPath($virtualPath);
         $parent     = [];
 
         if ($showDirectories) {
-            $parent = self::getParentCollection($path);
-            if (\is_array($parent) && \is_dir(__DIR__ . '/../../Media/Files' . $path)) {
+            $parent = self::getParentCollection($virtualPath);
+            if (\is_array($parent) && \is_dir(__DIR__ . '/../../Media/Files' . $virtualPath)) {
                 $parent       = new Collection();
-                $parent->name = \basename($path);
-                $parent->setVirtualPath(\dirname($path));
-                $parent->setPath(\dirname($path));
+                $parent->name = \basename($virtualPath);
+                $parent->setVirtualPath(\dirname($virtualPath));
+                $parent->setPath(\dirname($virtualPath));
                 $parent->isAbsolute = false;
             }
 
@@ -165,7 +166,7 @@ final class CollectionMapper extends MediaMapper
                     $localMedia            = new Collection();
                     $localMedia->name      = $pathinfo['filename'];
                     $localMedia->extension = \is_dir($file) ? 'collection' : $pathinfo['extension'] ?? '';
-                    $localMedia->setVirtualPath($path);
+                    $localMedia->setVirtualPath($virtualPath);
                     $localMedia->createdBy = new Account();
 
                     $collection[] = $localMedia;

@@ -27,7 +27,7 @@ class Collection extends Media implements \Iterator
     /**
      * Resource id.
      *
-     * @var Media[]
+     * @var array<int, Media>
      * @since 1.0.0
      */
     private array $sources = [];
@@ -113,7 +113,7 @@ class Collection extends Media implements \Iterator
     /**
      * {@inheritdoc}
      */
-    public function current()
+    public function current() : Media
     {
         return \current($this->sources);
     }
@@ -121,7 +121,7 @@ class Collection extends Media implements \Iterator
     /**
      * {@inheritdoc}
      */
-    public function key()
+    public function key() : ?int
     {
         return \key($this->sources);
     }
