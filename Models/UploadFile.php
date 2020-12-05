@@ -290,7 +290,7 @@ class UploadFile
             return;
         }
 
-        \imageinterlace($img, $this->isInterlaced ? 1 : 0);
+        \imageinterlace($img, $this->isInterlaced);
 
         if ($extension === 'png') {
             \imagepng($img, $path);

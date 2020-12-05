@@ -115,7 +115,9 @@ class Collection extends Media implements \Iterator
      */
     public function current() : Media
     {
-        return \current($this->sources);
+        $current = \current($this->sources);
+
+        return $current === false ? $this : $current ;
     }
 
     /**
