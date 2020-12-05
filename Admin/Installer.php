@@ -46,7 +46,7 @@ final class Installer extends InstallerAbstract
      */
     public static function installExternal(DatabasePool $dbPool, array $data) : void
     {
-         try {
+        try {
             $dbPool->get()->con->query('select 1 from `media`');
         } catch (\Exception $e) {
             return; // @codeCoverageIgnore

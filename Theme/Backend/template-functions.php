@@ -21,7 +21,7 @@ $fileIconFunction = function (int $extensionType) : string
     } elseif ($extensionType === ExtensionType::TEXT) {
         return 'file-text';
     } elseif ($extensionType === ExtensionType::PRESENTATION) {
-       return 'file-powerpoint';
+        return 'file-powerpoint';
     } elseif ($extensionType === ExtensionType::PDF) {
         return 'file-pdf';
     } elseif ($extensionType === ExtensionType::ARCHIVE) {
