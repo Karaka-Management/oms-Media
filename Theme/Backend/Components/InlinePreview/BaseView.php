@@ -39,6 +39,14 @@ class BaseView extends View
     protected string $id = '';
 
     /**
+     * Form id
+     *
+     * @var string
+     * @since 1.0.0
+     */
+    protected string $form = '';
+
+    /**
      * Virtual path of the media file
      *
      * @var string
@@ -76,10 +84,11 @@ class BaseView extends View
      */
     public function render(...$data) : string
     {
-        $this->id          = $data[0];
-        $this->name        = $data[1];
-        $this->virtualPath = $data[2] ?? '/';
-        $this->isRequired  = $data[3] ?? false;
+        $this->form        = $data[0];
+        $this->id          = $data[1];
+        $this->name        = $data[2];
+        $this->virtualPath = $data[3] ?? '/';
+        $this->isRequired  = $data[4] ?? false;
         return parent::render();
     }
 

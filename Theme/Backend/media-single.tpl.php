@@ -44,7 +44,7 @@ echo $this->getData('nav')->render();
                 <table class="list w-100">
                     <tbody>
                         <tr><td><?= $this->getHtml('Name'); ?><td class="wf-100"><?= $this->printHtml($media->name); ?>
-                        <tr><td><?= $this->getHtml('Size'); ?><td class="wf-100"><?= $this->printHtml($media->size); ?>
+                        <tr><td><?= $this->getHtml('Size'); ?><td class="wf-100"><?= $media->size; ?>
                         <tr><td><?= $this->getHtml('Created'); ?><td><?= $this->printHtml($media->createdAt->format('Y-m-d')); ?>
                         <tr><td><?= $this->getHtml('Creator'); ?><td><a href="<?= UriFactory::build('{/prefix}profile/single?for=' . $media->createdBy->getId()); ?>"><?= $this->printHtml(
                                 \ltrim($media->createdBy->name2 . ', ' . $media->createdBy->name1, ', ')
@@ -99,7 +99,7 @@ echo $this->getData('nav')->render();
                             <td><a href="<?= $url; ?>"><i class="fa fa-<?= $this->printHtml($icon); ?>"></i></a>
                             <td><a href="<?= $url; ?>"><?= $this->printHtml($value->name); ?></a>
                             <td><a href="<?= $url; ?>"><?= $this->printHtml($value->extension); ?></a>
-                            <td><a href="<?= $url; ?>"><?= $this->printHtml($value->size); ?></a>
+                            <td><a href="<?= $url; ?>"><?= $value->size; ?></a>
                             <td><a href="<?= $url; ?>"><?= $this->printHtml($value->createdBy->name1); ?></a>
                             <td><a href="<?= $url; ?>"><?= $this->printHtml($value->createdAt->format('Y-m-d H:i:s')); ?></a>
                     <?php endforeach; else : $path = $this->dirPathFunction($media, $this->request->getData('sub') ?? ''); ?>

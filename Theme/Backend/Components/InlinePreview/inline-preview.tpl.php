@@ -1,10 +1,10 @@
 <div class="ipt-wrap">
     <div class="ipt-first">
         <span class="input">
-            <button type="button" id="<?= $this->printHtml($this->getId()); ?>-book-button" data-action='[
+            <button type="button" id="<?= $this->getId(); ?>-book-button" data-action='[
                 {
                     "key": 1, "listener": "click", "action": [
-                        {"key": 1, "type": "dom.popup", "selector": "#acc-grp-tpl", "aniIn": "fadeIn", "id": "<?= $this->printHtml($this->getId()); ?>"},
+                        {"key": 1, "type": "dom.popup", "selector": "#acc-grp-tpl", "aniIn": "fadeIn", "id": "<?= $this->getId(); ?>"},
                         {"key": 2, "type": "message.request", "uri": "<?= \phpOMS\Uri\UriFactory::build('{/prefix}admin/account?filter=some&limit=10'); ?>", "method": "GET", "request_type": "json"},
                         {"key": 3, "type": "dom.table.append", "id": "acc-table", "aniIn": "fadeIn", "data": [], "bindings": {"id": "id", "name": "name/0"}, "position": -1},
                         {"key": 4, "type": "message.request", "uri": "<?= \phpOMS\Uri\UriFactory::build('{/prefix}admin/account?filter=some&limit=10'); ?>", "method": "GET", "request_type": "json"},
@@ -12,12 +12,12 @@
                     ]
                 }
             ]' formaction=""><i class="fa fa-book"></i></button>
-            <div class="advancedInput wf-100" id="<?= $this->printHtml($this->getId()); ?>">
-                <input autocomplete="off" class="input" type="text" id="i<?= $this->printHtml($this->getId()); ?>"
+            <div class="advancedInput wf-100" id="<?= $this->getId(); ?>">
+                <input autocomplete="off" class="input" type="text" id="i<?= $this->getId(); ?>"
                     data-emptyAfter="true"
                     data-autocomplete="off"
                     data-src="api/media/find?search={!#mediaInput}">
-                <div id="<?= $this->printHtml($this->getId()); ?>-dropdown" class="dropdown" data-active="true">
+                <div id="<?= $this->getId(); ?>-dropdown" class="dropdown" data-active="true">
                     <table class="default">
                         <thead>
                             <tr>
@@ -25,7 +25,7 @@
                                 <td>Name<i class="sort-asc fa fa-chevron-up"></i><i class="sort-desc fa fa-chevron-down"></i>
                                 <td>Extension<i class="sort-asc fa fa-chevron-up"></i><i class="sort-desc fa fa-chevron-down"></i>
                         <tbody>
-                            <template id="<?= $this->printHtml($this->getId()); ?>-rowElement" class="rowTemplate">
+                            <template id="<?= $this->getId(); ?>-rowElement" class="rowTemplate">
                                 <tr tabindex="-1">
                                     <td data-tpl-text="/id" data-tpl-value="/id" data-value=""></td>
                                     <td data-tpl-text="/name" data-tpl-value="/name" data-value=""></td>
@@ -40,8 +40,8 @@
     </div>
     <div class="ipt-second"><button><?= $this->getHtml('Select', 'Media'); ?></button></div>
 </div>
-<div class="box" id="<?= $this->printHtml($this->getId()); ?>-tags" data-limit="0" data-active="true">
-    <template id="<?= $this->printHtml($this->getId()); ?>-tagTemplate">
+<div class="box" id="<?= $this->getId(); ?>-tags" data-limit="0" data-active="true">
+    <template id="<?= $this->getId(); ?>-tagTemplate">
         <span class="tag red" data-tpl-value="/id" data-value="" data-uuid="" data-name="<?= $this->printHtml($this->name); ?>">
             <i class="fa fa-times"></i>
             <span style="display: none;" data-name="type_prefix" data-tpl-value="/type_prefix" data-value=""></span>
