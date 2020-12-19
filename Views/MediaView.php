@@ -161,6 +161,38 @@ class MediaView extends View
     }
 
     /**
+     * Check if media file is video file
+     *
+     * @param Media  $media Media file
+     * @param string $path  File path
+     *
+     * @return bool
+     *
+     * @since 1.0.0
+     */
+    protected function isVideoFile(Media $media, string $path = '') : bool
+    {
+        return FileUtils::getExtensionType($media->extension) === ExtensionType::VIDEO
+            || FileUtils::getExtensionType(File::extension($path)) === ExtensionType::VIDEO;
+    }
+
+    /**
+     * Check if media file is audio file
+     *
+     * @param Media  $media Media file
+     * @param string $path  File path
+     *
+     * @return bool
+     *
+     * @since 1.0.0
+     */
+    protected function isAudioFile(Media $media, string $path = '') : bool
+    {
+        return FileUtils::getExtensionType($media->extension) === ExtensionType::AUDIO
+            || FileUtils::getExtensionType(File::extension($path)) === ExtensionType::AUDIO;
+    }
+
+    /**
      * Check if media file is text file
      *
      * @param Media  $media Media file

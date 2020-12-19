@@ -15,6 +15,8 @@ declare(strict_types=1);
 use \phpOMS\System\File\FileUtils;
 use \phpOMS\System\File\Local\File;
 use \phpOMS\Uri\UriFactory;
+use phpOMS\Utils\IO\Csv\CsvSettings;
+use phpOMS\Utils\Parser\Markdown\Markdown;
 
 include __DIR__ . '/template-functions.php';
 
@@ -139,10 +141,40 @@ echo $this->getData('nav')->render();
                         <template id="iMediaUpdateTpl">
                             <textarea class="textContent" form="iMediaFileUpdate" data-tpl-text="/media/content" data-tpl-value="/media/content" data-marker="tpl" name="content"></textarea>
                         </template>
-                        <pre class="textContent" data-tpl-text="/media/content" data-tpl-value="/media/content"><?= $this->printHtml(
-                            $this->getFileContent(($media->isAbsolute ? '' : __DIR__ . '/../../../../') . $media->getPath())
-                        ); ?></pre>
+                        <?php if ($media->extension === 'csv') :
+                            $f = \fopen(($media->isAbsolute ? '' : __DIR__ . '/../../../../') . $media->getPath(), 'r');
+
+                            echo '<table class="default">';
+                            $delim = CsvSettings::getFileDelimiter($f, 3);
+                            while (($line = \fgetcsv($f, 0, $delim)) !== false) {
+                                echo '<tr>';
+                                foreach ($line as $cell) {
+                                    echo '<td>' . \htmlspecialchars($cell);
+                                }
+                            }
+
+                            \fclose($f);
+                            echo '</table>';
+                        elseif ($media->extension === 'md') : ?>
+                            <article><?= Markdown::parse(
+                                $this->getFileContent(($media->isAbsolute ? '' : __DIR__ . '/../../../../') . $media->getPath())
+                            ); ?></article>
+                        <?php else : ?>
+                            <pre class="textContent" data-tpl-text="/media/content" data-tpl-value="/media/content"><?= $this->printHtml(
+                                $this->getFileContent(($media->isAbsolute ? '' : __DIR__ . '/../../../../') . $media->getPath())
+                            ); ?></pre>
+                        <?php endif; ?>
                     <?php endif; ?>
+                 <?php elseif ($this->isVideoFile($media, $path)) : ?>
+                    <video width="100%" controls>
+                        <source src="<?= $media->getPath(); ?>" type="video/<?= $media->extension; ?>">
+                        Your browser does not support HTML video.
+                    </video>
+                <?php elseif ($this->isAudioFile($media, $path)) : ?>
+                    <audio width="100%" controls>
+                        <source src="<?= $media->getPath(); ?>" type="audio/<?= $media->extension; ?>">
+                        Your browser does not support HTML audio.
+                    </audio>
                 <?php endif; ?>
             </div>
         </section>

@@ -18,18 +18,18 @@ $fileIconFunction = function (int $extensionType) : string
 {
     if ($extensionType === ExtensionType::CODE) {
         return 'file-code';
-    } elseif ($extensionType === ExtensionType::TEXT) {
+    } elseif ($extensionType === ExtensionType::TEXT || $extensionType === ExtensionType::WORD) {
         return 'file-text';
     } elseif ($extensionType === ExtensionType::PRESENTATION) {
         return 'file-powerpoint';
     } elseif ($extensionType === ExtensionType::PDF) {
-        return 'file-pdf';
+        return 'file-pdf-o';
     } elseif ($extensionType === ExtensionType::ARCHIVE) {
         return 'file-zip';
     } elseif ($extensionType === ExtensionType::AUDIO) {
-        return 'file-audio';
+        return 'file-audio-o';
     } elseif ($extensionType === ExtensionType::VIDEO) {
-        return 'file-video';
+        return 'file-video-o';
     } elseif ($extensionType === ExtensionType::IMAGE) {
         return 'file-image-o';
     } elseif ($extensionType === ExtensionType::SPREADSHEET) {
