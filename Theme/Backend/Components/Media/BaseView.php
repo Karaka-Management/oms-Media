@@ -36,7 +36,7 @@ class BaseView extends View
      * @var \Modules\Media\Models\Media[]
      * @since 1.0.0
      */
-    protected $media = [];
+    protected array $media = [];
 
     /**
      * {@inheritdoc}
