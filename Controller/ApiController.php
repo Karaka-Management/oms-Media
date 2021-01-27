@@ -512,4 +512,116 @@ final class ApiController extends Controller
 
         $this->fillJsonResponse($request, $response, NotificationLevel::OK, 'Media', 'Media successfully created.', $ids);
     }
+
+    /**
+     * Routing end-point for application behaviour.
+     *
+     * @param HttpRequest  $request  Request
+     * @param HttpResponse $response Response
+     * @param mixed        $data     Generic data
+     *
+     * @return void
+     *
+     * @api
+     *
+     * @since 1.0.0
+     */
+    public function apiMediaExport(RequestAbstract $request, ResponseAbstract $response, $data = null) : void
+    {
+        /** @var Media $media */
+        $media  = MediaMapper::get((int) $request->getData('id'));
+
+        $view = $this->createView($media, $request, $response);
+        $this->setMediaResponseHeader($view, $media, $request, $response);
+        $view->setData('path', __DIR__ . '/../../../');
+
+        $response->set('export', $view);
+    }
+
+    /**
+     * Set header for report/template
+     *
+     * @param View             $view     Media view
+     * @param string           $name     Template name
+     * @param RequestAbstract  $request  Request
+     * @param ResponseAbstract $response Response
+     *
+     * @return void
+     *
+     * @api
+     *
+     * @since 1.0.0
+     */
+    private function setMediaResponseHeader(View $view, Media $media, RequestAbstract $request, ResponseAbstract $response) : void
+    {
+        switch (\strtolower($media->extension)) {
+            case 'pdf':
+                $response->header->set('Content-Type', MimeType::M_PDF, true);
+                break;
+            case 'c':
+            case 'cpp':
+            case 'h':
+            case 'php':
+            case 'js':
+            case 'css':
+            case 'rs':
+            case 'py':
+            case 'r':
+                $response->header->set('Content-Type', MimeType::M_TXT, true);
+                break;
+            case 'txt':
+            case 'cfg':
+            case 'log':
+                $response->header->set('Content-Type', MimeType::M_TXT, true);
+                break;
+            case 'md':
+                $response->header->set('Content-Type', MimeType::M_TXT, true);
+                break;
+            case 'csv':
+                $response->header->set('Content-Type', MimeType::M_CSV, true);
+                break;
+            case 'xls':
+                $response->header->set('Content-Type', MimeType::M_XLS, true);
+                break;
+            case 'xlsx':
+                $response->header->set('Content-Type', MimeType::M_XLSX, true);
+                break;
+            case 'doc':
+                $response->header->set('Content-Type', MimeType::M_DOC, true);
+                break;
+            case 'docx':
+                $response->header->set('Content-Type', MimeType::M_DOCX, true);
+                break;
+            case 'ppt':
+                $response->header->set('Content-Type', MimeType::M_PPT, true);
+                break;
+            case 'pptx':
+                $response->header->set('Content-Type', MimeType::M_PPTX, true);
+                break;
+            case 'json':
+                $response->header->set('Content-Type', MimeType::M_CSV, true);
+                break;
+            case 'jpg':
+            case 'jpeg':
+                $response->header->set('Content-Type', MimeType::M_JPG, true);
+                break;
+            case 'gif':
+                $response->header->set('Content-Type', MimeType::M_GIF, true);
+                break;
+            case 'png':
+                $response->header->set('Content-Type', MimeType::M_PNG, true);
+                break;
+            case 'mp3':
+                $response->header->set('Content-Type', MimeType::M_MP3, true);
+                break;
+            case 'mp4':
+                $response->header->set('Content-Type', MimeType::M_MP4, true);
+                break;
+            case 'mpeg':
+                $response->header->set('Content-Type', MimeType::M_MPEG, true);
+                break;
+            default:
+                $response->header->set('Content-Type', MimeType::M_BIN, true);
+        }
+    }
 }

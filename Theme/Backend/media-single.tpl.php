@@ -22,6 +22,7 @@ include __DIR__ . '/template-functions.php';
 
 /** @var \Modules\Media\Models\Media $media */
 $media = $this->getData('media');
+$view = $this->getData('view');
 
 /** @var \Modules\Media\Views\MediaView $this */
 echo $this->getData('nav')->render();
@@ -74,6 +75,13 @@ echo $this->getData('nav')->render();
     </div>
 </div>
 
+<div class="row" style="height: calc(100% - 85px);">
+    <div class="col-xs-12">
+        <?= $view->render($media); ?>
+    </div>
+</div>
+
+<!--
 <div class="row">
     <?php if ($this->isCollectionFunction($media, $this->request->getData('sub') ?? '')) : ?>
     <div class="col-xs-12">
@@ -133,8 +141,6 @@ echo $this->getData('nav')->render();
                         <img style="max-width: 100%" src="<?= $media->getPath(); ?>" alt="<?= $this->printHtml($media->name); ?>">
                     </div>
                 <?php elseif ($this->isTextFile($media, $path)) : ?>
-                    <!-- if markdown show markdown editor, if image show image editor, if text file show textarea only on edit -->
-
                     <?php if (!\is_file(($media->isAbsolute ? '' : __DIR__ . '/../../../../') . $media->getPath())) : ?>
                         <div class="centerText"><i class="fa fa-question fa-5x"></i></div>
                     <?php else : ?>
@@ -181,3 +187,4 @@ echo $this->getData('nav')->render();
     </div>
     <?php endif; ?>
 </div>
+-->

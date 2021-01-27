@@ -28,7 +28,7 @@ use phpOMS\Views\View;
  * @since   1.0.0
  * @codeCoverageIgnore
  */
-class BaseView extends View
+class ListView extends View
 {
     /**
      * Media files
