@@ -35,6 +35,10 @@ use phpOMS\Model\Message\FormValidation;
 use phpOMS\System\File\FileUtils;
 use phpOMS\System\File\Local\Directory;
 use phpOMS\Utils\Parser\Markdown\Markdown;
+use phpOMS\Views\View;
+use phpOMS\System\MimeType;
+use phpOMS\Model\Html\Head;
+use phpOMS\Asset\AssetType;
 
 /**
  * Media class.
@@ -539,6 +543,52 @@ final class ApiController extends Controller
     }
 
     /**
+     * Routing end-point for application behaviour.
+     *
+     * @param Media        $media    Media
+     * @param HttpRequest  $request  Request
+     * @param HttpResponse $response Response
+     *
+     * @return View
+     *
+     * @since 1.0.0
+     */
+    public function createView(Media $media, RequestAbstract $request, ResponseAbstract $response) : View
+    {
+        $view = new View($this->app->l11nManager, $request, $response);
+        $view->setData('media', $media);
+
+        if (($type = $request->getData('type')) === null) {
+            $view->setTemplate('/Modules/Media/Theme/Api/render');
+        } elseif ($type === 'html') {
+            $head = new Head();
+            $css = \file_get_contents(__DIR__ . '/../../../Web/Backend/css/backend-small.css');
+            if ($css === false) {
+                $css = '';
+            }
+
+            $css = \preg_replace('!\s+!', ' ', $css);
+            $head->setStyle('core', $css ?? '');
+
+            $head->addAsset(AssetType::CSS, 'cssOMS/styles.css');
+            $view->setData('head', $head);
+
+            switch (\strtolower($media->extension)) {
+                case 'xls':
+                case 'xlsx':
+                    $view->setTemplate('/Modules/Media/Theme/Api/spreadsheetAsHtml');
+                    break;
+                case 'doc':
+                case 'docx':
+                    $view->setTemplate('/Modules/Media/Theme/Api/wordAsHtml');
+                    break;
+            }
+        }
+
+        return $view;
+    }
+
+    /**
      * Set header for report/template
      *
      * @param View             $view     Media view
@@ -548,13 +598,15 @@ final class ApiController extends Controller
      *
      * @return void
      *
-     * @api
-     *
      * @since 1.0.0
      */
     private function setMediaResponseHeader(View $view, Media $media, RequestAbstract $request, ResponseAbstract $response) : void
     {
-        switch (\strtolower($media->extension)) {
+        switch ($request->getData('type') ?? \strtolower($media->extension)) {
+            case 'htm':
+            case 'html':
+                $response->header->set('Content-Type', MimeType::M_HTML, true);
+                break;
             case 'pdf':
                 $response->header->set('Content-Type', MimeType::M_PDF, true);
                 break;

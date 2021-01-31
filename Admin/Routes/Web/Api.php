@@ -37,6 +37,17 @@ return [
             ],
         ],
     ],
+    '^.*/media/export(\?+.*|$)' => [
+        [
+            'dest'       => '\Modules\Media\Controller\ApiController:apiMediaExport',
+            'verb'       => RouteVerb::GET,
+            'permission' => [
+                'module' => ApiController::MODULE_NAME,
+                'type'   => PermissionType::READ,
+                'state'  => PermissionState::MEDIA,
+            ],
+        ],
+    ],
     '^.*/media/collection(\?+.*|$)' => [
         [
             'dest'       => '\Modules\Media\Controller\ApiController:apiCollectionCreate',

@@ -1,7 +1,11 @@
+<?php
+
+use phpOMS\Uri\UriFactory;
+?>
 <section id="mediaFile" class="portlet">
     <div class="portlet-body">
         <audio width="100%" controls>
-            <source src="<?= $this->media->getPath(); ?>" type="audio/<?= $this->media->extension; ?>">
+            <source src="<?= UriFactory::build('{/api}media/export?id=' . $this->media->getId()); ?>" type="audio/<?= $this->media->extension; ?>">
             Your browser does not support HTML audio.
         </audio>
     </div>
