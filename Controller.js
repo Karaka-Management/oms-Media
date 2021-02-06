@@ -11,7 +11,7 @@ jsOMS.Modules.Media = class {
      *
      * @since 1.0.0
      */
-    constructor  (app)
+    constructor (app)
     {
         this.app = app;
     };
