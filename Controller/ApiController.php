@@ -140,6 +140,19 @@ final class ApiController extends Controller
         return $this->createDbEntries($status, $account, $virtualPath, $type);
     }
 
+    public static function uploadFilesToDestination(
+        array $files,
+        string $name = '',
+        string $path = '',
+    ) : array {
+        $upload = new UploadFile();
+        $upload->setOutputDir($path);
+
+        $status = $upload->upload($files, $name, true, '');
+
+        return $status;
+    }
+
     /**
      * Create a random file path to store media files
      *

@@ -118,7 +118,7 @@ class UploadFile
             $this->outputDir = $this->findOutputDir();
         }
 
-        $path = $this->outputDir;
+        $path = empty($this->outputDir) ? $f['tmp_name'] : $this->outputDir;
 
         foreach ($files as $key => $f) {
             $result[$key]           = [];
@@ -158,6 +158,7 @@ class UploadFile
                 $result[$key]['filename'] = $this->fileName;
             }
 
+            // @todo: find a way to allow upload to default temp directory, maybe check if $path is empty, if empty don't change directory, just keep it in the temp directory
             if (empty($this->fileName) || \is_file($path . '/' . $this->fileName)) {
                 try {
                     $this->fileName           = $this->createFileName($path, $f['tmp_name'], $extension);
@@ -222,7 +223,7 @@ class UploadFile
                 //FileUtils::changeFileEncoding($dest, $encoding);
             }*/
 
-            $result[$key]['path'] = \realpath($this->outputDir);
+            $result[$key]['path'] = $this->outputDir === '' ? $f['tmp_name'] : \realpath($this->outputDir);
         }
 
         return $result;
