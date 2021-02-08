@@ -188,6 +188,8 @@ final class BackendController extends Controller
                 $media->setVirtualPath(\dirname($path));
                 $media->setPath('/Modules/Media/Files/' . \ltrim($path, '\\/'));
                 $media->isAbsolute = false;
+
+                $view->addData('view', $this->createMediaView($media, $request, $response));
             }
         } else {
             $media = MediaMapper::get($id);
