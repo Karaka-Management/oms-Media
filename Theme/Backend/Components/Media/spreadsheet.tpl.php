@@ -1,14 +1,13 @@
 <?php declare(strict_types=1);
 
-use phpOMS\Autoloader;
+use PhpOffice\PhpSpreadsheet\IOFactory;
+
 Autoloader::addPath(__DIR__ . '/../../../../../../Resources/');
 
-use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Writer\Csv;
-use PhpOffice\PhpSpreadsheet\Spreadsheet;
-
+use phpOMS\Autoloader;
 use phpOMS\Uri\UriFactory;
-use phpOMS\Utils\IO\Csv\CsvSettings;
+
 ?>
 <section id="mediaFile" class="portlet">
     <div class="portlet-body">
@@ -38,7 +37,7 @@ use phpOMS\Utils\IO\Csv\CsvSettings;
 					\ob_start();
 					$writer->save('php://output');
 					$data = \ob_get_clean();
-					$csv = \explode("\n", \trim($data, "\n"));
+					$csv  = \explode("\n", \trim($data, "\n"));
 					?>
 					<table class="default">
 					<?php

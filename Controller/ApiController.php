@@ -27,18 +27,18 @@ use Modules\Media\Models\PermissionState;
 use Modules\Media\Models\UploadFile;
 use Modules\Media\Models\UploadStatus;
 use phpOMS\Account\PermissionType;
+use phpOMS\Asset\AssetType;
 use phpOMS\Message\Http\RequestStatusCode;
 use phpOMS\Message\NotificationLevel;
 use phpOMS\Message\RequestAbstract;
 use phpOMS\Message\ResponseAbstract;
+use phpOMS\Model\Html\Head;
 use phpOMS\Model\Message\FormValidation;
 use phpOMS\System\File\FileUtils;
 use phpOMS\System\File\Local\Directory;
+use phpOMS\System\MimeType;
 use phpOMS\Utils\Parser\Markdown\Markdown;
 use phpOMS\Views\View;
-use phpOMS\System\MimeType;
-use phpOMS\Model\Html\Head;
-use phpOMS\Asset\AssetType;
 
 /**
  * Media class.
@@ -575,7 +575,7 @@ final class ApiController extends Controller
             $view->setTemplate('/Modules/Media/Theme/Api/render');
         } elseif ($type === 'html') {
             $head = new Head();
-            $css = \file_get_contents(__DIR__ . '/../../../Web/Backend/css/backend-small.css');
+            $css  = \file_get_contents(__DIR__ . '/../../../Web/Backend/css/backend-small.css');
             if ($css === false) {
                 $css = '';
             }

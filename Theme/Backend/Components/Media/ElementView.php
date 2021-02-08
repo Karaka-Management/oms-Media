@@ -14,11 +14,11 @@ declare(strict_types=1);
 
 namespace Modules\Media\Theme\Backend\Components\Media;
 
+use Modules\Media\Models\Media;
+use Modules\Media\Views\MediaView;
 use phpOMS\Localization\L11nManager;
 use phpOMS\Message\RequestAbstract;
 use phpOMS\Message\ResponseAbstract;
-use Modules\Media\Views\MediaView;
-use Modules\Media\Models\Media;
 
 /**
  * Component view.

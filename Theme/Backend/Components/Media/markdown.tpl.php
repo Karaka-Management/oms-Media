@@ -1,6 +1,7 @@
-<?php
+<?php declare(strict_types=1);
 
 use phpOMS\Utils\Parser\Markdown\Markdown;
+
 ?>
 <section id="mediaFile" class="portlet">
     <div class="portlet-body">

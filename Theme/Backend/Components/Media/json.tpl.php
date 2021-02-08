@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 $array = \json_decode($this->getFileContent(($this->media->isAbsolute ? '' : __DIR__ . '/../../../../../../') . $this->media->getPath()), true);
 ?>

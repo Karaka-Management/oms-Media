@@ -22,7 +22,7 @@ include __DIR__ . '/template-functions.php';
 
 /** @var \Modules\Media\Models\Media $media */
 $media = $this->getData('media');
-$view = $this->getData('view');
+$view  = $this->getData('view');
 
 /** @var \Modules\Media\Views\MediaView $this */
 echo $this->getData('nav')->render();

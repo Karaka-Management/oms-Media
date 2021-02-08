@@ -1,11 +1,11 @@
 <?php declare(strict_types=1);
 
-use phpOMS\Autoloader;
+use PhpOffice\PhpSpreadsheet\IOFactory;
+
 Autoloader::addPath(__DIR__ . '/../../../../Resources/');
 
-use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Writer\Csv;
-use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use phpOMS\Autoloader;
 
 $media = $this->getData('media');
 

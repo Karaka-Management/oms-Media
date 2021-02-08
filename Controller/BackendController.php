@@ -20,9 +20,9 @@ use Modules\Media\Models\CollectionMapper;
 use Modules\Media\Models\Media;
 use Modules\Media\Models\MediaMapper;
 use Modules\Media\Models\NullMedia;
-use Modules\Media\Views\MediaView;
 use Modules\Media\Theme\Backend\Components\Media\ElementView;
 use Modules\Media\Theme\Backend\Components\Media\ListView;
+use Modules\Media\Views\MediaView;
 use phpOMS\Contract\RenderableInterface;
 use phpOMS\Message\RequestAbstract;
 use phpOMS\Message\ResponseAbstract;
@@ -178,7 +178,7 @@ final class BackendController extends Controller
 
         $id = $request->getData('id', 'int');
         if ($id === 0) {
-            $path = \urldecode($request->getData('path'));
+            $path  = \urldecode($request->getData('path'));
             $media = new NullMedia();
             if (\is_file(__DIR__ . '/../Files' . $path)) {
                 $name = \explode('.', \basename($path));
@@ -227,7 +227,7 @@ final class BackendController extends Controller
     /**
      * Create media view
      *
-     * @param Media  $media Media
+     * @param Media $media Media
      *
      * @return View
      *
