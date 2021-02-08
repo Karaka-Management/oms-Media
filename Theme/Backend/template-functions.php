@@ -21,7 +21,7 @@ $fileIconFunction = function (int $extensionType) : string
     } elseif ($extensionType === ExtensionType::TEXT || $extensionType === ExtensionType::WORD) {
         return 'file-text';
     } elseif ($extensionType === ExtensionType::PRESENTATION) {
-        return 'file-powerpoint';
+        return 'file-powerpoint-o';
     } elseif ($extensionType === ExtensionType::PDF) {
         return 'file-pdf-o';
     } elseif ($extensionType === ExtensionType::ARCHIVE) {
@@ -33,7 +33,7 @@ $fileIconFunction = function (int $extensionType) : string
     } elseif ($extensionType === ExtensionType::IMAGE) {
         return 'file-image-o';
     } elseif ($extensionType === ExtensionType::SPREADSHEET) {
-        return 'file-excel';
+        return 'file-excel-o';
     } elseif ($extensionType === ExtensionType::DIRECTORY) {
         return 'folder-open';
     }

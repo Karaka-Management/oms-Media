@@ -18,6 +18,7 @@ namespace Modules\Media\Models;
 
 use phpOMS\Log\FileLogger;
 use phpOMS\System\File\Local\Directory;
+use phpOMS\System\File\Local\File;
 
 /**
  * Upload.
@@ -118,9 +119,13 @@ class UploadFile
             $this->outputDir = $this->findOutputDir();
         }
 
-        $path = empty($this->outputDir) ? $f['tmp_name'] : $this->outputDir;
+        $path = $this->outputDir;
 
         foreach ($files as $key => $f) {
+            if ($path === '') {
+                $path = File::dirpath($f['tmp_name']);
+            }
+
             $result[$key]           = [];
             $result[$key]['status'] = UploadStatus::OK;
 
@@ -158,7 +163,6 @@ class UploadFile
                 $result[$key]['filename'] = $this->fileName;
             }
 
-            // @todo: find a way to allow upload to default temp directory, maybe check if $path is empty, if empty don't change directory, just keep it in the temp directory
             if (empty($this->fileName) || \is_file($path . '/' . $this->fileName)) {
                 try {
                     $this->fileName           = $this->createFileName($path, $f['tmp_name'], $extension);
@@ -223,7 +227,7 @@ class UploadFile
                 //FileUtils::changeFileEncoding($dest, $encoding);
             }*/
 
-            $result[$key]['path'] = $this->outputDir === '' ? $f['tmp_name'] : \realpath($this->outputDir);
+            $result[$key]['path'] = $path;
         }
 
         return $result;
