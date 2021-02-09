@@ -153,8 +153,13 @@ class UploadFile
                 return $result;
             }
 
-            $split                     = \explode('.', $f['name']);
-            $result[$key]['name']      = \count($files) === 1 && !empty($name) ? $name : $split[0];
+            $split                = \explode('.', $f['name']);
+            $result[$key]['name'] = \count($files) === 1 && !empty($name)
+                ? $name
+                : (\count($split) > 1
+                    ? \substr($f['name'], 0, \strripos($f['name'], '.'))
+                    : $f['name']);
+
             $extension                 = \count($split) > 1 ? $split[\count($split) - 1] : '';
             $result[$key]['extension'] = $extension;
 

@@ -162,7 +162,7 @@ final class ApiController extends Controller
      *
      * @since 1.0.0
      */
-    public static function createMediaPath(string $basePath = 'Modules/Media/Files') : string
+    public static function createMediaPath(string $basePath = '/Modules/Media/Files') : string
     {
         $rndPath = \str_pad(\dechex(\mt_rand(0, 65535)), 4, '0', \STR_PAD_LEFT);
         return $basePath . '/' . $rndPath[0] . $rndPath[1] . '/' . $rndPath[2] . $rndPath[3];
@@ -172,7 +172,7 @@ final class ApiController extends Controller
      * @param array  $status      Files
      * @param int    $account     Uploader
      * @param string $virtualPath Virtual path
-     * @param string $type        Media type (internal categorization)
+     * @param string $type        Media type (internal categorization = identifier for modules)
      * @param string $ip          Ip
      *
      * @return Media[]
@@ -254,18 +254,18 @@ final class ApiController extends Controller
      *
      * @since 1.0.0
      */
-    private static function normalizeDbPath(string $path) : string
+    public static function normalizeDbPath(string $path) : string
     {
         $realpath = \realpath(__DIR__ . '/../../../');
         if ($realpath === false) {
             throw new \Exception(); // @codeCoverageIgnore
         }
 
-        return \str_replace('\\', '/',
+        return FileUtils::absolute(\str_replace('\\', '/',
             \str_replace($realpath, '',
                 \rtrim($path, '\\/')
             )
-        );
+        ));
     }
 
     /**

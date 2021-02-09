@@ -20,6 +20,12 @@ use Modules\Media\Models\CollectionMapper;
 use phpOMS\DataStorage\Database\DatabasePool;
 use phpOMS\Module\InstallerAbstract;
 use phpOMS\System\File\PathException;
+use phpOMS\System\File\Local\Directory;
+use phpOMS\System\File\Local\File;
+use Modules\Media\Models\UploadFile;
+use Modules\Media\Models\Media;
+use Modules\Media\Models\MediaMapper;
+use Modules\Media\Controller\ApiController;
 
 /**
  * Installer class.
@@ -66,13 +72,26 @@ final class Installer extends InstallerAbstract
             throw new \Exception(); // @codeCoverageIgnore
         }
 
-        foreach ($mediaData as $media) {
-            self::installMedia($dbPool, $media);
+        if (\is_dir(__DIR__ . '/tmp')) {
+            Directory::delete(__DIR__ . '/tmp');
         }
+
+        \mkdir(__DIR__ . '/tmp');
+        foreach ($mediaData as $media) {
+            switch ($media['type']) {
+                case 'collection':
+                    self::createCollection($dbPool, $media);
+                    break;
+                case 'upload':
+                    self::uploadMedia($dbPool, $media);
+                    break;
+            }
+        }
+        Directory::delete(__DIR__ . '/tmp');
     }
 
     /**
-     * Install media element.
+     * Create collection.
      *
      * @param DatabasePool $dbPool Database instance
      * @param array        $data   Media info
@@ -81,7 +100,7 @@ final class Installer extends InstallerAbstract
      *
      * @since 1.0.0
      */
-    private static function installMedia($dbPool, $data) : void
+    private static function createCollection($dbPool, $data) : void
     {
         $collection       = new Collection();
         $collection->name = (string) $data['name'] ?? '';
@@ -90,5 +109,86 @@ final class Installer extends InstallerAbstract
         $collection->createdBy = new NullAccount((int) $data['user'] ?? 1);
 
         CollectionMapper::create($collection);
+    }
+
+    /**
+     * Upload media.
+     *
+     * @param DatabasePool $dbPool Database instance
+     * @param array        $data   Media info
+     *
+     * @return void
+     *
+     * @since 1.0.0
+     */
+    private static function uploadMedia($dbPool, $data) : void
+    {
+        $files = [];
+        foreach ($data['files'] as $file) {
+            if (\is_file(__DIR__ . '/../../..' . $file)) {
+                File::copy(__DIR__ . '/../../..' . $file, __DIR__ . '/tmp' . $file);
+
+                $files[] = [
+                    'size' => \filesize(__DIR__ . '/tmp' . $file),
+                    'name' => \basename($file),
+                    'tmp_name' => __DIR__ . '/tmp' . $file,
+                    'error' => \UPLOAD_ERR_OK,
+                ];
+            } if (\is_dir(__DIR__ . '/../../..' . $file)) {
+                Directory::copy(__DIR__ . '/../../..' . $file, __DIR__ . '/tmp' . $file);
+
+                $iterator = new \RecursiveIteratorIterator(
+                    new \RecursiveDirectoryIterator(__DIR__ . '/tmp' . $file . '/', \RecursiveDirectoryIterator::SKIP_DOTS),
+                    \RecursiveIteratorIterator::SELF_FIRST
+                );
+
+                foreach ($iterator as $item) {
+                    if ($item->isDir()) {
+                        continue;
+                    }
+
+                    $files[] = [
+                        'size' => \filesize($item->getPathname()),
+                        'name' => \basename($item->getPathname()),
+                        'tmp_name' => $item->getPathname(),
+                        'error' => \UPLOAD_ERR_OK,
+                    ];
+                }
+            }
+        }
+
+        $upload = new UploadFile();
+        $upload->setOutputDir(empty($data['path'] ?? '') ? ApiController::createMediaPath() : __DIR__ . '/../../..' . $data['path']);
+
+        $status = $upload->upload($files, $data['name'], true);
+
+        $mediaFiles = [];
+        foreach ($status as $uFile) {
+            $media = new Media();
+
+            $media->setPath(ApiController::normalizeDbPath($data['path']) . '/' . $uFile['filename']);
+            $media->name      = $uFile['name'];
+            $media->size      = $uFile['size'];
+            $media->createdBy = new NullAccount((int) $data['user'] ?? 1);
+            $media->extension = $uFile['extension'];
+            $media->setVirtualPath((string) ($data['virtualPath'] ?? '/') . '/' . $data['name']);
+            $media->type = $data['type'] ?? ''; // = identifier for modules
+
+            MediaMapper::create($media);
+
+            $mediaFiles[] = $media;
+        }
+
+        if ($data['create_collection']) {
+            $collection       = new Collection();
+            $collection->name = (string) $data['name'] ?? '';
+            $collection->setVirtualPath((string) $data['virtualPath'] ?? '/');
+            $collection->setPath((string) ($data['path'] ?? '/Modules/Media/Files/' . ((string) $data['name'] ?? '')));
+            $collection->createdBy = new NullAccount((int) $data['user'] ?? 1);
+
+            $collection->setSources($mediaFiles);
+
+            CollectionMapper::create($collection);
+        }
     }
 }
