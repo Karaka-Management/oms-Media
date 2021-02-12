@@ -1,11 +1,11 @@
 <?php declare(strict_types=1);
 
+use phpOMS\Autoloader;
+
 use PhpOffice\PhpWord\IOFactory;
+use PhpOffice\PhpWord\Writer\HTML;
 
 Autoloader::addPath(__DIR__ . '/../../../../Resources/');
-
-use PhpOffice\PhpWord\Writer\HTML;
-use phpOMS\Autoloader;
 
 $media = $this->getData('media');
 

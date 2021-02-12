@@ -43,19 +43,19 @@ final class Installer extends InstallerAbstract
      * @param DatabasePool $dbPool Database pool
      * @param array        $data   Module info
      *
-     * @return void
+     * @return array
      *
      * @throws PathException This exception is thrown if the Navigation install file couldn't be found
      * @throws \Exception    This exception is thrown if the Navigation install file is invalid json
      *
      * @since 1.0.0
      */
-    public static function installExternal(DatabasePool $dbPool, array $data) : void
+    public static function installExternal(DatabasePool $dbPool, array $data) : array
     {
         try {
             $dbPool->get()->con->query('select 1 from `media`');
         } catch (\Exception $e) {
-            return; // @codeCoverageIgnore
+            return []; // @codeCoverageIgnore
         }
 
         if (!\is_file($data['path'] ?? '')) {
@@ -76,18 +76,26 @@ final class Installer extends InstallerAbstract
             Directory::delete(__DIR__ . '/tmp');
         }
 
+        $result = [
+            'collection' => [],
+            'upload' => [],
+        ];
+
         \mkdir(__DIR__ . '/tmp');
         foreach ($mediaData as $media) {
             switch ($media['type']) {
                 case 'collection':
-                    self::createCollection($dbPool, $media);
+                    $result['collection'][] = self::createCollection($dbPool, $media);
                     break;
                 case 'upload':
-                    self::uploadMedia($dbPool, $media);
+                    $result['upload'][] = self::uploadMedia($dbPool, $media);
                     break;
+                default:
             }
         }
         Directory::delete(__DIR__ . '/tmp');
+
+        return $result;
     }
 
     /**
@@ -96,11 +104,11 @@ final class Installer extends InstallerAbstract
      * @param DatabasePool $dbPool Database instance
      * @param array        $data   Media info
      *
-     * @return void
+     * @return Collection
      *
      * @since 1.0.0
      */
-    private static function createCollection($dbPool, $data) : void
+    private static function createCollection($dbPool, $data) : Collection
     {
         $collection       = new Collection();
         $collection->name = (string) $data['name'] ?? '';
@@ -117,11 +125,11 @@ final class Installer extends InstallerAbstract
      * @param DatabasePool $dbPool Database instance
      * @param array        $data   Media info
      *
-     * @return void
+     * @return array
      *
      * @since 1.0.0
      */
-    private static function uploadMedia($dbPool, $data) : void
+    private static function uploadMedia($dbPool, $data) : array
     {
         $files = [];
         foreach ($data['files'] as $file) {
@@ -189,6 +197,9 @@ final class Installer extends InstallerAbstract
             $collection->setSources($mediaFiles);
 
             CollectionMapper::create($collection);
+            return [$collection];
         }
+
+        return $mediaFiles;
     }
 }
