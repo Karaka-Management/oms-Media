@@ -13,10 +13,10 @@ use phpOMS\Utils\IO\Csv\CsvSettings;
         <div class="tab-content">
             <input type="radio" id="media-c-tab-1" name="tabular-1" checked>
             <div class="tab">
+                <table class="default">
                 <?php
                     $f = \fopen(($this->media->isAbsolute ? '' : __DIR__ . '/../../../../../../') . $this->media->getPath(), 'r');
 
-                    echo '<table class="default">';
                     $delim = CsvSettings::getFileDelimiter($f, 3);
                     while (($line = \fgetcsv($f, 0, $delim)) !== false) {
                         echo '<tr>';
@@ -26,8 +26,8 @@ use phpOMS\Utils\IO\Csv\CsvSettings;
                     }
 
                     \fclose($f);
-                    echo '</table>';
                 ?>
+                </table>
             </div>
             <input type="radio" id="media-c-tab-2" name="tabular-1">
             <div class="tab">
