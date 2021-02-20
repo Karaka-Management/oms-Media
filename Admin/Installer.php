@@ -110,13 +110,28 @@ final class Installer extends InstallerAbstract
      */
     private static function createCollection($dbPool, $data) : Collection
     {
+        if (!isset($data['path'])) {
+            $dirPath = __DIR__ . '/../../../Modules/Media/Files' . ($data['virtualPath'] ?? '/') . '/' . ($data['name'] ?? '');
+            $path = '/Modules/Media/Files' . ($data['virtualPath'] ?? '') . '/' . ($data['name'] ?? '');
+        } else {
+            $dirPath = $data['path'] . '/' . ($data['name'] ?? '');
+            $path = $data['path'] ?? '/Modules/Media/Files' . '/' . ($data['name'] ?? '');
+        }
+
         $collection       = new Collection();
-        $collection->name = (string) $data['name'] ?? '';
-        $collection->setVirtualPath((string) $data['virtualPath'] ?? '/');
-        $collection->setPath((string) ($data['path'] ?? '/Modules/Media/Files/' . ((string) $data['name'] ?? '')));
+        $collection->name = $data['name'] ?? '';
+        $collection->setVirtualPath($data['virtualPath'] ?? '/');
+        $collection->setPath($path);
         $collection->createdBy = new NullAccount((int) $data['user'] ?? 1);
 
         CollectionMapper::create($collection);
+
+        if ($data['create_directory']) {
+            // @todo fix permission mode
+            \mkdir($dirPath, 0755, true);
+        }
+
+        return $collection;
     }
 
     /**

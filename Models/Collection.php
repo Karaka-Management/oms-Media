@@ -88,6 +88,17 @@ class Collection extends Media implements \Iterator
         return $this->sources;
     }
 
+    public function getSourceByName(string $name) : Media
+    {
+        foreach ($this->sources as $source) {
+            if ($source->name === $name) {
+                return $source;
+            }
+        }
+
+        return new NullMedia();
+    }
+
     /**
      * {@inheritdoc}
      */

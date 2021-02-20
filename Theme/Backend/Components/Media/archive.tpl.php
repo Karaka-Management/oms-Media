@@ -1,6 +1,5 @@
 <?php declare(strict_types=1);
 
-$array = \json_decode($this->getFileContent(($this->media->isAbsolute ? '' : __DIR__ . '/../../../../../../') . $this->media->getPath()), true);
 ?>
 <section id="mediaFile" class="portlet">
     <div class="portlet-body">
@@ -12,13 +11,18 @@ $array = \json_decode($this->getFileContent(($this->media->isAbsolute ? '' : __D
         <div class="tab-content">
             <input type="radio" id="media-c-tab-1" name="tabular-1" checked>
             <div class="tab">
-                <pre><?= \json_encode($array, \JSON_PRETTY_PRINT); ?></pre>
+                <?php
+                    $archive = new ZipArchive();
+                    $archive->open(($this->media->isAbsolute ? '' : __DIR__ . '/../../../../../../') . $this->media->getPath());
+
+                    for( $i = 0; $i < $archive->numFiles; $i++ ){
+                        $stat = $archive->statIndex( $i );
+                        print_r( basename( $stat['name'] ) . PHP_EOL );
+                    }
+                ?>
             </div>
             <input type="radio" id="media-c-tab-2" name="tabular-1">
             <div class="tab">
-                <pre class="textContent" data-tpl-text="/media/content" data-tpl-value="/media/content"><?= $this->printHtml(
-                    $this->getFileContent(($this->media->isAbsolute ? '' : __DIR__ . '/../../../../../../') . $this->media->getPath())
-                ); ?></pre>
             </div>
         </div>
     </div>

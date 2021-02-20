@@ -156,9 +156,7 @@ class UploadFile
             $split                = \explode('.', $f['name']);
             $result[$key]['name'] = \count($files) === 1 && !empty($name)
                 ? $name
-                : (\count($split) > 1
-                    ? \substr($f['name'], 0, \strripos($f['name'], '.'))
-                    : $f['name']);
+                : $f['name'];
 
             $extension                 = \count($split) > 1 ? $split[\count($split) - 1] : '';
             $result[$key]['extension'] = $extension;
@@ -324,9 +322,9 @@ class UploadFile
     {
         do {
             $rndPath = \str_pad(\dechex(\mt_rand(0, 65535)), 4, '0', \STR_PAD_LEFT);
-        } while (\is_dir($this->outputDir . '/' . $rndPath));
+        } while (\is_dir($this->outputDir . '/_' . $rndPath));
 
-        return $this->outputDir . '/' . $rndPath;
+        return $this->outputDir . '/_' . $rndPath;
     }
 
     /**

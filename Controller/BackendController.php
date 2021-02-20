@@ -115,7 +115,7 @@ final class BackendController extends Controller
             $collection       = new Collection();
             $collection->name = \basename($path);
             $collection->setVirtualPath(\dirname($path));
-            $collection->setPath(\dirname($path));
+            $collection->setPath($path);
             $collection->isAbsolute = false;
         }
 
@@ -125,16 +125,18 @@ final class BackendController extends Controller
             /** @var string[] $glob */
             $glob = $collection->isAbsolute
                 ? $collection->getPath() . '/' . $collection->name . '/*'
-                : \glob(__DIR__ . '/../Files/' . \rtrim($collection->getPath(), '/') . '/' . $collection->name . '/*');
+                : \glob(__DIR__ . '/../Files/' . \trim($collection->getVirtualPath(), '/') . '/' . $collection->name . '/*');
             $glob = $glob === false ? [] : $glob;
 
             foreach ($glob as $file) {
+                $basename = \basename($file);
+                if ($basename[0] === '_' && \strlen($basename) === 3) {
+                    continue;
+                }
+
                 foreach ($media as $obj) {
-                    if (($obj->extension !== 'collection'
-                            && !empty($obj->extension)
-                            && $obj->name . '.' . $obj->extension === \basename($file))
-                        || ($obj->extension === 'collection'
-                            && $obj->name === \basename($file))
+                    if ($obj->name === $basename
+                        || $obj->name . '.' . $obj->extension === $basename
                     ) {
                         continue 2;
                     }
@@ -205,11 +207,9 @@ final class BackendController extends Controller
                 $view->setTemplate('/Modules/Media/Theme/Backend/media-list');
             } else {
                 $sub = $request->getData('sub') ?? '';
-                if (($media->extension === 'collection'
-                        && !\is_file($media->getPath() . $sub))
-                    || (\is_dir($media->getPath())
-                        && (\is_dir($media->getPath() . $sub))
-                )) {
+                if (\is_dir($media->getPath())
+                    && (\is_dir($media->getPath() . $sub))
+                ) {
                     $listView = new ListView($this->app->l11nManager, $request, $response);
                     $listView->setTemplate('/modules/Media/Theme/Backend/Components/Media/list');
                     $view->addData('view', $listView);
@@ -289,6 +289,9 @@ final class BackendController extends Controller
             case 'mp4':
             case 'mpeg':
                 $view->setTemplate('/Modules/Media/Theme/Backend/Components/Media/video');
+                break;
+            case 'zip':
+                $view->setTemplate('/Modules/Media/Theme/Backend/Components/Media/archive');
                 break;
             default:
                 $view->setTemplate('/Modules/Media/Theme/Backend/Components/Media/default');

@@ -17,9 +17,9 @@ use \phpOMS\System\File\ExtensionType;
 $fileIconFunction = function (int $extensionType) : string
 {
     if ($extensionType === ExtensionType::CODE) {
-        return 'file-code';
+        return 'file-code-o';
     } elseif ($extensionType === ExtensionType::TEXT || $extensionType === ExtensionType::WORD) {
-        return 'file-text';
+        return 'file-text-o';
     } elseif ($extensionType === ExtensionType::PRESENTATION) {
         return 'file-powerpoint-o';
     } elseif ($extensionType === ExtensionType::PDF) {
@@ -35,7 +35,7 @@ $fileIconFunction = function (int $extensionType) : string
     } elseif ($extensionType === ExtensionType::SPREADSHEET) {
         return 'file-excel-o';
     } elseif ($extensionType === ExtensionType::DIRECTORY) {
-        return 'folder-open';
+        return 'folder-open-o';
     }
 
     return 'file';

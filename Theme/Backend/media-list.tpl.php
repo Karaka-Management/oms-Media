@@ -92,7 +92,7 @@ $next     = empty($media) ? '{/prefix}media/list' : '{/prefix}media/list?{?}&id=
                                 : UriFactory::build('{/prefix}media/single?id=' . $value->getId()
                                     . '&path={?path}' . (
                                             $value->getId() === 0
-                                                ? '/' . $value->name . (!empty($value->extension) ? '.' . $value->extension : '')
+                                                ? '/' . $value->name
                                                 : ''
                                         )
                                 );
@@ -102,16 +102,12 @@ $next     = empty($media) ? '{/prefix}media/list' : '{/prefix}media/list?{?}&id=
                     <tr tabindex="0" data-href="<?= $url; ?>">
                         <td data-label="<?= $this->getHtml('Type'); ?>"><a href="<?= $url; ?>"><i class="fa fa-<?= $this->printHtml($icon); ?>"></i></a>
                         <td data-label="<?= $this->getHtml('Name'); ?>"><a href="<?= $url; ?>">
-                            <?= $this->printHtml(
-                                $value->extension !== 'collection'
-                                    ? $value->name . (
-                                        $value->extension !== '' ? '.' . $value->extension : ''
-                                    ) : $value->name); ?>
+                            <?= $this->printHtml($value->name); ?>
                             </a>
                         <td data-label="<?= $this->getHtml('Extension'); ?>"><a href="<?= $url; ?>"><?= $this->printHtml($value->extension); ?></a>
                         <td data-label="<?= $this->getHtml('Size'); ?>"><a href="<?= $url; ?>"><?php
                             $size = FileSizeType::autoFormat($value->size);
-                            echo $this->printHtml($value->extension !== 'collection' ? \number_format($size[0], 1, '.', ','). $size[1] : ''); ?></a>
+                            echo $this->printHtml($value->extension !== 'collection' ? \number_format($size[0], 1, '.', ',') . $size[1] : ''); ?></a>
                         <td data-label="<?= $this->getHtml('Creator'); ?>"><a href="<?= $url; ?>"><?= $this->printHtml($value->createdBy->name1); ?></a>
                         <td data-label="<?= $this->getHtml('Created'); ?>"><a href="<?= $url; ?>"><?= $this->printHtml($value->createdAt->format('Y-m-d H:i:s')); ?></a>
                         <?php endforeach; ?>
