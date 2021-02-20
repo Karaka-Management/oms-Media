@@ -1,9 +1,8 @@
 <?php declare(strict_types=1);
 
-use phpOMS\Autoloader;
-
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Writer\Csv;
+use phpOMS\Autoloader;
 use phpOMS\Uri\UriFactory;
 
 Autoloader::addPath(__DIR__ . '/../../../../../../Resources/');

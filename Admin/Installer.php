@@ -15,17 +15,17 @@ declare(strict_types=1);
 namespace Modules\Media\Admin;
 
 use Modules\Admin\Models\NullAccount;
+use Modules\Media\Controller\ApiController;
 use Modules\Media\Models\Collection;
 use Modules\Media\Models\CollectionMapper;
-use phpOMS\DataStorage\Database\DatabasePool;
-use phpOMS\Module\InstallerAbstract;
-use phpOMS\System\File\PathException;
-use phpOMS\System\File\Local\Directory;
-use phpOMS\System\File\Local\File;
-use Modules\Media\Models\UploadFile;
 use Modules\Media\Models\Media;
 use Modules\Media\Models\MediaMapper;
-use Modules\Media\Controller\ApiController;
+use Modules\Media\Models\UploadFile;
+use phpOMS\DataStorage\Database\DatabasePool;
+use phpOMS\Module\InstallerAbstract;
+use phpOMS\System\File\Local\Directory;
+use phpOMS\System\File\Local\File;
+use phpOMS\System\File\PathException;
 
 /**
  * Installer class.
@@ -78,7 +78,7 @@ final class Installer extends InstallerAbstract
 
         $result = [
             'collection' => [],
-            'upload' => [],
+            'upload'     => [],
         ];
 
         \mkdir(__DIR__ . '/tmp');
@@ -112,10 +112,10 @@ final class Installer extends InstallerAbstract
     {
         if (!isset($data['path'])) {
             $dirPath = __DIR__ . '/../../../Modules/Media/Files' . ($data['virtualPath'] ?? '/') . '/' . ($data['name'] ?? '');
-            $path = '/Modules/Media/Files' . ($data['virtualPath'] ?? '') . '/' . ($data['name'] ?? '');
+            $path    = '/Modules/Media/Files' . ($data['virtualPath'] ?? '') . '/' . ($data['name'] ?? '');
         } else {
             $dirPath = $data['path'] . '/' . ($data['name'] ?? '');
-            $path = $data['path'] ?? '/Modules/Media/Files' . '/' . ($data['name'] ?? '');
+            $path    = $data['path'] ?? '/Modules/Media/Files' . '/' . ($data['name'] ?? '');
         }
 
         $collection       = new Collection();
@@ -152,10 +152,10 @@ final class Installer extends InstallerAbstract
                 File::copy(__DIR__ . '/../../..' . $file, __DIR__ . '/tmp' . $file);
 
                 $files[] = [
-                    'size' => \filesize(__DIR__ . '/tmp' . $file),
-                    'name' => \basename($file),
+                    'size'     => \filesize(__DIR__ . '/tmp' . $file),
+                    'name'     => \basename($file),
                     'tmp_name' => __DIR__ . '/tmp' . $file,
-                    'error' => \UPLOAD_ERR_OK,
+                    'error'    => \UPLOAD_ERR_OK,
                 ];
             } if (\is_dir(__DIR__ . '/../../..' . $file)) {
                 Directory::copy(__DIR__ . '/../../..' . $file, __DIR__ . '/tmp' . $file);
@@ -171,10 +171,10 @@ final class Installer extends InstallerAbstract
                     }
 
                     $files[] = [
-                        'size' => \filesize($item->getPathname()),
-                        'name' => \basename($item->getPathname()),
+                        'size'     => \filesize($item->getPathname()),
+                        'name'     => \basename($item->getPathname()),
                         'tmp_name' => $item->getPathname(),
-                        'error' => \UPLOAD_ERR_OK,
+                        'error'    => \UPLOAD_ERR_OK,
                     ];
                 }
             }

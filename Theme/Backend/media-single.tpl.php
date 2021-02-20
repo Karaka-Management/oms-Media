@@ -12,11 +12,7 @@
  */
 declare(strict_types=1);
 
-use \phpOMS\System\File\FileUtils;
-use \phpOMS\System\File\Local\File;
 use \phpOMS\Uri\UriFactory;
-use phpOMS\Utils\IO\Csv\CsvSettings;
-use phpOMS\Utils\Parser\Markdown\Markdown;
 use phpOMS\Utils\Converter\FileSizeType;
 
 include __DIR__ . '/template-functions.php';

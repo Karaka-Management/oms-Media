@@ -15,9 +15,9 @@
                     $archive = new ZipArchive();
                     $archive->open(($this->media->isAbsolute ? '' : __DIR__ . '/../../../../../../') . $this->media->getPath());
 
-                    for( $i = 0; $i < $archive->numFiles; $i++ ){
-                        $stat = $archive->statIndex( $i );
-                        print_r( basename( $stat['name'] ) . PHP_EOL );
+                    for($i = 0; $i < $archive->numFiles; ++$i){
+                        $stat = $archive->statIndex($i);
+                        \print_r(\basename($stat['name']) . \PHP_EOL);
                     }
                 ?>
             </div>
