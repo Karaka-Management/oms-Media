@@ -25,7 +25,7 @@ $fileIconFunction = function (int $extensionType) : string
     } elseif ($extensionType === ExtensionType::PDF) {
         return 'file-pdf-o';
     } elseif ($extensionType === ExtensionType::ARCHIVE) {
-        return 'file-zip';
+        return 'file-zip-o';
     } elseif ($extensionType === ExtensionType::AUDIO) {
         return 'file-audio-o';
     } elseif ($extensionType === ExtensionType::VIDEO) {

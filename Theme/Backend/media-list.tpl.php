@@ -52,10 +52,15 @@ $next     = empty($media) ? '{/prefix}media/list' : '{/prefix}media/list?{?}&id=
                     $subPath = '';
                     $paths   = \explode('/', \ltrim($mediaPath, '/'));
                     $length  = \count($paths);
+                    $parentPath = '';
 
                     for ($i = 0; $i < $length; ++$i) :
                         if ($paths[$i] === '') {
                             continue;
+                        }
+
+                        if ($i === $length - 1) {
+                            $parentPath = $subPath === '' ? '/' : $subPath;
                         }
 
                         $subPath .= '/' . $paths[$i];
@@ -83,6 +88,16 @@ $next     = empty($media) ? '{/prefix}media/list' : '{/prefix}media/list?{?}&id=
                     <td><?= $this->getHtml('Creator'); ?>
                     <td><?= $this->getHtml('Created'); ?>
                 <tbody>
+                    <?php if (!empty($parentPath)) : $url = UriFactory::build('{/prefix}media/list?path=' . $parentPath); ?>
+                        <tr tabindex="0" data-href="<?= $url; ?>">
+                            <td data-label="<?= $this->getHtml('Type'); ?>"><a href="<?= $url; ?>"><i class="fa fa-folder-open-o"></i></a>
+                            <td data-label="<?= $this->getHtml('Name'); ?>"><a href="<?= $url; ?>">..
+                            </a>
+                            <td>
+                            <td>
+                            <td>
+                            <td>
+                    <?php endif; ?>
                     <?php $count = 0;
                         foreach ($media as $key => $value) :
                             ++$count;
