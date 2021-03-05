@@ -30,7 +30,7 @@ echo $this->getData('nav')->render();
             <?php if ($this->request->getData('path') !== null) : ?>
                 <a tabindex="0" class="button" href="<?= UriFactory::build('{/prefix}media/list?path=' . ($media->getId() === 0 ? $media->getVirtualPath() : '{?path}')); ?>"><?= $this->getHtml('Back'); ?></a>
             <?php else: ?>
-                <a tabindex="0" class="button" href="<?= UriFactory::build('{/prefix}media/list'); ?>"><?= $this->getHtml('Back'); ?></a>
+                <a tabindex="0" class="button" href="<?= $this->request->getReferer() !== '' ? $this->request->getReferer() : UriFactory::build('{/prefix}media/list'); ?>"><?= $this->getHtml('Back'); ?></a>
             <?php endif; ?>
         </div>
     </div>
