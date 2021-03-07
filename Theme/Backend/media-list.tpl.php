@@ -49,9 +49,9 @@ $next     = empty($media) ? '{/prefix}media/list' : '{/prefix}media/list?{?}&id=
             <ul class="crumbs-2">
                 <li data-href="<?= UriFactory::build('{/prefix}media/list?path=/'); ?>"><a href="<?= UriFactory::build('{/prefix}media/list?path=/'); ?>">/</a></li>
                 <?php
-                    $subPath = '';
-                    $paths   = \explode('/', \ltrim($mediaPath, '/'));
-                    $length  = \count($paths);
+                    $subPath    = '';
+                    $paths      = \explode('/', \ltrim($mediaPath, '/'));
+                    $length     = \count($paths);
                     $parentPath = '';
 
                     for ($i = 0; $i < $length; ++$i) :
