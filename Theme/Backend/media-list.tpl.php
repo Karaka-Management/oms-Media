@@ -78,18 +78,78 @@ $next     = empty($media) ? '{/prefix}media/list' : '{/prefix}media/list?{?}&id=
     <div class="col-xs-12">
         <div class="portlet">
             <div class="portlet-head"><?= $this->getHtml('Media'); ?><i class="fa fa-download floatRight download btn"></i></div>
-            <table id="mediaList" class="default">
+            <table id="iMediaList" class="default">
                 <thead>
                 <tr>
+                    <td><label class="checkbox" for="iMediaSelect-0">
+                            <input type="checkbox" id="iMediaSelect-0" name="mediaselect">
+                            <span class="checkmark"></span>
+                        </label>
                     <td>
                     <td class="wf-100"><?= $this->getHtml('Name'); ?>
+                        <label for="iMediaList-sort-1">
+                            <input type="radio" name="iMediaList-sort" id="iMediaList-sort-1">
+                            <i class="sort-asc fa fa-chevron-up"></i>
+                        </label>
+                        <label for="iMediaList-sort-2">
+                            <input type="radio" name="iMediaList-sort" id="iMediaList-sort-2">
+                             <i class="sort-desc fa fa-chevron-down"></i>
+                        </label>
+                        <label>
+                            <i class="filter fa fa-filter"></i>
+                        </label>
                     <td><?= $this->getHtml('Type'); ?>
+                        <label for="iMediaList-sort-3">
+                            <input type="radio" name="iMediaList-sort" id="iMediaList-sort-3">
+                            <i class="sort-asc fa fa-chevron-up"></i>
+                        </label>
+                        <label for="iMediaList-sort-4">
+                            <input type="radio" name="iMediaList-sort" id="iMediaList-sort-4">
+                             <i class="sort-desc fa fa-chevron-down"></i>
+                        </label>
+                        <label>
+                            <i class="filter fa fa-filter"></i>
+                        </label>
                     <td><?= $this->getHtml('Size'); ?>
+                        <label for="iMediaList-sort-5">
+                            <input type="radio" name="iMediaList-sort" id="iMediaList-sort-5">
+                            <i class="sort-asc fa fa-chevron-up"></i>
+                        </label>
+                        <label for="iMediaList-sort-6">
+                            <input type="radio" name="iMediaList-sort" id="iMediaList-sort-6">
+                             <i class="sort-desc fa fa-chevron-down"></i>
+                        </label>
+                        <label>
+                            <i class="filter fa fa-filter"></i>
+                        </label>
                     <td><?= $this->getHtml('Creator'); ?>
+                        <label for="iMediaList-sort-7">
+                            <input type="radio" name="iMediaList-sort" id="iMediaList-sort-7">
+                            <i class="sort-asc fa fa-chevron-up"></i>
+                        </label>
+                        <label for="iMediaList-sort-8">
+                            <input type="radio" name="iMediaList-sort" id="iMediaList-sort-8">
+                             <i class="sort-desc fa fa-chevron-down"></i>
+                        </label>
+                        <label>
+                            <i class="filter fa fa-filter"></i>
+                        </label>
                     <td><?= $this->getHtml('Created'); ?>
+                        <label for="iMediaList-sort-9">
+                            <input type="radio" name="iMediaList-sort" id="iMediaList-sort-9">
+                            <i class="sort-asc fa fa-chevron-up"></i>
+                        </label>
+                        <label for="iMediaList-sort-10">
+                            <input type="radio" name="iMediaList-sort" id="iMediaList-sort-10">
+                             <i class="sort-desc fa fa-chevron-down"></i>
+                        </label>
+                        <label>
+                            <i class="filter fa fa-filter"></i>
+                        </label>
                 <tbody>
                     <?php if (!empty($parentPath)) : $url = UriFactory::build('{/prefix}media/list?path=' . $parentPath); ?>
                         <tr tabindex="0" data-href="<?= $url; ?>">
+                            <td>
                             <td data-label="<?= $this->getHtml('Type'); ?>"><a href="<?= $url; ?>"><i class="fa fa-folder-open-o"></i></a>
                             <td data-label="<?= $this->getHtml('Name'); ?>"><a href="<?= $url; ?>">..
                             </a>
@@ -115,6 +175,10 @@ $next     = empty($media) ? '{/prefix}media/list' : '{/prefix}media/list?{?}&id=
                             $icon = $fileIconFunction(FileUtils::getExtensionType($value->extension));
                         ?>
                     <tr tabindex="0" data-href="<?= $url; ?>">
+                        <td><label class="checkbox" for="iMediaSelect-<?= $key; ?>">
+                                    <input type="checkbox" id="iMediaSelect-<?= $key; ?>" name="mediaselect">
+                                    <span class="checkmark"></span>
+                                </label>
                         <td data-label="<?= $this->getHtml('Type'); ?>"><a href="<?= $url; ?>"><i class="fa fa-<?= $this->printHtml($icon); ?>"></i></a>
                         <td data-label="<?= $this->getHtml('Name'); ?>"><a href="<?= $url; ?>">
                             <?= $this->printHtml($value->name); ?>
@@ -133,6 +197,7 @@ $next     = empty($media) ? '{/prefix}media/list' : '{/prefix}media/list?{?}&id=
             <div class="portlet-foot">
                 <a tabindex="0" class="button" href="<?= UriFactory::build($previous); ?>"><?= $this->getHtml('Previous', '0', '0'); ?></a>
                 <a tabindex="0" class="button" href="<?= UriFactory::build($next); ?>"><?= $this->getHtml('Next', '0', '0'); ?></a>
+                <a tabindex="0" class="button floatRight" href="<?= UriFactory::build('{/prefix}api/media/download'); ?>"><?= $this->getHtml('Download', '0', '0'); ?></a>
             </div>
         </div>
     </div>
