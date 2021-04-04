@@ -17,6 +17,7 @@ namespace Modules\Media\Models;
 use Modules\Admin\Models\AccountMapper;
 use phpOMS\DataStorage\Database\DataMapperAbstract;
 use phpOMS\DataStorage\Database\RelationType;
+use Modules\Tag\Models\TagMapper;
 
 /**
  * Media mapper class.
@@ -64,6 +65,21 @@ class MediaMapper extends DataMapperAbstract
         'createdBy' => [
             'mapper'     => AccountMapper::class,
             'external'   => 'media_created_by',
+        ],
+    ];
+
+    /**
+     * Has many relation.
+     *
+     * @var array<string, array{mapper:string, table:string, self?:?string, external?:?string, column?:string}>
+     * @since 1.0.0
+     */
+    protected static array $hasMany = [
+        'tags'         => [
+            'mapper'   => TagMapper::class,
+            'table'    => 'media_tag',
+            'external' => 'media_tag_dst',
+            'self'     => 'media_tag_src',
         ],
     ];
 

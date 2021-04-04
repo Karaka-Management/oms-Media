@@ -18,8 +18,11 @@
 
                     for($i = 0; $i < $archive->numFiles; ++$i) {
                         $stat = $archive->statIndex($i);
-
-                        echo '<tr><td>' . \str_repeat('&nbsp;', (\substr_count(\trim($stat['name'], '/'), '/')) * 8) . $stat['name'];
+                        echo '<tr>';
+                        echo '<td>'
+                            . \str_repeat('&nbsp;', (\substr_count(\trim($stat['name'], '/'), '/')) * 8)
+                            . ($stat['name'][\strlen($stat['name']) - 1] === '/' ? '<i class="fa fa-folder-open-o"></i> ' : '<i class="fa fa-file-o"></i> ')
+                            . $stat['name'];
                     }
                 ?>
                 </table>

@@ -39,6 +39,9 @@ use phpOMS\System\File\Local\Directory;
 use phpOMS\System\MimeType;
 use phpOMS\Utils\Parser\Markdown\Markdown;
 use phpOMS\Views\View;
+use phpOMS\Message\Http\HttpResponse;
+use phpOMS\Message\Http\HttpRequest;
+use Modules\Tag\Models\NullTag;
 
 /**
  * Media class.
@@ -80,6 +83,35 @@ final class ApiController extends Controller
         $ids = [];
         foreach ($uploads as $file) {
             $ids[] = $file->getId();
+
+            // @todo: maybe improve, this could potentially be done immediately in the createDBEntry, especially if tags replace the type? But probably we need type and tags (both are slightly different e.g. tags are public, types are for modules e.g. itemmanagement item image)
+            // add tags
+            if (!empty($tags = $request->getDataJson('tags'))) {
+                foreach ($tags as $tag) {
+                    if (!isset($tag['id'])) {
+                        $request->setData('title', $tag['title'], true);
+                        $request->setData('color', $tag['color'], true);
+                        $request->setData('icon', $tag['icon'] ?? null, true);
+                        $request->setData('language', $tag['language'], true);
+
+                        $internalResponse = new HttpResponse();
+                        $this->app->moduleManager->get('Tag')->apiTagCreate($request, $internalResponse, null);
+                        $file->addTag($tId = $internalResponse->get($request->uri->__toString())['response']);
+                    } else {
+                        $file->addTag(new NullTag($tId = (int) $tag['id']));
+                    }
+
+                    $this->createModelRelation(
+                        $request->header->account,
+                        $file->getId(),
+                        $tId,
+                        MediaMapper::class,
+                        'tags',
+                        '',
+                        $request->getOrigin()
+                    );
+                }
+            }
         }
 
         $this->fillJsonResponse($request, $response, NotificationLevel::OK, 'Media', 'Media successfully created.', $ids);
@@ -197,6 +229,7 @@ final class ApiController extends Controller
                         $account,
                         $this->app->orgId,
                         $this->app->appName,
+                        self::MODULE_NAME,
                         self::MODULE_NAME,
                         PermissionState::MEDIA,
                         $created->getId(),
@@ -605,7 +638,7 @@ final class ApiController extends Controller
      * Set header for report/template
      *
      * @param View             $view     Media view
-     * @param string           $name     Template name
+     * @param Media            $media    Media file
      * @param RequestAbstract  $request  Request
      * @param ResponseAbstract $response Response
      *

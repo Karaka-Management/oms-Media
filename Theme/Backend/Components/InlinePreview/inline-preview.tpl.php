@@ -17,7 +17,7 @@
                     data-emptyAfter="true"
                     data-autocomplete="off"
                     data-src="api/media/find?search={!#mediaInput}">
-                <div id="<?= $this->getId(); ?>-dropdown" class="dropdown" data-active="true">
+                <div id="<?= $this->getId(); ?>-popup" class="popup" data-active="true">
                     <table class="default">
                         <thead>
                             <tr>

@@ -21,6 +21,9 @@ include __DIR__ . '/template-functions.php';
 $media = $this->getData('media');
 $view  = $this->getData('view');
 
+/** @var \Modules\Tag\Models\Tag[] $tag */
+$tags = $media->getTags();
+
 /** @var \Modules\Media\Views\MediaView $this */
 echo $this->getData('nav')->render();
 ?>
@@ -49,8 +52,12 @@ echo $this->getData('nav')->render();
                             echo $this->printHtml(\number_format($size[0], 1, '.', ',') . $size[1]); ?>
                         <tr><td><?= $this->getHtml('Created'); ?><td><?= $this->printHtml($media->createdAt->format('Y-m-d')); ?>
                         <tr><td><?= $this->getHtml('Creator'); ?><td><a href="<?= UriFactory::build('{/prefix}profile/single?for=' . $media->createdBy->getId()); ?>"><?= $this->printHtml(
-                                \ltrim($media->createdBy->name2 . ', ' . $media->createdBy->name1, ', ')
-                            ); ?></a>
+                            \ltrim($media->createdBy->name2 . ', ' . $media->createdBy->name1, ', ')
+                        ); ?></a>
+                        <tr><td><?= $this->getHtml('Tags'); ?><td>
+                            <?php foreach ($tags as $tag) : ?>
+                                <span class="tag" style="background: <?= $this->printHtml($tag->color); ?>"><?= $tag->icon !== null ? '<i class="' . $this->printHtml($tag->icon ?? '') . '"></i>' : ''; ?><?= $this->printHtml($tag->getTitle()); ?></span>
+                            <?php endforeach; ?>
                         <tr><td colspan="2"><?= $this->getHtml('Description'); ?>
                         <tr><td colspan="2"><?= $media->description; ?>
                 </table>

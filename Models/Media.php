@@ -16,6 +16,8 @@ namespace Modules\Media\Models;
 
 use Modules\Admin\Models\Account;
 use Modules\Admin\Models\NullAccount;
+use Modules\Tag\Models\Tag;
+use Modules\Tag\Models\NullTag;
 
 /**
  * Media class.
@@ -162,6 +164,14 @@ class Media implements \JsonSerializable
      * @since 1.0.0
      */
     protected int $collection = 0;
+
+    /**
+     * Tags.
+     *
+     * @var Tag[]
+     * @since 1.0.0
+     */
+    protected array $tags = [];
 
     /**
      * Constructor.
@@ -326,6 +336,72 @@ class Media implements \JsonSerializable
     public function setVirtualPath(string $path) : void
     {
         $this->virtualPath = \str_replace('\\', '/', $path);
+    }
+
+    /**
+     * Adding new tag.
+     *
+     * @param Tag $tag Tag
+     *
+     * @return int
+     *
+     * @since 1.0.0
+     */
+    public function addTag(Tag $tag) : int
+    {
+        $this->tags[] = $tag;
+
+        \end($this->tags);
+        $key = (int) \key($this->tags);
+        \reset($this->tags);
+
+        return $key;
+    }
+
+    /**
+     * Remove Tag from list.
+     *
+     * @param int $id Tag
+     *
+     * @return bool
+     *
+     * @since 1.0.0
+     */
+    public function removeTag($id) : bool
+    {
+        if (isset($this->tags[$id])) {
+            unset($this->tags[$id]);
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Get task elements.
+     *
+     * @return Tag[]
+     *
+     * @since 1.0.0
+     */
+    public function getTags() : array
+    {
+        return $this->tags;
+    }
+
+    /**
+     * Get task elements.
+     *
+     * @param int $id Element id
+     *
+     * @return Tag
+     *
+     * @since 1.0.0
+     */
+    public function getTag(int $id) : Tag
+    {
+        return $this->tags[$id] ?? new NullTag();
     }
 
     /**

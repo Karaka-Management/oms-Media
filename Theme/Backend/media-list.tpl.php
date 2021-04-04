@@ -28,6 +28,9 @@ $mediaPath = \urldecode($this->getData('path') ?? '/');
  * @var \Modules\Media\Models\Media[] $media
  */
 $media = $this->getData('media');
+$account = $this->getData('account');
+
+$accountDir = $account->getId() . ' ' . $account->login;
 
 $previous = empty($media) ? '{/prefix}media/list' : '{/prefix}media/list?{?}&id=' . \reset($media)->getId() . '&ptype=p';
 $next     = empty($media) ? '{/prefix}media/list' : '{/prefix}media/list?{?}&id=' . \end($media)->getId() . '&ptype=n';
@@ -47,6 +50,7 @@ $next     = empty($media) ? '{/prefix}media/list' : '{/prefix}media/list?{?}&id=
     <div class="col-xs-12">
         <div class="box">
             <ul class="crumbs-2">
+                <li data-href="<?= UriFactory::build('{/prefix}media/list?path=/Accounts/' . $accountDir); ?>"><a href="<?= UriFactory::build('{/prefix}media/list?path=/Accounts/' . $accountDir); ?>"><i class="fa fa-home"></i></a>
                 <li data-href="<?= UriFactory::build('{/prefix}media/list?path=/'); ?>"><a href="<?= UriFactory::build('{/prefix}media/list?path=/'); ?>">/</a></li>
                 <?php
                     $subPath    = '';

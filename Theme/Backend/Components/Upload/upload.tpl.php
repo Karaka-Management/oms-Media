@@ -13,7 +13,7 @@
                                     data-emptyAfter="true"
                                     data-autocomplete="off"
                                     data-src="api/media/find?search={!#mediaInput}">
-                                <div id="iMediaInput-dropdown" class="dropdown" data-active="true">
+                                <div id="iMediaInput-popup" class="popup" data-active="true">
                                     <table id="iMediaInput-table" class="default">
                                         <thead>
                                             <tr>
