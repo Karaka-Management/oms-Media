@@ -27,7 +27,7 @@ $mediaPath = \urldecode($this->getData('path') ?? '/');
 /**
  * @var \Modules\Media\Models\Media[] $media
  */
-$media = $this->getData('media');
+$media   = $this->getData('media');
 $account = $this->getData('account');
 
 $accountDir = $account->getId() . ' ' . $account->login;

@@ -15,9 +15,9 @@ declare(strict_types=1);
 namespace Modules\Media\Models;
 
 use Modules\Admin\Models\AccountMapper;
+use Modules\Tag\Models\TagMapper;
 use phpOMS\DataStorage\Database\DataMapperAbstract;
 use phpOMS\DataStorage\Database\RelationType;
-use Modules\Tag\Models\TagMapper;
 
 /**
  * Media mapper class.

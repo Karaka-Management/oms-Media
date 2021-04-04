@@ -16,8 +16,8 @@ namespace Modules\Media\Models;
 
 use Modules\Admin\Models\Account;
 use Modules\Admin\Models\NullAccount;
-use Modules\Tag\Models\Tag;
 use Modules\Tag\Models\NullTag;
+use Modules\Tag\Models\Tag;
 
 /**
  * Media class.
