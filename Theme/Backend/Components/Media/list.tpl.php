@@ -29,7 +29,7 @@ include __DIR__ . '/../../template-functions.php';
             <td data-label="<?= $this->getHtml('Extension'); ?>"><a href="<?= $url; ?>"><?= $this->printHtml($value->extension); ?></a>
             <td data-label="<?= $this->getHtml('Size'); ?>"><a href="<?= $url; ?>"><?= $value->size; ?></a>
             <td data-label="<?= $this->getHtml('Creator'); ?>"><a href="<?= $url; ?>"><?= $this->printHtml($value->createdBy->name1); ?></a>
-            <td data-label="<?= $this->getHtml('Created'); ?>"><a href="<?= $url; ?>"><?= $this->printHtml($value->createdAt->format('Y-m-d H:i:s')); ?></a>
+            <td data-label="<?= $this->getHtml('Created'); ?>"><a href="<?= $url; ?>"><?= $this->printHtml($value->createdAt->format('Y-m-d')); ?></a>
         <?php endforeach; ?>
         <?php if ($count === 0) : ?>
         <tr><td colspan="6" class="empty"><?= $this->getHtml('Empty', '0', '0'); ?>

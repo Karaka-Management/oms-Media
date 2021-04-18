@@ -82,7 +82,7 @@ $next     = empty($media) ? '{/prefix}media/list' : '{/prefix}media/list?{?}&id=
     <div class="col-xs-12">
         <div class="portlet">
             <div class="portlet-head"><?= $this->getHtml('Media'); ?><i class="fa fa-download floatRight download btn"></i></div>
-            <table id="iMediaList" class="default">
+            <table id="iMediaList" class="default sticky">
                 <thead>
                 <tr>
                     <td><label class="checkbox" for="iMediaSelect-0">
@@ -192,7 +192,7 @@ $next     = empty($media) ? '{/prefix}media/list' : '{/prefix}media/list?{?}&id=
                             $size = FileSizeType::autoFormat($value->size);
                             echo $this->printHtml($value->extension !== 'collection' ? \number_format($size[0], 1, '.', ',') . $size[1] : ''); ?></a>
                         <td data-label="<?= $this->getHtml('Creator'); ?>"><a href="<?= $url; ?>"><?= $this->printHtml($value->createdBy->name1); ?></a>
-                        <td data-label="<?= $this->getHtml('Created'); ?>"><a href="<?= $url; ?>"><?= $this->printHtml($value->createdAt->format('Y-m-d H:i:s')); ?></a>
+                        <td data-label="<?= $this->getHtml('Created'); ?>"><a href="<?= $url; ?>"><?= $this->printHtml($value->createdAt->format('Y-m-d')); ?></a>
                         <?php endforeach; ?>
                     <?php if ($count === 0) : ?>
                         <tr><td colspan="6" class="empty"><?= $this->getHtml('Empty', '0', '0'); ?>
