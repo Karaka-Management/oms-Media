@@ -150,7 +150,7 @@
                 "foreignKey": "media_id"
             },
             "media_tag_dst": {
-                "name": "task_tag_dst",
+                "name": "media_tag_dst",
                 "type": "INT",
                 "null": false,
                 "foreignTable": "tag",

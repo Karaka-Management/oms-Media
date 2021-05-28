@@ -108,7 +108,7 @@ final class Installer extends InstallerAbstract
      *
      * @since 1.0.0
      */
-    private static function createCollection($dbPool, $data) : Collection
+    private static function createCollection(DatabasePool $dbPool, array $data) : Collection
     {
         if (!isset($data['path'])) {
             $dirPath = __DIR__ . '/../../../Modules/Media/Files' . ($data['virtualPath'] ?? '/') . '/' . ($data['name'] ?? '');
@@ -144,7 +144,7 @@ final class Installer extends InstallerAbstract
      *
      * @since 1.0.0
      */
-    private static function uploadMedia($dbPool, $data) : array
+    private static function uploadMedia(DatabasePool $dbPool, array $data) : array
     {
         $files = [];
         foreach ($data['files'] as $file) {
