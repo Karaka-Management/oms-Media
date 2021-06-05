@@ -102,6 +102,10 @@ $next     = empty($media) ? '{/prefix}media/list' : '{/prefix}media/list?{?}&id=
                         <label>
                             <i class="filter fa fa-filter"></i>
                         </label>
+                    <td class="wf-100"><?= $this->getHtml('Tag'); ?>
+                        <label>
+                            <i class="filter fa fa-filter"></i>
+                        </label>
                     <td><?= $this->getHtml('Type'); ?>
                         <label for="iMediaList-sort-3">
                             <input type="radio" name="iMediaList-sort" id="iMediaList-sort-3">
@@ -187,6 +191,11 @@ $next     = empty($media) ? '{/prefix}media/list' : '{/prefix}media/list?{?}&id=
                         <td data-label="<?= $this->getHtml('Name'); ?>"><a href="<?= $url; ?>">
                             <?= $this->printHtml($value->name); ?>
                             </a>
+                        <td data-label="<?= $this->getHtml('Tag'); ?>"><?php $tags = $value->getTags(); foreach ($tags as $tag) : ?>
+                            <a href="<?= $url; ?>">
+                            <span class="tag" style="background: <?= $this->printHtml($tag->color); ?>"><?= $tag->icon !== null ? '<i class="' . $this->printHtml($tag->icon ?? '') . '"></i>' : ''; ?><?= $this->printHtml($tag->getTitle()); ?></span>
+                            </a>
+                            <?php endforeach; ?>
                         <td data-label="<?= $this->getHtml('Extension'); ?>"><a href="<?= $url; ?>"><?= $this->printHtml($value->extension); ?></a>
                         <td data-label="<?= $this->getHtml('Size'); ?>"><a href="<?= $url; ?>"><?php
                             $size = FileSizeType::autoFormat($value->size);
