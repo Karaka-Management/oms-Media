@@ -164,7 +164,7 @@ final class ApiController extends Controller
             return [];
         }
 
-        $upload = new UploadFile();
+        $upload            = new UploadFile();
         $upload->outputDir = $outputDir;
 
         $status = $upload->upload($files, $name, $absolute, $encryptionKey);
@@ -177,7 +177,7 @@ final class ApiController extends Controller
         string $name = '',
         string $path = '',
     ) : array {
-        $upload = new UploadFile();
+        $upload            = new UploadFile();
         $upload->outputDir = $path;
 
         $status = $upload->upload($files, $name, true, '');

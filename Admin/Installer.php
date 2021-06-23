@@ -21,12 +21,12 @@ use Modules\Media\Models\CollectionMapper;
 use Modules\Media\Models\Media;
 use Modules\Media\Models\MediaMapper;
 use Modules\Media\Models\UploadFile;
+use phpOMS\Application\ApplicationAbstract;
 use phpOMS\DataStorage\Database\DatabasePool;
 use phpOMS\Module\InstallerAbstract;
 use phpOMS\System\File\Local\Directory;
 use phpOMS\System\File\Local\File;
 use phpOMS\System\File\PathException;
-use phpOMS\Application\ApplicationAbstract;
 
 /**
  * Installer class.
@@ -41,8 +41,8 @@ final class Installer extends InstallerAbstract
     /**
      * Install data from providing modules.
      *
-     * @param ApplicationAbstract $app Application
-     * @param array        $data   Module info
+     * @param ApplicationAbstract $app  Application
+     * @param array               $data Module info
      *
      * @return array
      *
@@ -181,7 +181,7 @@ final class Installer extends InstallerAbstract
             }
         }
 
-        $upload = new UploadFile();
+        $upload            = new UploadFile();
         $upload->outputDir = empty($data['path'] ?? '')
             ? ApiController::createMediaPath()
             : __DIR__ . '/../../..' . $data['path'];
