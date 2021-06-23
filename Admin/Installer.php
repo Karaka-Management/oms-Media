@@ -26,6 +26,7 @@ use phpOMS\Module\InstallerAbstract;
 use phpOMS\System\File\Local\Directory;
 use phpOMS\System\File\Local\File;
 use phpOMS\System\File\PathException;
+use phpOMS\Application\ApplicationAbstract;
 
 /**
  * Installer class.
@@ -40,7 +41,7 @@ final class Installer extends InstallerAbstract
     /**
      * Install data from providing modules.
      *
-     * @param DatabasePool $dbPool Database pool
+     * @param ApplicationAbstract $app Application
      * @param array        $data   Module info
      *
      * @return array
@@ -50,10 +51,10 @@ final class Installer extends InstallerAbstract
      *
      * @since 1.0.0
      */
-    public static function installExternal(DatabasePool $dbPool, array $data) : array
+    public static function installExternal(ApplicationAbstract $app, array $data) : array
     {
         try {
-            $dbPool->get()->con->query('select 1 from `media`');
+            $app->dbPool->get()->con->query('select 1 from `media`');
         } catch (\Exception $e) {
             return []; // @codeCoverageIgnore
         }
@@ -85,10 +86,10 @@ final class Installer extends InstallerAbstract
         foreach ($mediaData as $media) {
             switch ($media['type']) {
                 case 'collection':
-                    $result['collection'][] = self::createCollection($dbPool, $media);
+                    $result['collection'][] = self::createCollection($app->dbPool, $media);
                     break;
                 case 'upload':
-                    $result['upload'][] = self::uploadMedia($dbPool, $media);
+                    $result['upload'][] = self::uploadMedia($app->dbPool, $media);
                     break;
                 default:
             }
@@ -181,7 +182,9 @@ final class Installer extends InstallerAbstract
         }
 
         $upload = new UploadFile();
-        $upload->setOutputDir(empty($data['path'] ?? '') ? ApiController::createMediaPath() : __DIR__ . '/../../..' . $data['path']);
+        $upload->outputDir = empty($data['path'] ?? '')
+            ? ApiController::createMediaPath()
+            : __DIR__ . '/../../..' . $data['path'];
 
         $status = $upload->upload($files, $data['name'], true);
 
