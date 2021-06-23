@@ -20,14 +20,13 @@ include __DIR__ . '/template-functions.php';
 
 /**
  * @var \phpOMS\Views\View $this
- * @var string             $parent
  */
 $mediaPath = \urldecode($this->getData('path') ?? '/');
 
-/**
- * @var \Modules\Media\Models\Media[] $media
- */
-$media   = $this->getData('media');
+/** @var \Modules\Media\Models\Media[] $media */
+$media = $this->getData('media') ?? [];
+
+/** @var \Modules\Admin\Models\Account $account */
 $account = $this->getData('account');
 
 $accountDir = $account->getId() . ' ' . $account->login;
@@ -193,7 +192,7 @@ $next     = empty($media) ? '{/prefix}media/list' : '{/prefix}media/list?{?}&id=
                             </a>
                         <td data-label="<?= $this->getHtml('Tag'); ?>"><?php $tags = $value->getTags(); foreach ($tags as $tag) : ?>
                             <a href="<?= $url; ?>">
-                            <span class="tag" style="background: <?= $this->printHtml($tag->color); ?>"><?= $tag->icon !== null ? '<i class="' . $this->printHtml($tag->icon ?? '') . '"></i>' : ''; ?><?= $this->printHtml($tag->getTitle()); ?></span>
+                            <span class="tag" style="background: <?= $this->printHtml($tag->color); ?>"><?= $tag->icon !== null ? '<i class="' . $this->printHtml($tag->icon ?? '') . '"></i>' : ''; ?><?= $this->printHtml($tag->getL11n()); ?></span>
                             </a>
                             <?php endforeach; ?>
                         <td data-label="<?= $this->getHtml('Extension'); ?>"><a href="<?= $url; ?>"><?= $this->printHtml($value->extension); ?></a>

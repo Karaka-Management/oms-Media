@@ -45,7 +45,7 @@ class UploadFile
      * @var bool
      * @since 1.0.0
      */
-    private bool $isInterlaced = true;
+    public bool $isInterlaced = true;
 
     /**
      * Upload max size.
@@ -53,7 +53,7 @@ class UploadFile
      * @var int
      * @since 1.0.0
      */
-    private int $maxSize = 50000000;
+    public int $maxSize = 50000000;
 
     /**
      * Allowed mime types.
@@ -69,15 +69,7 @@ class UploadFile
      * @var string
      * @since 1.0.0
      */
-    private string $outputDir = __DIR__ . '/../../Modules/Media/Files';
-
-    /**
-     * Output file name.
-     *
-     * @var string
-     * @since 1.0.0
-     */
-    private string $fileName = '';
+    public string $outputDir = __DIR__ . '/../../Modules/Media/Files';
 
     /**
      * Output file name.
@@ -85,7 +77,7 @@ class UploadFile
      * @var bool
      * @since 1.0.0
      */
-    private bool $preserveFileName = true;
+    public bool $preserveFileName = true;
 
     /**
      * Upload file to server.
@@ -153,8 +145,8 @@ class UploadFile
                 return $result;
             }
 
-            $split                = \explode('.', $f['name']);
-            $result[$key]['name'] = \count($files) === 1 && !empty($name)
+            $split                    = \explode('.', $f['name']);
+            $result[$key]['filename'] = \count($files) === 1 && !empty($name)
                 ? $name
                 : $f['name'];
 
@@ -162,14 +154,14 @@ class UploadFile
             $result[$key]['extension'] = $extension;
 
             if ($this->preserveFileName) {
-                $this->fileName           = $f['name'];
-                $result[$key]['filename'] = $this->fileName;
+                $name                     = $f['name'];
+                $result[$key]['filename'] = $name;
             }
 
-            if (empty($this->fileName) || \is_file($path . '/' . $this->fileName)) {
+            if (empty($name) || \is_file($path . '/' . $name)) {
                 try {
-                    $this->fileName           = $this->createFileName($path, $f['tmp_name'], $extension);
-                    $result[$key]['filename'] = $this->fileName;
+                    $name                     = $this->createFileName($path, $f['tmp_name'], $extension);
+                    $result[$key]['filename'] = $name;
                 } catch (\Exception $e) {
                     $result[$key]['filename'] = $f['name'];
                     $result[$key]['status']   = UploadStatus::FAILED_HASHING;
@@ -186,7 +178,7 @@ class UploadFile
                 }
             }
 
-            if (!\rename($f['tmp_name'], $dest = $path . '/' . $this->fileName)) {
+            if (!\rename($f['tmp_name'], $dest = $path . '/' . $name)) {
                 $result[$key]['status'] = UploadStatus::NOT_MOVABLE;
 
                 return $result;
@@ -350,40 +342,6 @@ class UploadFile
     }
 
     /**
-     * @return int
-     *
-     * @since 1.0.0
-     */
-    public function getMaxSize() : int
-    {
-        return $this->maxSize;
-    }
-
-    /**
-     * @param bool $isInterlaced Is interlaced
-     *
-     * @return void
-     *
-     * @since 1.0.0
-     */
-    public function setInterlaced(bool $isInterlaced) : void
-    {
-        $this->isInterlaced = $isInterlaced;
-    }
-
-    /**
-     * @param int $maxSize Max allowed file size
-     *
-     * @return void
-     *
-     * @since 1.0.0
-     */
-    public function setMaxSize(int $maxSize) : void
-    {
-        $this->maxSize = $maxSize;
-    }
-
-    /**
      * @return string[]
      *
      * @since 1.0.0
@@ -415,67 +373,5 @@ class UploadFile
     public function addAllowedTypes(string $allowedTypes) : void
     {
         $this->allowedTypes[] = $allowedTypes;
-    }
-
-    /**
-     * @return string
-     *
-     * @since 1.0.0
-     */
-    public function getOutputDir() : string
-    {
-        return $this->outputDir;
-    }
-
-    /**
-     * Define output directory of the upload
-     *
-     * @param string $outputDir Output directory of the uploaded file
-     *
-     * @return void
-     *
-     * @since 1.0.0
-     */
-    public function setOutputDir(string $outputDir) : void
-    {
-        $this->outputDir = $outputDir;
-    }
-
-    /**
-     * @return string
-     *
-     * @since 1.0.0
-     */
-    public function getFileName() : string
-    {
-        return $this->fileName;
-    }
-
-    /**
-     * Set the file name of the uploaded file
-     *
-     * @param string $fileName File name of the uploaded file
-     *
-     * @return void
-     *
-     * @since 1.0.0
-     */
-    public function setFileName(string $fileName) : void
-    {
-        $this->fileName = $fileName;
-    }
-
-    /**
-     * Define if the uploaded file name should be the same file name as the original file
-     *
-     * @param bool $preserveFileName Keep file name of the original file
-     *
-     * @return void
-     *
-     * @since 1.0.0
-     */
-    public function setPreserveFileName(bool $preserveFileName) : void
-    {
-        $this->preserveFileName = $preserveFileName;
     }
 }
