@@ -16,9 +16,6 @@ namespace Modules\Media\Theme\Backend\Components\Media;
 
 use Modules\Media\Models\Media;
 use Modules\Media\Views\MediaView;
-use phpOMS\Localization\L11nManager;
-use phpOMS\Message\RequestAbstract;
-use phpOMS\Message\ResponseAbstract;
 
 /**
  * Component view.
