@@ -100,11 +100,11 @@ final class CollectionMapper extends MediaMapper
     {
         $depth = 3;
         $query = self::getQuery();
-        $query->where(self::$table . '_' . $depth . '.media_virtual', '=', $virtualPath);
-        $query->where(self::$table . '_' . $depth . '.media_collection', '=', 1);
+        $query->where(self::$table . '_d' . $depth . '.media_virtual', '=', $virtualPath);
+        $query->where(self::$table . '_d' . $depth . '.media_collection', '=', 1);
 
         if ($hidden === false) {
-            $query->andWhere(self::$table . '_' . $depth . '.media_hidden', '=', (int) $hidden);
+            $query->andWhere(self::$table . '_d' . $depth . '.media_hidden', '=', (int) $hidden);
         }
 
         return self::getAllByQuery($query, RelationType::ALL, $depth);

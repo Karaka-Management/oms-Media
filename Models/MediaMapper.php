@@ -141,10 +141,10 @@ class MediaMapper extends DataMapperAbstract
     {
         $depth = 3;
         $query = self::getQuery();
-        $query->where(self::$table . '_' . $depth . '.media_virtual', '=', $virtualPath);
+        $query->where(self::$table . '_d' . $depth . '.media_virtual', '=', $virtualPath);
 
         if ($hidden === false) {
-            $query->andWhere(self::$table . '_' . $depth . '.media_hidden', '=', (int) $hidden);
+            $query->andWhere(self::$table . '_d' . $depth . '.media_hidden', '=', (int) $hidden);
         }
 
         return self::getAllByQuery($query, RelationType::ALL, $depth);
@@ -166,8 +166,8 @@ class MediaMapper extends DataMapperAbstract
 
         $depth = 3;
         $query = self::getQuery();
-        $query->where(self::$table. '_' . $depth  . '.media_virtual', '=', $virtualPath)
-            ->andWhere(self::$table. '_' . $depth  . '.media_name', '=', $name);
+        $query->where(self::$table. '_d' . $depth  . '.media_virtual', '=', $virtualPath)
+            ->andWhere(self::$table. '_d' . $depth  . '.media_name', '=', $name);
 
         $objs = self::getAllByQuery($query, RelationType::ALL, $depth);
 

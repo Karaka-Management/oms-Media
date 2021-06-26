@@ -42,14 +42,6 @@ class ElementView extends MediaView
     /**
      * {@inheritdoc}
      */
-    public function __construct(L11nManager $l11n = null, RequestAbstract $request, ResponseAbstract $response)
-    {
-        parent::__construct($l11n, $request, $response);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function render(...$data) : string
     {
         $this->media = $data[0];

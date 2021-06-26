@@ -88,6 +88,15 @@ class Collection extends Media implements \Iterator
         return $this->sources;
     }
 
+    /**
+     * Get media element by its name.
+     *
+     * @param string $name Name of the media element
+     *
+     * @return Media
+     *
+     * @since 1.0.0
+     */
     public function getSourceByName(string $name) : Media
     {
         foreach ($this->sources as $source) {

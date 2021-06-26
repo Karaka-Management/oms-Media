@@ -107,6 +107,8 @@ class UploadFile
             $files = [$files];
         }
 
+        $fileCount = \count($files);
+
         if (!$absolute && \count($files) > 1) {
             $this->outputDir = $this->findOutputDir();
         }
@@ -158,7 +160,7 @@ class UploadFile
                 $result[$key]['filename'] = $name;
             }
 
-            if (empty($name) || \is_file($path . '/' . $name)) {
+            if (!$this->preserveFileName || $fileCount !== 1 || empty($name) || \is_file($path . '/' . $name)) {
                 try {
                     $name                     = $this->createFileName($path, $f['tmp_name'], $extension);
                     $result[$key]['filename'] = $name;
@@ -169,6 +171,8 @@ class UploadFile
                     return $result;
                 }
             }
+
+            $result[$key]['name'] = empty($name) ? $result[$key]['filename'] : $name;
 
             if (!\is_dir($path)) {
                 $created = Directory::create($path, 0755, true);

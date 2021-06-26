@@ -172,6 +172,17 @@ final class ApiController extends Controller
         return $this->createDbEntries($status, $account, $virtualPath, $type);
     }
 
+    /**
+     * Uploads a file to a destination
+     *
+     * @param array  $files Files to upload
+     * @param string $name  Name of the file (only if a single file is provided)
+     * @param string $path  Upload path
+     *
+     * @return array
+     *
+     * @since 1.0.0
+     */
     public static function uploadFilesToDestination(
         array $files,
         string $name = '',
@@ -266,7 +277,7 @@ final class ApiController extends Controller
         $media = new Media();
 
         $media->setPath(self::normalizeDbPath($status['path']) . '/' . $status['filename']);
-        $media->name      = $status['name'];
+        $media->name      = empty($status['name']) ? $status['filename'] : $status['name'];
         $media->size      = $status['size'];
         $media->createdBy = new NullAccount($account);
         $media->extension = $status['extension'];
@@ -579,7 +590,7 @@ final class ApiController extends Controller
     public function apiMediaExport(RequestAbstract $request, ResponseAbstract $response, $data = null) : void
     {
         /** @var Media $media */
-        $media  = MediaMapper::get((int) $request->getData('id'));
+        $media = MediaMapper::get((int) $request->getData('id'));
 
         $view = $this->createView($media, $request, $response);
         $this->setMediaResponseHeader($view, $media, $request, $response);

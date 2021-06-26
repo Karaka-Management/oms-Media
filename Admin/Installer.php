@@ -42,7 +42,7 @@ final class Installer extends InstallerAbstract
      * Install data from providing modules.
      *
      * @param ApplicationAbstract $app  Application
-     * @param array               $data Module info
+     * @param array               $data Additional data
      *
      * @return array
      *
@@ -116,7 +116,7 @@ final class Installer extends InstallerAbstract
             $path    = '/Modules/Media/Files' . ($data['virtualPath'] ?? '') . '/' . ($data['name'] ?? '');
         } else {
             $dirPath = $data['path'] . '/' . ($data['name'] ?? '');
-            $path    = $data['path'] ?? '/Modules/Media/Files' . '/' . ($data['name'] ?? '');
+            $path    = $data['path'] ?? '/Modules/Media/Files/' . ($data['name'] ?? '');
         }
 
         $collection       = new Collection();
@@ -193,7 +193,7 @@ final class Installer extends InstallerAbstract
             $media = new Media();
 
             $media->setPath(ApiController::normalizeDbPath($data['path']) . '/' . $uFile['filename']);
-            $media->name      = $uFile['name'];
+            $media->name      = $uFile['filename'];
             $media->size      = $uFile['size'];
             $media->createdBy = new NullAccount((int) $data['user'] ?? 1);
             $media->extension = $uFile['extension'];
