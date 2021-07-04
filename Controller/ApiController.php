@@ -69,7 +69,7 @@ final class ApiController extends Controller
     public function apiMediaUpload(RequestAbstract $request, ResponseAbstract $response, $data = null) : void
     {
         $uploads = $this->uploadFiles(
-            $request->getData('name') === null || \count($request->getFiles()) > 1 ? '' : $request->getData('name'),
+            [$request->getData('name') === null ? '' : $request->getData('name')],
             $request->getFiles(),
             $request->header->account,
             __DIR__ . '/../../../Modules/Media/Files' . \urldecode((string) ($request->getData('path') ?? '')),
@@ -120,7 +120,7 @@ final class ApiController extends Controller
     /**
      * Upload a media file
      *
-     * @param string $name          Name
+     * @param array  $names         Name
      * @param array  $files         Files
      * @param int    $account       Uploader
      * @param string $basePath      Base path. The path which is used for the upload.
@@ -138,7 +138,7 @@ final class ApiController extends Controller
      * @since 1.0.0
      */
     public function uploadFiles(
-        string $name,
+        array $names,
         array $files,
         int $account,
         string $basePath = '/Modules/Media/Files',
@@ -147,7 +147,8 @@ final class ApiController extends Controller
         string $password = '',
         string $encryptionKey = '',
         int $pathSettings = PathSettings::RANDOM_PATH
-    ) : array {
+    ) : array
+    {
         if (empty($files)) {
             return [];
         }
@@ -167,7 +168,7 @@ final class ApiController extends Controller
         $upload            = new UploadFile();
         $upload->outputDir = $outputDir;
 
-        $status = $upload->upload($files, $name, $absolute, $encryptionKey);
+        $status = $upload->upload($files, $names, $absolute, $encryptionKey);
 
         return $this->createDbEntries($status, $account, $virtualPath, $type);
     }
@@ -176,7 +177,7 @@ final class ApiController extends Controller
      * Uploads a file to a destination
      *
      * @param array  $files Files to upload
-     * @param string $name  Name of the file (only if a single file is provided)
+     * @param array  $names Name of the file (only if a single file is provided)
      * @param string $path  Upload path
      *
      * @return array
@@ -185,13 +186,14 @@ final class ApiController extends Controller
      */
     public static function uploadFilesToDestination(
         array $files,
-        string $name = '',
+        array $names = [],
         string $path = '',
-    ) : array {
+    ) : array
+    {
         $upload            = new UploadFile();
         $upload->outputDir = $path;
 
-        $status = $upload->upload($files, $name, true, '');
+        $status = $upload->upload($files, $names, true, '');
 
         return $status;
     }
@@ -212,6 +214,8 @@ final class ApiController extends Controller
     }
 
     /**
+     * Create database entries for uploaded files
+     *
      * @param array  $status      Files
      * @param int    $account     Uploader
      * @param string $virtualPath Virtual path
@@ -228,7 +232,8 @@ final class ApiController extends Controller
         string $virtualPath = '',
         string $type = '',
         string $ip = '127.0.0.1'
-    ) : array {
+    ) : array
+    {
         $mediaCreated = [];
 
         foreach ($status as $uFile) {

@@ -82,11 +82,11 @@ class UploadFile
     /**
      * Upload file to server.
      *
-     * @param array  $files         File data ($_FILE)
-     * @param string $name          File name
-     * @param bool   $absolute      Use absolute path
-     * @param string $encryptionKey Encryption key
-     * @param string $encoding      Encoding used for uploaded file. Empty string will not convert file content.
+     * @param array    $files         File data ($_FILE)
+     * @param string[] $names         File name
+     * @param bool     $absolute      Use absolute path
+     * @param string   $encryptionKey Encryption key
+     * @param string   $encoding      Encoding used for uploaded file. Empty string will not convert file content.
      *
      * @return array
      *
@@ -96,26 +96,30 @@ class UploadFile
      */
     public function upload(
         array $files,
-        string $name = '',
+        array $names = [],
         bool $absolute = false,
         string $encryptionKey = '',
         string $encoding = 'UTF-8'
-    ) : array {
+    ) : array
+    {
         $result = [];
 
         if (\count($files) === \count($files, \COUNT_RECURSIVE)) {
             $files = [$files];
         }
 
-        $fileCount = \count($files);
-
         if (!$absolute && \count($files) > 1) {
             $this->outputDir = $this->findOutputDir();
         }
 
-        $path = $this->outputDir;
+        $path     = $this->outputDir;
+        $fCounter = -1;
+        $areNamed = \count($files) === \count($names);
 
         foreach ($files as $key => $f) {
+            ++$fCounter;
+            $name = $areNamed ? $names[$fCounter] : '';
+
             if ($path === '') {
                 $path = File::dirpath($f['tmp_name']);
             }
@@ -148,9 +152,7 @@ class UploadFile
             }
 
             $split                    = \explode('.', $f['name']);
-            $result[$key]['filename'] = \count($files) === 1 && !empty($name)
-                ? $name
-                : $f['name'];
+            $result[$key]['filename'] = !empty($name) ? $name : $f['name'];
 
             $extension                 = \count($split) > 1 ? $split[\count($split) - 1] : '';
             $result[$key]['extension'] = $extension;
@@ -160,7 +162,7 @@ class UploadFile
                 $result[$key]['filename'] = $name;
             }
 
-            if (!$this->preserveFileName || $fileCount !== 1 || empty($name) || \is_file($path . '/' . $name)) {
+            if (!$this->preserveFileName || empty($name) || \is_file($path . '/' . $name)) {
                 try {
                     $name                     = $this->createFileName($path, $f['tmp_name'], $extension);
                     $result[$key]['filename'] = $name;

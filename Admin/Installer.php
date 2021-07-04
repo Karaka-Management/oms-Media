@@ -186,7 +186,7 @@ final class Installer extends InstallerAbstract
             ? ApiController::createMediaPath()
             : __DIR__ . '/../../..' . $data['path'];
 
-        $status = $upload->upload($files, $data['name'], true);
+        $status = $upload->upload($files, [$data['name']], true);
 
         $mediaFiles = [];
         foreach ($status as $uFile) {
