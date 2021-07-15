@@ -6,7 +6,7 @@ A media element is used in order to handle files, directories, virtual directori
 
 ### File system
 
-The path is either the absolute path on the file system or relative path in relation to applications path. If the path is an absolute path the media element also needs to be set to `isAbsolute() === true`. The path includes the file itself.
+The path is either the absolute path on the file system or relative path in relation to applications path. If the path is an absolute path the media element also needs to be set to `->isAbsolute === true`. The path includes the file itself.
 
 ## Virtual Path
 
