@@ -15,6 +15,7 @@ declare(strict_types=1);
 namespace Modules\Media\tests\Admin;
 
 use Modules\Media\Admin\Installer;
+use phpOMS\Application\ApplicationAbstract;
 
 /**
  * @internal
@@ -31,6 +32,13 @@ class AdminTest extends \PHPUnit\Framework\TestCase
     {
         $this->expectException(\phpOMS\System\File\PathException::class);
 
-        Installer::installExternal($GLOBALS['dbpool'], ['path' => 'invalid.json']);
+        $app = new class() extends ApplicationAbstract
+        {
+            protected string $appName = 'Api';
+        };
+
+        $app->dbPool = $GLOBALS['dbpool'];
+
+        Installer::installExternal($app, ['path' => 'invalid.json']);
     }
 }

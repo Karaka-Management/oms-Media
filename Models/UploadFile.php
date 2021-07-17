@@ -152,20 +152,14 @@ class UploadFile
             }
 
             $split                    = \explode('.', $f['name']);
-            $result[$key]['filename'] = !empty($name) ? $name : $f['name'];
+            $result[$key]['filename'] = !empty($name) && !$this->preserveFileName ? $name : $f['name'];
 
             $extension                 = \count($split) > 1 ? $split[\count($split) - 1] : '';
             $result[$key]['extension'] = $extension;
 
-            if ($this->preserveFileName) {
-                $name                     = $f['name'];
-                $result[$key]['filename'] = $name;
-            }
-
-            if (!$this->preserveFileName || empty($name) || \is_file($path . '/' . $name)) {
+            if (!$this->preserveFileName || \is_file($path . '/' . $result[$key]['filename'])) {
                 try {
-                    $name                     = $this->createFileName($path, $f['tmp_name'], $extension);
-                    $result[$key]['filename'] = $name;
+                    $result[$key]['filename'] = $this->createFileName($path, $f['tmp_name'], $extension);
                 } catch (\Exception $e) {
                     $result[$key]['filename'] = $f['name'];
                     $result[$key]['status']   = UploadStatus::FAILED_HASHING;
@@ -184,7 +178,7 @@ class UploadFile
                 }
             }
 
-            if (!\rename($f['tmp_name'], $dest = $path . '/' . $name)) {
+            if (!\rename($f['tmp_name'], $dest = $path . '/' . $result[$key]['filename'])) {
                 $result[$key]['status'] = UploadStatus::NOT_MOVABLE;
 
                 return $result;
