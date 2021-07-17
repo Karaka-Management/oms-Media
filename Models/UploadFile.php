@@ -145,7 +145,7 @@ class UploadFile
                 return $result;
             }
 
-            if (!empty($this->allowedTypes) && ($ext = \array_search($f['type'], $this->allowedTypes, true)) === false) {
+            if (!empty($this->allowedTypes) && \array_search($f['type'], $this->allowedTypes, true) === false) {
                 $result[$key]['status'] = UploadStatus::WRONG_EXTENSION;
 
                 return $result;
