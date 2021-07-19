@@ -159,6 +159,7 @@ class UploadFile
 
             if (!$this->preserveFileName || \is_file($path . '/' . $result[$key]['filename'])) {
                 try {
+                    // @todo: split filename to tmp_name and extension for this function call!
                     $result[$key]['filename'] = $this->createFileName($path, $f['tmp_name'], $extension);
                 } catch (\Exception $e) {
                     $result[$key]['filename'] = $f['name'];
