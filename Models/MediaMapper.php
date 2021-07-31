@@ -140,7 +140,7 @@ class MediaMapper extends DataMapperAbstract
     public static function getByVirtualPath(string $virtualPath = '/', bool $hidden = false) : array
     {
         $depth = 3;
-        $query = self::getQuery();
+        $query = self::getQuery(depth: $depth);
         $query->where(self::$table . '_d' . $depth . '.media_virtual', '=', $virtualPath);
 
         if ($hidden === false) {

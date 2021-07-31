@@ -99,7 +99,7 @@ final class CollectionMapper extends MediaMapper
     public static function getByVirtualPath(string $virtualPath = '/', bool $hidden = false) : array
     {
         $depth = 3;
-        $query = self::getQuery();
+        $query = self::getQuery(depth: $depth);
         $query->where(self::$table . '_d' . $depth . '.media_virtual', '=', $virtualPath);
         $query->where(self::$table . '_d' . $depth . '.media_collection', '=', 1);
 

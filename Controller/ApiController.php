@@ -209,8 +209,8 @@ final class ApiController extends Controller
      */
     public static function createMediaPath(string $basePath = '/Modules/Media/Files') : string
     {
-        $rndPath = \str_pad(\dechex(\mt_rand(0, 65535)), 4, '0', \STR_PAD_LEFT);
-        return $basePath . '/_' . $rndPath[0] . $rndPath[1] . '/' . $rndPath[2] . $rndPath[3];
+        $rndPath = \str_pad(\dechex(\mt_rand(0, 4294967295)), 8, '0', \STR_PAD_LEFT);
+        return $basePath . '/_' . $rndPath[0] . $rndPath[1] . $rndPath[2] . $rndPath[3] . '/_' . $rndPath[4] . $rndPath[5] . $rndPath[6] . $rndPath[7];
     }
 
     /**
