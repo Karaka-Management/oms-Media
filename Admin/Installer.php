@@ -27,6 +27,9 @@ use phpOMS\Module\InstallerAbstract;
 use phpOMS\System\File\Local\Directory;
 use phpOMS\System\File\Local\File;
 use phpOMS\System\File\PathException;
+use Modules\Admin\Models\AccountMapper;
+use phpOMS\Module\ModuleInfo;
+use phpOMS\Config\SettingsInterface;
 
 /**
  * Installer class.
@@ -39,15 +42,43 @@ use phpOMS\System\File\PathException;
 final class Installer extends InstallerAbstract
 {
     /**
+     * {@inheritdoc}
+     */
+    public static function install(DatabasePool $dbPool, ModuleInfo $info, SettingsInterface $cfgHandler) : void
+    {
+        parent::install($dbPool, $info, $cfgHandler);
+
+        // Create directory for admin account
+        // All other accounts are automatically created in the admin module whenever they get created
+        // However, the admin account is created before the Media module is installed
+        // Because of this, the directory needs to be created manually after the Media installation
+        // The admin account should be the only DB account, but we use a loop of all accounts to avoid bugs
+        $accounts = AccountMapper::getAll();
+
+        foreach ($accounts as $account) {
+            $collection       = new Collection();
+            $collection->name = ((string) $account->getId()) . ' ' . $account->login;
+            $collection->setVirtualPath('/Accounts');
+            $collection->setPath('/Modules/Media/Files/Accounts/' . ((string) $account->getId()));
+            // The installation is always run by the admin account since the module is a "base" module which is always installed during the application setup
+            $collection->createdBy = new NullAccount(1);
+
+            CollectionMapper::create($collection);
+        }
+    }
+
+    /**
      * Install data from providing modules.
+     *
+     * The data can be either directories which should be created or files which should be "uploaded"
      *
      * @param ApplicationAbstract $app  Application
      * @param array               $data Additional data
      *
      * @return array
      *
-     * @throws PathException This exception is thrown if the Navigation install file couldn't be found
-     * @throws \Exception    This exception is thrown if the Navigation install file is invalid json
+     * @throws PathException
+     * @throws \Exception
      *
      * @since 1.0.0
      */
@@ -127,7 +158,7 @@ final class Installer extends InstallerAbstract
 
         CollectionMapper::create($collection);
 
-        if ($data['create_directory']) {
+        if ($data['create_directory'] && !\is_dir($dirPath)) {
             // @todo fix permission mode
             \mkdir($dirPath, 0755, true);
         }
@@ -198,7 +229,7 @@ final class Installer extends InstallerAbstract
             $media->createdBy = new NullAccount((int) $data['user'] ?? 1);
             $media->extension = $uFile['extension'];
             $media->setVirtualPath((string) ($data['virtualPath'] ?? '/') . '/' . $data['name']);
-            $media->type = $data['type'] ?? ''; // = identifier for modules
+            $media->type = $data['media_type'] ?? ''; // = identifier for modules
 
             MediaMapper::create($media);
 
