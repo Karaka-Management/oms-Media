@@ -17,6 +17,12 @@ use phpOMS\Uri\UriFactory;
 
 include __DIR__ . '/../../template-functions.php';
 
+$previous = empty($this->media)
+    ? '{%}'
+    : '{%}?{?}&mpivot=' . \reset($this->media)->getId() . '&mptype=p';
+$next     = empty($this->media)
+    ? '{%}'
+    : '{%}?{?}&mpivot=' . \end($this->media)->getId() . '&mptype=n';
 ?>
 <div class="portlet">
     <div class="portlet-head"><?= $this->getHtml('Media', 'Media'); ?><i class="fa fa-download floatRight download btn"></i></div>
@@ -45,8 +51,11 @@ include __DIR__ . '/../../template-functions.php';
             <td data-label="<?= $this->getHtml('Created'); ?>"><a href="<?= $url; ?>"><?= $this->printHtml($value->createdAt->format('Y-m-d')); ?></a>
         <?php endforeach; ?>
         <?php if ($count === 0) : ?>
-        <tr><td colspan="6" class="empty"><?= $this->getHtml('Empty', '0', '0'); ?>
+            <tr><td colspan="6" class="empty"><?= $this->getHtml('Empty', '0', '0'); ?>
         <?php endif; ?>
     </table>
-    <div class="portlet-foot"></div>
+    <div class="portlet-foot">
+        <a tabindex="0" class="button" href="<?= UriFactory::build($previous); ?>"><?= $this->getHtml('Previous', '0', '0'); ?></a>
+        <a tabindex="0" class="button" href="<?= UriFactory::build($next); ?>"><?= $this->getHtml('Next', '0', '0'); ?></a>
+    </div>
 </div>
