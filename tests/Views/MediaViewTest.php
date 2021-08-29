@@ -24,6 +24,9 @@ class MediaViewTest extends \PHPUnit\Framework\TestCase
 {
     protected MediaView $view;
 
+    /**
+     * {@inheritdoc}
+     */
     protected function setUp() : void
     {
         $this->view = new MediaView();

@@ -25,6 +25,9 @@ class CollectionTest extends \PHPUnit\Framework\TestCase
 {
     protected Collection $media;
 
+    /**
+     * {@inheritdoc}
+     */
     protected function setUp() : void
     {
         $this->media = new Collection();

@@ -24,6 +24,9 @@ class MediaTest extends \PHPUnit\Framework\TestCase
 {
     protected Media $media;
 
+    /**
+     * {@inheritdoc}
+     */
     protected function setUp() : void
     {
         $this->media = new Media();
