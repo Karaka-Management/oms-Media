@@ -14,6 +14,7 @@ declare(strict_types=1);
 
 namespace Modules\Media\Admin;
 
+use Modules\Admin\Models\AccountMapper;
 use Modules\Admin\Models\NullAccount;
 use Modules\Media\Controller\ApiController;
 use Modules\Media\Models\Collection;
@@ -22,14 +23,13 @@ use Modules\Media\Models\Media;
 use Modules\Media\Models\MediaMapper;
 use Modules\Media\Models\UploadFile;
 use phpOMS\Application\ApplicationAbstract;
+use phpOMS\Config\SettingsInterface;
 use phpOMS\DataStorage\Database\DatabasePool;
 use phpOMS\Module\InstallerAbstract;
+use phpOMS\Module\ModuleInfo;
 use phpOMS\System\File\Local\Directory;
 use phpOMS\System\File\Local\File;
 use phpOMS\System\File\PathException;
-use Modules\Admin\Models\AccountMapper;
-use phpOMS\Module\ModuleInfo;
-use phpOMS\Config\SettingsInterface;
 
 /**
  * Installer class.
