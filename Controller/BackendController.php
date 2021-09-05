@@ -130,7 +130,7 @@ final class BackendController extends Controller
 
             foreach ($glob as $file) {
                 $basename = \basename($file);
-                if ($basename[0] === '_' && \strlen($basename) === 3) {
+                if ($basename[0] === '_' && \strlen($basename) === 5) {
                     continue;
                 }
 
