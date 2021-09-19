@@ -38,7 +38,7 @@ class MediaMapper extends DataMapperAbstract
     protected static array $columns = [
         'media_id'                    => ['name' => 'media_id',              'type' => 'int',      'internal' => 'id'],
         'media_name'                  => ['name' => 'media_name',            'type' => 'string',   'internal' => 'name',          'autocomplete' => true],
-        'media_type'                  => ['name' => 'media_type',            'type' => 'string',   'internal' => 'type'],
+        'media_type'                  => ['name' => 'media_type',            'type' => 'int',   'internal' => 'type'],
         'media_description'           => ['name' => 'media_description',     'type' => 'string',   'internal' => 'description',   'autocomplete' => true],
         'media_description_raw'       => ['name' => 'media_description_raw', 'type' => 'string',   'internal' => 'descriptionRaw'],
         'media_versioned'             => ['name' => 'media_versioned',       'type' => 'bool',     'internal' => 'isVersioned'],
@@ -65,6 +65,19 @@ class MediaMapper extends DataMapperAbstract
         'createdBy' => [
             'mapper'     => AccountMapper::class,
             'external'   => 'media_created_by',
+        ],
+    ];
+
+    /**
+     * Belongs to.
+     *
+     * @var array<string, array{mapper:string, external:string}>
+     * @since 1.0.0
+     */
+    protected static array $ownsOne = [
+        'type' => [
+            'mapper'     => MediaTypeMapper::class,
+            'external'   => 'media_type',
         ],
     ];
 

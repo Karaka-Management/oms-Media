@@ -17,6 +17,8 @@ declare(strict_types=1);
 
 $media = $this->getData('media');
 
+$t = ($media->isAbsolute ? '' : __DIR__ . '/../../../../') . $media->getPath();
+
 $fp = \fopen(($media->isAbsolute ? '' : __DIR__ . '/../../../../') . $media->getPath(), 'r');
 \fpassthru($fp);
 \fclose($fp);

@@ -145,7 +145,7 @@ final class BackendController extends Controller
                 $pathinfo = \pathinfo($file);
 
                 $localMedia            = new Media();
-                $localMedia->name      = $pathinfo['filename'];
+                $localMedia->name      = $pathinfo['basename'];
                 $localMedia->extension = \is_dir($file) ? 'collection' : $pathinfo['extension'] ?? '';
                 $localMedia->setVirtualPath($path);
                 $localMedia->createdBy = new Account();

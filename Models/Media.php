@@ -48,10 +48,10 @@ class Media implements \JsonSerializable
     /**
      * Type.
      *
-     * @var string
+     * @var null|int|MediaType
      * @since 1.0.0
      */
-    public string $type = '';
+    public null|int|MediaType $type = null;
 
     /**
      * Extension.

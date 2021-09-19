@@ -594,8 +594,22 @@ final class ApiController extends Controller
      */
     public function apiMediaExport(RequestAbstract $request, ResponseAbstract $response, $data = null) : void
     {
-        /** @var Media $media */
-        $media = MediaMapper::get((int) $request->getData('id'));
+        if (((int) $request->getData('id')) !== 0) {
+            /** @var Media $media */
+            $media = MediaMapper::get((int) $request->getData('id'));
+        } else {
+            $path  = \urldecode($request->getData('path'));
+            $media = new NullMedia();
+            if (\is_file(__DIR__ . '/../../../' . \ltrim($path, '\\/'))) {
+                $name = \explode('.', \basename($path));
+
+                $media->name      = $name[0];
+                $media->extension = $name[1] ?? '';
+                $media->setVirtualPath(\dirname($path));
+                $media->setPath('/' . \ltrim($path, '\\/'));
+                $media->isAbsolute = false;
+            }
+        }
 
         $view = $this->createView($media, $request, $response);
         $this->setMediaResponseHeader($view, $media, $request, $response);
