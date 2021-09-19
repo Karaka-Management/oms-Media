@@ -116,10 +116,10 @@ class MediaTypeL11n implements \JsonSerializable, ArrayableInterface
     public function toArray() : array
     {
         return [
-            'id'       => $this->id,
-            'title'    => $this->title,
+            'id'        => $this->id,
+            'title'     => $this->title,
             'type'      => $this->type,
-            'language' => $this->language,
+            'language'  => $this->language,
         ];
     }
 

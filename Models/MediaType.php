@@ -77,7 +77,7 @@ class MediaType implements \JsonSerializable, ArrayableInterface
      * Set title
      *
      * @param string|MediaTypeL11n $title Media article title
-     * @param string         $lang  Language
+     * @param string               $lang  Language
      *
      * @return void
      *
@@ -104,7 +104,7 @@ class MediaType implements \JsonSerializable, ArrayableInterface
         return [
             'id'    => $this->id,
             'title' => $this->title,
-            'name' => $this->name,
+            'name'  => $this->name,
         ];
     }
 

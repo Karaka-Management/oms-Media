@@ -17,14 +17,14 @@ namespace Modules\Media\Admin;
 use Modules\Admin\Models\AccountMapper;
 use Modules\Admin\Models\NullAccount;
 use Modules\Media\Controller\ApiController;
-use Modules\Media\Models\MediaType;
-use Modules\Media\Models\MediaTypeMapper;
-use Modules\Media\Models\MediaTypeL11n;
-use Modules\Media\Models\MediaTypeL11nMapper;
 use Modules\Media\Models\Collection;
 use Modules\Media\Models\CollectionMapper;
 use Modules\Media\Models\Media;
 use Modules\Media\Models\MediaMapper;
+use Modules\Media\Models\MediaType;
+use Modules\Media\Models\MediaTypeL11n;
+use Modules\Media\Models\MediaTypeL11nMapper;
+use Modules\Media\Models\MediaTypeMapper;
 use Modules\Media\Models\UploadFile;
 use phpOMS\Application\ApplicationAbstract;
 use phpOMS\Config\SettingsInterface;
@@ -186,13 +186,13 @@ final class Installer extends InstallerAbstract
      */
     private static function createType(DatabasePool $dbPool, array $data) : MediaType
     {
-        $type = new MediaType();
+        $type       = new MediaType();
         $type->name = $data['name'] ?? '';
 
         $id = MediaTypeMapper::create($type);
 
         foreach ($data['l11n'] as $l11n) {
-            $l11n = new MediaTypeL11n($l11n['title'], $l11n['lang']);
+            $l11n       = new MediaTypeL11n($l11n['title'], $l11n['lang']);
             $l11n->type = $id;
 
             MediaTypeL11nMapper::create($l11n);
