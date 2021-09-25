@@ -42,6 +42,7 @@ use phpOMS\System\File\Local\Directory;
 use phpOMS\System\MimeType;
 use phpOMS\Utils\Parser\Markdown\Markdown;
 use phpOMS\Views\View;
+use Modules\Media\Models\NullMediaType;
 
 /**
  * Media class.
@@ -74,7 +75,7 @@ final class ApiController extends Controller
             $request->header->account,
             __DIR__ . '/../../../Modules/Media/Files' . \urldecode((string) ($request->getData('path') ?? '')),
             \urldecode((string) ($request->getData('virtualpath') ?? '')),
-            (string) ($request->getData('type') ?? ''),
+            $request->getData('type', 'int'),
             (string) ($request->getData('password') ?? ''),
             (string) ($request->getData('encrypt') ?? ''),
             (int) ($request->getData('pathsettings') ?? PathSettings::RANDOM_PATH)
@@ -143,7 +144,7 @@ final class ApiController extends Controller
         int $account,
         string $basePath = '/Modules/Media/Files',
         string $virtualPath = '',
-        string $type = '',
+        int $type = null,
         string $password = '',
         string $encryptionKey = '',
         int $pathSettings = PathSettings::RANDOM_PATH
@@ -219,7 +220,7 @@ final class ApiController extends Controller
      * @param array  $status      Files
      * @param int    $account     Uploader
      * @param string $virtualPath Virtual path
-     * @param string $type        Media type (internal categorization = identifier for modules)
+     * @param null|int $type        Media type (internal categorization = identifier for modules)
      * @param string $ip          Ip
      *
      * @return Media[]
@@ -230,7 +231,7 @@ final class ApiController extends Controller
         array $status,
         int $account,
         string $virtualPath = '',
-        string $type = '',
+        int $type = null,
         string $ip = '127.0.0.1'
     ) : array
     {
@@ -264,16 +265,16 @@ final class ApiController extends Controller
     /**
      * Create db entry for uploaded file
      *
-     * @param array  $status      Files
-     * @param int    $account     Uploader
-     * @param string $virtualPath Virtual path (not on the hard-drive)
-     * @param string $type        Media type (internal categorization)
+     * @param array     $status      Files
+     * @param int       $account     Uploader
+     * @param string    $virtualPath Virtual path (not on the hard-drive)
+     * @param null|int  $type        Media type (internal categorization)
      *
      * @return null|Media
      *
      * @since 1.0.0
      */
-    public static function createDbEntry(array $status, int $account, string $virtualPath = '', string $type = '') : ?Media
+    public static function createDbEntry(array $status, int $account, string $virtualPath = '', int $type = null) : ?Media
     {
         if ($status['status'] !== UploadStatus::OK) {
             return null;
@@ -287,7 +288,7 @@ final class ApiController extends Controller
         $media->createdBy = new NullAccount($account);
         $media->extension = $status['extension'];
         $media->setVirtualPath($virtualPath);
-        $media->type = $type;
+        $media->type = \is_int($type) ? new NullMediaType($type) : null;
 
         MediaMapper::create($media);
 
