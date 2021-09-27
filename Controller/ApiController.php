@@ -84,8 +84,6 @@ final class ApiController extends Controller
         $ids = [];
         foreach ($uploads as $file) {
             $ids[] = $file->getId();
-
-            // @todo: maybe improve, this could potentially be done immediately in the createDBEntry, especially if tags replace the type? But probably we need type and tags (both are slightly different e.g. tags are public, types are for modules e.g. itemmanagement item image)
             // add tags
             if (!empty($tags = $request->getDataJson('tags'))) {
                 foreach ($tags as $tag) {
@@ -366,7 +364,8 @@ final class ApiController extends Controller
         // @todo: implement a security check to ensure the user is allowed to write to the file. Right now you could overwrite ANY file with a malicious $path
         if ($id === 0
             && $media instanceof NullMedia
-            && \is_file(__DIR__ . '/../Files' . ($path = \urldecode($request->getData('path'))))
+            && \is_file($fullPath = __DIR__ . '/../Files' . ($path = \urldecode($request->getData('path'))))
+            && \stripos(FileUtils::absolute(__DIR__ . '/../Files/'), FileUtils::absolute($fullPath)) === 0
         ) {
             $name = \explode('.', \basename($path));
 
@@ -634,6 +633,8 @@ final class ApiController extends Controller
     {
         $view = new View($this->app->l11nManager, $request, $response);
         $view->setData('media', $media);
+
+        $response->endAllOutputBuffering(); // for large files
 
         if (($type = $request->getData('type')) === null) {
             $view->setTemplate('/Modules/Media/Theme/Api/render');
