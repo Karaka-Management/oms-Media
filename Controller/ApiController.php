@@ -22,6 +22,7 @@ use Modules\Media\Models\Media;
 use Modules\Media\Models\MediaMapper;
 use Modules\Media\Models\NullCollection;
 use Modules\Media\Models\NullMedia;
+use Modules\Media\Models\NullMediaType;
 use Modules\Media\Models\PathSettings;
 use Modules\Media\Models\PermissionState;
 use Modules\Media\Models\UploadFile;
@@ -42,7 +43,6 @@ use phpOMS\System\File\Local\Directory;
 use phpOMS\System\MimeType;
 use phpOMS\Utils\Parser\Markdown\Markdown;
 use phpOMS\Views\View;
-use Modules\Media\Models\NullMediaType;
 
 /**
  * Media class.
@@ -215,11 +215,11 @@ final class ApiController extends Controller
     /**
      * Create database entries for uploaded files
      *
-     * @param array  $status      Files
-     * @param int    $account     Uploader
-     * @param string $virtualPath Virtual path
+     * @param array    $status      Files
+     * @param int      $account     Uploader
+     * @param string   $virtualPath Virtual path
      * @param null|int $type        Media type (internal categorization = identifier for modules)
-     * @param string $ip          Ip
+     * @param string   $ip          Ip
      *
      * @return Media[]
      *
@@ -263,10 +263,10 @@ final class ApiController extends Controller
     /**
      * Create db entry for uploaded file
      *
-     * @param array     $status      Files
-     * @param int       $account     Uploader
-     * @param string    $virtualPath Virtual path (not on the hard-drive)
-     * @param null|int  $type        Media type (internal categorization)
+     * @param array    $status      Files
+     * @param int      $account     Uploader
+     * @param string   $virtualPath Virtual path (not on the hard-drive)
+     * @param null|int $type        Media type (internal categorization)
      *
      * @return null|Media
      *
