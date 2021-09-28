@@ -22,7 +22,7 @@ use phpOMS\Application\ApplicationAbstract;
  */
 class AdminTest extends \PHPUnit\Framework\TestCase
 {
-    protected const MODULE_NAME = 'Media';
+    protected const NAME = 'Media';
 
     protected const URI_LOAD = 'http://127.0.0.1/en/backend/media';
 

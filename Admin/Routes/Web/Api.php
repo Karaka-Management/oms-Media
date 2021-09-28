@@ -23,7 +23,7 @@ return [
             'dest'       => '\Modules\Media\Controller\ApiController:apiMediaUpload',
             'verb'       => RouteVerb::PUT,
             'permission' => [
-                'module' => ApiController::MODULE_NAME,
+                'module' => ApiController::NAME,
                 'type'   => PermissionType::CREATE,
                 'state'  => PermissionState::MEDIA,
             ],
@@ -32,7 +32,7 @@ return [
             'dest'       => '\Modules\Media\Controller\ApiController:apiMediaUpdate',
             'verb'       => RouteVerb::SET,
             'permission' => [
-                'module' => ApiController::MODULE_NAME,
+                'module' => ApiController::NAME,
                 'type'   => PermissionType::CREATE,
                 'state'  => PermissionState::MEDIA,
             ],
@@ -43,7 +43,7 @@ return [
             'dest'       => '\Modules\Media\Controller\ApiController:apiMediaCreate',
             'verb'       => RouteVerb::PUT,
             'permission' => [
-                'module' => ApiController::MODULE_NAME,
+                'module' => ApiController::NAME,
                 'type'   => PermissionType::CREATE,
                 'state'  => PermissionState::MEDIA,
             ],
@@ -54,7 +54,7 @@ return [
             'dest'       => '\Modules\Media\Controller\ApiController:apiMediaExport',
             'verb'       => RouteVerb::GET,
             'permission' => [
-                'module' => ApiController::MODULE_NAME,
+                'module' => ApiController::NAME,
                 'type'   => PermissionType::READ,
                 'state'  => PermissionState::MEDIA,
             ],
@@ -65,7 +65,7 @@ return [
             'dest'       => '\Modules\Media\Controller\ApiController:apiCollectionCreate',
             'verb'       => RouteVerb::PUT,
             'permission' => [
-                'module' => ApiController::MODULE_NAME,
+                'module' => ApiController::NAME,
                 'type'   => PermissionType::CREATE,
                 'state'  => PermissionState::MEDIA,
             ],

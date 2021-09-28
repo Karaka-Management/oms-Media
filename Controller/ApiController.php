@@ -244,8 +244,8 @@ final class ApiController extends Controller
                         $account,
                         $this->app->orgId,
                         $this->app->appName,
-                        self::MODULE_NAME,
-                        self::MODULE_NAME,
+                        self::NAME,
+                        self::NAME,
                         PermissionState::MEDIA,
                         $created->getId(),
                         null,
@@ -494,7 +494,7 @@ final class ApiController extends Controller
     {
         if (empty($media)
             || !$this->app->accountManager->get($account)->hasPermission(
-                PermissionType::CREATE, $this->app->orgId, null, self::MODULE_NAME, PermissionState::COLLECTION, null)
+                PermissionType::CREATE, $this->app->orgId, null, self::NAME, PermissionState::COLLECTION, null)
         ) {
             return new NullCollection();
         }

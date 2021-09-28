@@ -44,7 +44,7 @@ final class BackendController extends Controller
      * @var string
      * @since 1.0.0
      */
-    public const MODULE_PATH = __DIR__;
+    public const PATH = __DIR__;
 
     /**
      * Module version.
@@ -52,7 +52,7 @@ final class BackendController extends Controller
      * @var string
      * @since 1.0.0
      */
-    public const MODULE_VERSION = '1.0.0';
+    public const VERSION = '1.0.0';
 
     /**
      * Module name.
@@ -60,7 +60,7 @@ final class BackendController extends Controller
      * @var string
      * @since 1.0.0
      */
-    public const MODULE_NAME = 'Media';
+    public const NAME = 'Media';
 
     /**
      * Module id.
@@ -68,7 +68,7 @@ final class BackendController extends Controller
      * @var int
      * @since 1.0.0
      */
-    public const MODULE_ID = 1000400000;
+    public const ID = 1000400000;
 
     /**
      * Providing.
