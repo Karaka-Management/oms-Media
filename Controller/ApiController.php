@@ -569,7 +569,7 @@ final class ApiController extends Controller
             ],
         ];
 
-        $created = $this->createDbEntries($status, $request->header->account, $virtualPath, $request->getData('type') ?? '');
+        $created = $this->createDbEntries($status, $request->header->account, $virtualPath, $request->getData('type', 'int'));
 
         $ids = [];
         foreach ($created as $file) {
