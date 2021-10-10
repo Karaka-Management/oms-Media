@@ -124,7 +124,7 @@ final class ApiController extends Controller
      * @param int    $account       Uploader
      * @param string $basePath      Base path. The path which is used for the upload.
      * @param string $virtualPath   virtual path The path which is used to visually structure the files, like directories
-     * @param string $type          Media type (internal/custom media categorization)
+     * @param int    $type          Media type (internal/custom media categorization)
      *                              The file storage on the system can be different
      * @param string $password      File password. The password to protect the file (only database)
      * @param string $encryptionKey Encryption key. Used to encrypt the file on the local file storage.
