@@ -21,7 +21,7 @@ use Modules\Media\Models\CollectionMapper;
 /**
  * @internal
  */
-class CollectionMapperTest extends \PHPUnit\Framework\TestCase
+final class CollectionMapperTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @covers Modules\Media\Models\CollectionMapper

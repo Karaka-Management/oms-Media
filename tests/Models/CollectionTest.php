@@ -21,7 +21,7 @@ use Modules\Media\Models\NullMedia;
 /**
  * @internal
  */
-class CollectionTest extends \PHPUnit\Framework\TestCase
+final class CollectionTest extends \PHPUnit\Framework\TestCase
 {
     protected Collection $media;
 

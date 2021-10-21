@@ -20,7 +20,7 @@ use Modules\Media\Views\MediaView;
 /**
  * @internal
  */
-class MediaViewTest extends \PHPUnit\Framework\TestCase
+final class MediaViewTest extends \PHPUnit\Framework\TestCase
 {
     protected MediaView $view;
 

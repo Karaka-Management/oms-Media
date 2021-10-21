@@ -23,7 +23,7 @@ use Modules\Media\Models\MediaMapper;
 /**
  * @internal
  */
-class MediaMapperTest extends \PHPUnit\Framework\TestCase
+final class MediaMapperTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @covers Modules\Media\Models\MediaMapper

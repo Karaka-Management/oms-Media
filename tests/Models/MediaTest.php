@@ -20,7 +20,7 @@ use Modules\Media\Models\Media;
 /**
  * @internal
  */
-class MediaTest extends \PHPUnit\Framework\TestCase
+final class MediaTest extends \PHPUnit\Framework\TestCase
 {
     protected Media $media;
 
