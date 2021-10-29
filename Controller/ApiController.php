@@ -70,7 +70,8 @@ final class ApiController extends Controller
     public function apiMediaUpload(RequestAbstract $request, ResponseAbstract $response, $data = null) : void
     {
         $uploads = $this->uploadFiles(
-            [$request->getData('name') === null ? '' : $request->getData('name')],
+            $request->getDataList('names') ?? [],
+            $request->getDataList('filenames') ?? [],
             $request->getFiles(),
             $request->header->account,
             __DIR__ . '/../../../Modules/Media/Files' . \urldecode((string) ($request->getData('path') ?? '')),
@@ -119,7 +120,8 @@ final class ApiController extends Controller
     /**
      * Upload a media file
      *
-     * @param array  $names         Name
+     * @param array  $names         Database names
+     * @param array  $fileNames     FileNames
      * @param array  $files         Files
      * @param int    $account       Uploader
      * @param string $basePath      Base path. The path which is used for the upload.
@@ -138,6 +140,7 @@ final class ApiController extends Controller
      */
     public function uploadFiles(
         array $names,
+        array $fileNames,
         array $files,
         int $account,
         string $basePath = '/Modules/Media/Files',
@@ -164,10 +167,17 @@ final class ApiController extends Controller
             return [];
         }
 
-        $upload            = new UploadFile();
-        $upload->outputDir = $outputDir;
+        $upload                   = new UploadFile();
+        $upload->outputDir        = $outputDir;
 
-        $status = $upload->upload($files, $names, $absolute, $encryptionKey);
+        $status = $upload->upload($files, $fileNames, $absolute, $encryptionKey);
+
+        $sameLength = \count($names) === \count($status);
+        $nCounter   = -1;
+        foreach ($status as &$stat) {
+            ++$nCounter;
+            $stat['name'] = $sameLength ? $names[$nCounter] : $stat['filename'];
+        }
 
         return $this->createDbEntries($status, $account, $virtualPath, $type);
     }
@@ -175,9 +185,9 @@ final class ApiController extends Controller
     /**
      * Uploads a file to a destination
      *
-     * @param array  $files Files to upload
-     * @param array  $names Name of the file (only if a single file is provided)
-     * @param string $path  Upload path
+     * @param array  $files     Files to upload
+     * @param array  $fileNames Names on the directory
+     * @param string $path      Upload path
      *
      * @return array
      *
@@ -185,14 +195,14 @@ final class ApiController extends Controller
      */
     public static function uploadFilesToDestination(
         array $files,
-        array $names = [],
+        array $fileNames = [],
         string $path = '',
     ) : array
     {
-        $upload            = new UploadFile();
-        $upload->outputDir = $path;
+        $upload                   = new UploadFile();
+        $upload->outputDir        = $path;
 
-        $status = $upload->upload($files, $names, true, '');
+        $status = $upload->upload($files, $fileNames, true, '');
 
         return $status;
     }

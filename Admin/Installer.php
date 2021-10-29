@@ -58,6 +58,10 @@ final class Installer extends InstallerAbstract
      */
     public static function install(DatabasePool $dbPool, ModuleInfo $info, SettingsInterface $cfgHandler) : void
     {
+        if (!\is_dir(__DIR__ . '/../Files')) {
+            \mkdir(__DIR__ . '/../Files');
+        }
+
         parent::install($dbPool, $info, $cfgHandler);
 
         // Create directory for admin account
@@ -255,12 +259,13 @@ final class Installer extends InstallerAbstract
             }
         }
 
-        $upload            = new UploadFile();
-        $upload->outputDir = empty($data['path'] ?? '')
+        $upload                   = new UploadFile();
+        $upload->preserveFileName = $data['fixed_names'] ?? true;
+        $upload->outputDir        = empty($data['path'] ?? '')
             ? ApiController::createMediaPath()
             : __DIR__ . '/../../..' . $data['path'];
 
-        $status = $upload->upload($files, [$data['name']], true);
+        $status = $upload->upload($files, ($data['fixed_names'] ?? true) ? [] : [$data['name']], true);
 
         $mediaFiles = [];
         foreach ($status as $uFile) {

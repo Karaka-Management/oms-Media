@@ -172,7 +172,7 @@ trait ApiControllerMediaTrait
     {
         self::assertEquals(
             [],
-            $this->module->uploadFiles(['test'], ['test'], 1, '/test', '', null, '', '', 99)
+            $this->module->uploadFiles(['test'], ['test'], ['test'], 1, '/test', '', null, '', '', 99)
         );
     }
 

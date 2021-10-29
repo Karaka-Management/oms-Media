@@ -83,7 +83,7 @@ class UploadFile
      * Upload file to server.
      *
      * @param array    $files         File data ($_FILE)
-     * @param string[] $names         File name
+     * @param string[] $fileNames     File name
      * @param bool     $absolute      Use absolute path
      * @param string   $encryptionKey Encryption key
      * @param string   $encoding      Encoding used for uploaded file. Empty string will not convert file content.
@@ -96,13 +96,14 @@ class UploadFile
      */
     public function upload(
         array $files,
-        array $names = [],
+        array $fileNames = [],
         bool $absolute = false,
         string $encryptionKey = '',
         string $encoding = 'UTF-8'
     ) : array
     {
-        $result = [];
+        $result    = [];
+        $fileNames = $this->preserveFileName || \count($files) !== \count($fileNames) ? [] : $fileNames;
 
         if (\count($files) === \count($files, \COUNT_RECURSIVE)) {
             $files = [$files];
@@ -114,11 +115,9 @@ class UploadFile
 
         $path     = $this->outputDir;
         $fCounter = -1;
-        $areNamed = \count($files) === \count($names);
 
         foreach ($files as $key => $f) {
             ++$fCounter;
-            $name = $areNamed ? $names[$fCounter] : '';
 
             if ($path === '') {
                 $path = File::dirpath($f['tmp_name']);
@@ -151,15 +150,17 @@ class UploadFile
                 return $result;
             }
 
-            $split                    = \explode('.', $f['name']);
-            $result[$key]['filename'] = !empty($name) && !$this->preserveFileName ? $name : $f['name'];
-
-            $extension                 = \count($split) > 1 ? $split[\count($split) - 1] : '';
-            $result[$key]['extension'] = $extension;
+            $split                     = \explode('.', $f['name']);
+            $result[$key]['filename']  = !empty($fileNames) ? $fileNames[$fCounter] : $f['name'];
+            $result[$key]['extension'] = ($c = \count($split)) > 1 ? $split[$c - 1] : '';
 
             if (!$this->preserveFileName || \is_file($path . '/' . $result[$key]['filename'])) {
                 try {
-                    $result[$key]['filename'] = $this->createFileName($path, $f['tmp_name'], $extension);
+                    $result[$key]['filename'] = $this->createFileName(
+                        $path,
+                        $this->preserveFileName ? $result[$key]['filename'] : '',
+                        $result[$key]['extension']
+                    );
                 } catch (\Exception $e) {
                     $result[$key]['filename'] = $f['name'];
                     $result[$key]['status']   = UploadStatus::FAILED_HASHING;
@@ -168,12 +169,8 @@ class UploadFile
                 }
             }
 
-            $result[$key]['name'] = empty($name) ? $result[$key]['filename'] : $name;
-
             if (!\is_dir($path)) {
-                $created = Directory::create($path, 0755, true);
-
-                if (!$created) {
+                if (!Directory::create($path, 0755, true)) {
                     FileLogger::getInstance()->error('Couldn\t upload media file. There maybe is a problem with your permission or uploaded file.');
                 }
             }
@@ -244,10 +241,13 @@ class UploadFile
     private function createFileName(string $path, string $tempName, string $extension) : string
     {
         $rnd   = '';
-        $limit = 0;
+        $limit = -1;
+
+        $nameWithoutExtension = empty($tempName) ? '' : \substr($tempName, 0, -\strlen($extension) - 1);
 
         do {
-            $sha = \sha1($tempName . $rnd);
+            ++$limit;
+            $sha = empty($nameWithoutExtension) ? \sha1($tempName . $rnd) : $nameWithoutExtension . '_' . $rnd;
 
             if ($sha === false) {
                 throw new \Exception('No file path could be found. Potential attack!');
@@ -256,7 +256,6 @@ class UploadFile
             $sha     .= '.' . $extension;
             $fileName = $sha;
             $rnd      = \mt_rand();
-            ++$limit;
         } while (\is_file($path . '/' . $fileName) && $limit < self::PATH_GENERATION_LIMIT);
 
         if ($limit >= self::PATH_GENERATION_LIMIT) {
