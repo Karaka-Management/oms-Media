@@ -644,7 +644,9 @@ final class ApiController extends Controller
         $view = new View($this->app->l11nManager, $request, $response);
         $view->setData('media', $media);
 
-        $response->endAllOutputBuffering(); // for large files
+        if (!\headers_sent()) {
+            $response->endAllOutputBuffering(); // for large files
+        }
 
         if (($type = $request->getData('type')) === null) {
             $view->setTemplate('/Modules/Media/Theme/Api/render');
@@ -652,7 +654,7 @@ final class ApiController extends Controller
             $head = new Head();
             $css  = \file_get_contents(__DIR__ . '/../../../Web/Backend/css/backend-small.css');
             if ($css === false) {
-                $css = '';
+                $css = ''; // @codeCoverageIgnore
             }
 
             $css = \preg_replace('!\s+!', ' ', $css);
@@ -712,12 +714,11 @@ final class ApiController extends Controller
             case 'txt':
             case 'cfg':
             case 'log':
-                $response->header->set('Content-Type', MimeType::M_TXT, true);
-                break;
             case 'md':
                 $response->header->set('Content-Type', MimeType::M_TXT, true);
                 break;
             case 'csv':
+            case 'json':
                 $response->header->set('Content-Type', MimeType::M_CSV, true);
                 break;
             case 'xls':
@@ -737,9 +738,6 @@ final class ApiController extends Controller
                 break;
             case 'pptx':
                 $response->header->set('Content-Type', MimeType::M_PPTX, true);
-                break;
-            case 'json':
-                $response->header->set('Content-Type', MimeType::M_CSV, true);
                 break;
             case 'jpg':
             case 'jpeg':

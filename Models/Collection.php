@@ -43,10 +43,10 @@ class Collection extends Media implements \Iterator
     /**
      * Is collection.
      *
-     * @var int
+     * @var bool
      * @since 1.0.0
      */
-    protected int $collection = 1;
+    protected bool $collection = true;
 
     /**
      * Set sources.
@@ -106,20 +106,6 @@ class Collection extends Media implements \Iterator
         }
 
         return new NullMedia();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setExtension(string $extension) : void
-    {
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setVersioned(bool $versioned) : void
-    {
     }
 
     /**

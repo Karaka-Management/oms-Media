@@ -160,10 +160,10 @@ class Media implements \JsonSerializable
     /**
      * Is collection.
      *
-     * @var int
+     * @var bool
      * @since 1.0.0
      */
-    protected int $collection = 0;
+    protected bool $collection = false;
 
     /**
      * Tags.

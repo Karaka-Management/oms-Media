@@ -234,4 +234,38 @@ final class MediaViewTest extends \PHPUnit\Framework\TestCase
             $method->invoke($this->view, $media, __DIR__ . '/test.md')
         );
     }
+
+    /**
+     * @covers Modules\Media\Views\MediaView
+     * @group module
+     */
+    public function testIsVideo() : void
+    {
+        $method = new \ReflectionMethod($this->view, 'isVideoFile');
+        $method->setAccessible(true);
+
+        $media = new Media();
+        $media->setPath(__DIR__ . '/Video.mp4');
+        $media->isAbsolute = true;
+        self::assertFalse(
+            $method->invoke($this->view, $media)
+        );
+    }
+
+    /**
+     * @covers Modules\Media\Views\MediaView
+     * @group module
+     */
+    public function testIsAudio() : void
+    {
+        $method = new \ReflectionMethod($this->view, 'isAudioFile');
+        $method->setAccessible(true);
+
+        $media = new Media();
+        $media->setPath(__DIR__ . '/Audio.mp4');
+        $media->isAbsolute = true;
+        self::assertFalse(
+            $method->invoke($this->view, $media)
+        );
+    }
 }

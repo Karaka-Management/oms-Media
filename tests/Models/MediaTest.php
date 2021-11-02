@@ -16,6 +16,7 @@ namespace Modules\Media\tests\Models;
 
 use Modules\Admin\Models\NullAccount;
 use Modules\Media\Models\Media;
+use Modules\Tag\Models\Tag;
 
 /**
  * @internal
@@ -188,6 +189,35 @@ final class MediaTest extends \PHPUnit\Framework\TestCase
         $this->media->setPassword('test');
         self::assertTrue($this->media->comparePassword('test'));
         self::assertFalse($this->media->comparePassword('test2'));
+    }
+
+    /**
+     * @covers Modules\Media\Models\Media
+     * @group module
+     */
+    public function testTagInputOutput() : void
+    {
+        $tag = new Tag();
+        $tag->setL11n('Tag');
+
+        $this->media->addTag($tag);
+        self::assertEquals($tag, $this->media->getTag(0));
+        self::assertCount(1, $this->media->getTags());
+    }
+
+    /**
+     * @covers Modules\Media\Models\Media
+     * @group module
+     */
+    public function testTagRemove() : void
+    {
+        $tag = new Tag();
+        $tag->setL11n('Tag');
+
+        $this->media->addTag($tag);
+        self::assertTrue($this->media->removeTag(0));
+        self::assertCount(0, $this->media->getTags());
+        self::assertFalse($this->media->removeTag(0));
     }
 
     /**

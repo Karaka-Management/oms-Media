@@ -34,6 +34,7 @@ final class CollectionMapperTest extends \PHPUnit\Framework\TestCase
         $media->description    = 'desc';
         $media->descriptionRaw = 'descRaw';
         $media->setPath('some/path');
+        $media->setVirtualPath('/some/path');
         $media->size = 11;
         $media->name = 'Collection';
         $id          = CollectionMapper::create($media);
@@ -51,5 +52,8 @@ final class CollectionMapperTest extends \PHPUnit\Framework\TestCase
         self::assertEquals($media->size, $mediaR->size);
         self::assertEquals($media->extension, $mediaR->extension);
         self::assertEquals($media->name, $mediaR->name);
+
+        self::assertGreaterThan(0, \count(CollectionMapper::getByVirtualPath('/some/path')));
+        self::assertGreaterThan(0, \count(CollectionMapper::getCollectionsByPath('/', true)));
     }
 }

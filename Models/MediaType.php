@@ -38,6 +38,8 @@ class MediaType implements \JsonSerializable, ArrayableInterface
     /**
      * Name.
      *
+     * Name used for additional identification, doesn't have to be unique.
+     *
      * @var string
      * @since 1.0.0
      */
@@ -49,7 +51,19 @@ class MediaType implements \JsonSerializable, ArrayableInterface
      * @var string|MediaTypeL11n
      * @since 1.0.0
      */
-    protected $title = '';
+    protected $title;
+
+    /**
+     * Constructor.
+     *
+     * @param string $name Name
+     *
+     * @since 1.0.0
+     */
+    public function __construct(string $name = '')
+    {
+        $this->setL11n($name);
+    }
 
     /**
      * Get id

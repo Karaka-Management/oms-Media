@@ -15,6 +15,7 @@ declare(strict_types=1);
 namespace Modules\Media\tests\Controller\Api;
 
 use Modules\Media\Models\MediaMapper;
+use Modules\Media\Models\Media;
 use Modules\Media\Models\PathSettings;
 use Modules\Media\Models\UploadStatus;
 use phpOMS\Message\Http\HttpRequest;
@@ -22,6 +23,7 @@ use phpOMS\Message\Http\HttpResponse;
 use phpOMS\System\File\Local\Directory;
 use phpOMS\Uri\HttpUri;
 use phpOMS\Utils\TestUtils;
+use phpOMS\System\MimeType;
 
 trait ApiControllerMediaTrait
 {
@@ -73,6 +75,7 @@ trait ApiControllerMediaTrait
 
         $request->header->account = 1;
         $request->setData('name', 'Test Upload');
+        $request->setData('tags', '[{"title": "TestTitle", "color": "#f0f", "language": "en"}, {"id": 1}]');
 
         if (!\is_dir(__DIR__ . '/temp')) {
             \mkdir(__DIR__ . '/temp');
@@ -256,5 +259,335 @@ trait ApiControllerMediaTrait
         self::assertTrue(\is_file(__DIR__ . '/../test/path/created.md'));
 
         Directory::delete(__DIR__ . '/../test');
+    }
+
+    /**
+     * @covers Modules\Media\Controller\ApiController
+     * @group module
+     */
+    public function testCreateView() : void
+    {
+        $media = new Media();
+
+        $response = new HttpResponse();
+        $request  = new HttpRequest(new HttpUri(''));
+
+        $request->header->account = 1;
+        $request->setData('type', 'html');
+
+        $media->extension = 'xls';
+        self::assertInstanceOf('\phpOMS\Views\View', $this->module->createView($media, $request, $response));
+
+       $media->extension = 'docx';
+       self::assertInstanceOf('\phpOMS\Views\View', $this->module->createView($media, $request, $response));
+
+       $request->setData('type', null, true);
+       self::assertInstanceOf('\phpOMS\Views\View', $this->module->createView($media, $request, $response));
+    }
+
+    /**
+     * @covers Modules\Media\Controller\ApiController
+     * @group module
+     */
+    public function testApiMediaExportHTM() : void
+    {
+        $response = new HttpResponse();
+        $request  = new HttpRequest(new HttpUri(''));
+
+        $request->header->account = 1;
+        $request->setData('id', '1');
+        $request->setData('type', 'htm');
+
+        $this->module->apiMediaExport($request, $response);
+        self::assertEquals(MimeType::M_HTML, $response->header->get('Content-Type')[0]);
+    }
+
+    /**
+     * @covers Modules\Media\Controller\ApiController
+     * @group module
+     */
+    public function testApiMediaExportPDF() : void
+    {
+        $response = new HttpResponse();
+        $request  = new HttpRequest(new HttpUri(''));
+
+        $request->header->account = 1;
+        $request->setData('id', '1');
+        $request->setData('type', 'pdf');
+
+        $this->module->apiMediaExport($request, $response);
+        self::assertEquals(MimeType::M_PDF, $response->header->get('Content-Type')[0]);
+    }
+
+    /**
+     * @covers Modules\Media\Controller\ApiController
+     * @group module
+     */
+    public function testApiMediaExportC() : void
+    {
+        $response = new HttpResponse();
+        $request  = new HttpRequest(new HttpUri(''));
+
+        $request->header->account = 1;
+        $request->setData('id', '1');
+        $request->setData('type', 'c');
+
+        $this->module->apiMediaExport($request, $response);
+        self::assertEquals(MimeType::M_TXT, $response->header->get('Content-Type')[0]);
+    }
+
+    /**
+     * @covers Modules\Media\Controller\ApiController
+     * @group module
+     */
+    public function testApiMediaExportTXT() : void
+    {
+        $response = new HttpResponse();
+        $request  = new HttpRequest(new HttpUri(''));
+
+        $request->header->account = 1;
+        $request->setData('id', '1');
+        $request->setData('type', 'txt');
+
+        $this->module->apiMediaExport($request, $response);
+        self::assertEquals(MimeType::M_TXT, $response->header->get('Content-Type')[0]);
+    }
+
+    /**
+     * @covers Modules\Media\Controller\ApiController
+     * @group module
+     */
+    public function testApiMediaExportCSV() : void
+    {
+        $response = new HttpResponse();
+        $request  = new HttpRequest(new HttpUri(''));
+
+        $request->header->account = 1;
+        $request->setData('id', '1');
+        $request->setData('type', 'csv');
+
+        $this->module->apiMediaExport($request, $response);
+        self::assertEquals(MimeType::M_CSV, $response->header->get('Content-Type')[0]);
+    }
+
+    /**
+     * @covers Modules\Media\Controller\ApiController
+     * @group module
+     */
+    public function testApiMediaExportXLS() : void
+    {
+        $response = new HttpResponse();
+        $request  = new HttpRequest(new HttpUri(''));
+
+        $request->header->account = 1;
+        $request->setData('id', '1');
+        $request->setData('type', 'xls');
+
+        $this->module->apiMediaExport($request, $response);
+        self::assertEquals(MimeType::M_XLS, $response->header->get('Content-Type')[0]);
+    }
+
+    /**
+     * @covers Modules\Media\Controller\ApiController
+     * @group module
+     */
+    public function testApiMediaExportXLSX() : void
+    {
+        $response = new HttpResponse();
+        $request  = new HttpRequest(new HttpUri(''));
+
+        $request->header->account = 1;
+        $request->setData('id', '1');
+        $request->setData('type', 'xlsx');
+
+        $this->module->apiMediaExport($request, $response);
+        self::assertEquals(MimeType::M_XLSX, $response->header->get('Content-Type')[0]);
+    }
+
+    /**
+     * @covers Modules\Media\Controller\ApiController
+     * @group module
+     */
+    public function testApiMediaExportDOC() : void
+    {
+        $response = new HttpResponse();
+        $request  = new HttpRequest(new HttpUri(''));
+
+        $request->header->account = 1;
+        $request->setData('id', '1');
+        $request->setData('type', 'doc');
+
+        $this->module->apiMediaExport($request, $response);
+        self::assertEquals(MimeType::M_DOC, $response->header->get('Content-Type')[0]);
+    }
+
+    /**
+     * @covers Modules\Media\Controller\ApiController
+     * @group module
+     */
+    public function testApiMediaExportDOCX() : void
+    {
+        $response = new HttpResponse();
+        $request  = new HttpRequest(new HttpUri(''));
+
+        $request->header->account = 1;
+        $request->setData('id', '1');
+        $request->setData('type', 'docx');
+
+        $this->module->apiMediaExport($request, $response);
+        self::assertEquals(MimeType::M_DOCX, $response->header->get('Content-Type')[0]);
+    }
+
+    /**
+     * @covers Modules\Media\Controller\ApiController
+     * @group module
+     */
+    public function testApiMediaExportPPT() : void
+    {
+        $response = new HttpResponse();
+        $request  = new HttpRequest(new HttpUri(''));
+
+        $request->header->account = 1;
+        $request->setData('id', '1');
+        $request->setData('type', 'ppt');
+
+        $this->module->apiMediaExport($request, $response);
+        self::assertEquals(MimeType::M_PPT, $response->header->get('Content-Type')[0]);
+    }
+
+    /**
+     * @covers Modules\Media\Controller\ApiController
+     * @group module
+     */
+    public function testApiMediaExportPPTX() : void
+    {
+        $response = new HttpResponse();
+        $request  = new HttpRequest(new HttpUri(''));
+
+        $request->header->account = 1;
+        $request->setData('id', '1');
+        $request->setData('type', 'pptx');
+
+        $this->module->apiMediaExport($request, $response);
+        self::assertEquals(MimeType::M_PPTX, $response->header->get('Content-Type')[0]);
+    }
+
+    /**
+     * @covers Modules\Media\Controller\ApiController
+     * @group module
+     */
+    public function testApiMediaExportJPG() : void
+    {
+        $response = new HttpResponse();
+        $request  = new HttpRequest(new HttpUri(''));
+
+        $request->header->account = 1;
+        $request->setData('id', '1');
+        $request->setData('type', 'jpg');
+
+        $this->module->apiMediaExport($request, $response);
+        self::assertEquals(MimeType::M_JPG, $response->header->get('Content-Type')[0]);
+    }
+
+    /**
+     * @covers Modules\Media\Controller\ApiController
+     * @group module
+     */
+    public function testApiMediaExportGIF() : void
+    {
+        $response = new HttpResponse();
+        $request  = new HttpRequest(new HttpUri(''));
+
+        $request->header->account = 1;
+        $request->setData('id', '1');
+        $request->setData('type', 'gif');
+
+        $this->module->apiMediaExport($request, $response);
+        self::assertEquals(MimeType::M_GIF, $response->header->get('Content-Type')[0]);
+    }
+
+    /**
+     * @covers Modules\Media\Controller\ApiController
+     * @group module
+     */
+    public function testApiMediaExportPNG() : void
+    {
+        $response = new HttpResponse();
+        $request  = new HttpRequest(new HttpUri(''));
+
+        $request->header->account = 1;
+        $request->setData('id', '1');
+        $request->setData('type', 'png');
+
+        $this->module->apiMediaExport($request, $response);
+        self::assertEquals(MimeType::M_PNG, $response->header->get('Content-Type')[0]);
+    }
+
+    /**
+     * @covers Modules\Media\Controller\ApiController
+     * @group module
+     */
+    public function testApiMediaExportMP3() : void
+    {
+        $response = new HttpResponse();
+        $request  = new HttpRequest(new HttpUri(''));
+
+        $request->header->account = 1;
+        $request->setData('id', '1');
+        $request->setData('type', 'mp3');
+
+        $this->module->apiMediaExport($request, $response);
+        self::assertEquals(MimeType::M_MP3, $response->header->get('Content-Type')[0]);
+    }
+
+    /**
+     * @covers Modules\Media\Controller\ApiController
+     * @group module
+     */
+    public function testApiMediaExportMP4() : void
+    {
+        $response = new HttpResponse();
+        $request  = new HttpRequest(new HttpUri(''));
+
+        $request->header->account = 1;
+        $request->setData('id', '1');
+        $request->setData('type', 'mp4');
+
+        $this->module->apiMediaExport($request, $response);
+        self::assertEquals(MimeType::M_MP4, $response->header->get('Content-Type')[0]);
+    }
+
+    /**
+     * @covers Modules\Media\Controller\ApiController
+     * @group module
+     */
+    public function testApiMediaExportMPEG() : void
+    {
+        $response = new HttpResponse();
+        $request  = new HttpRequest(new HttpUri(''));
+
+        $request->header->account = 1;
+        $request->setData('id', '1');
+        $request->setData('type', 'mpeg');
+
+        $this->module->apiMediaExport($request, $response);
+        self::assertEquals(MimeType::M_MPEG, $response->header->get('Content-Type')[0]);
+    }
+
+    /**
+     * @covers Modules\Media\Controller\ApiController
+     * @group module
+     */
+    public function testApiMediaExportBIN() : void
+    {
+        $response = new HttpResponse();
+        $request  = new HttpRequest(new HttpUri(''));
+
+        $request->header->account = 1;
+        $request->setData('id', '1');
+        $request->setData('type', 'exe');
+
+        $this->module->apiMediaExport($request, $response);
+        self::assertEquals(MimeType::M_BIN, $response->header->get('Content-Type')[0]);
     }
 }

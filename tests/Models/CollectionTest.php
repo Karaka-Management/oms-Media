@@ -49,6 +49,7 @@ final class CollectionTest extends \PHPUnit\Framework\TestCase
         self::assertEquals(0, $this->media->size);
         self::assertFalse($this->media->isVersioned);
         self::assertEquals([], $this->media->getSources());
+        self::assertInstanceOf('\Modules\Media\Models\NullMedia', $this->media->getSourceByName('invalid'));
     }
 
     /**
@@ -121,7 +122,10 @@ final class CollectionTest extends \PHPUnit\Framework\TestCase
     public function testSourceInputOutput() : void
     {
         $this->media->setSources([$a = new NullMedia(1), $b = new NullMedia(2), $c = new NullMedia(3)]);
+
+        $b->name = 'test';
         self::assertEquals([$a, $b, $c], $this->media->getSources());
+        self::assertEquals($b, $this->media->getSourceByName('test'));
     }
 
     /**
