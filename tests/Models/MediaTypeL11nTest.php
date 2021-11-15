@@ -71,15 +71,15 @@ final class MediaTypeL11nTest extends \PHPUnit\Framework\TestCase
     public function testSerialize() : void
     {
         $this->l11n->title        = 'Title';
-        $this->l11n->type        = 2;
+        $this->l11n->type         = 2;
         $this->l11n->setLanguage(ISO639x1Enum::_DE);
 
         self::assertEquals(
             [
-                'id'        => 0,
+                'id'         => 0,
                 'title'      => 'Title',
-                'type'      => 2,
-                'language'  => ISO639x1Enum::_DE,
+                'type'       => 2,
+                'language'   => ISO639x1Enum::_DE,
             ],
             $this->l11n->jsonSerialize()
         );

@@ -14,16 +14,16 @@ declare(strict_types=1);
 
 namespace Modules\Media\tests\Controller\Api;
 
-use Modules\Media\Models\MediaMapper;
 use Modules\Media\Models\Media;
+use Modules\Media\Models\MediaMapper;
 use Modules\Media\Models\PathSettings;
 use Modules\Media\Models\UploadStatus;
 use phpOMS\Message\Http\HttpRequest;
 use phpOMS\Message\Http\HttpResponse;
 use phpOMS\System\File\Local\Directory;
+use phpOMS\System\MimeType;
 use phpOMS\Uri\HttpUri;
 use phpOMS\Utils\TestUtils;
-use phpOMS\System\MimeType;
 
 trait ApiControllerMediaTrait
 {

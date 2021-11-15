@@ -167,8 +167,8 @@ final class ApiController extends Controller
             return [];
         }
 
-        $upload                   = new UploadFile();
-        $upload->outputDir        = $outputDir;
+        $upload            = new UploadFile();
+        $upload->outputDir = $outputDir;
 
         $status = $upload->upload($files, $fileNames, $absolute, $encryptionKey);
 
@@ -199,12 +199,10 @@ final class ApiController extends Controller
         string $path = '',
     ) : array
     {
-        $upload                   = new UploadFile();
-        $upload->outputDir        = $path;
+        $upload            = new UploadFile();
+        $upload->outputDir = $path;
 
-        $status = $upload->upload($files, $fileNames, true, '');
-
-        return $status;
+        return $upload->upload($files, $fileNames, true, '');
     }
 
     /**
@@ -621,8 +619,8 @@ final class ApiController extends Controller
             }
         }
 
+        $this->setMediaResponseHeader($media, $request, $response);
         $view = $this->createView($media, $request, $response);
-        $this->setMediaResponseHeader($view, $media, $request, $response);
         $view->setData('path', __DIR__ . '/../../../');
 
         $response->set('export', $view);
@@ -644,9 +642,7 @@ final class ApiController extends Controller
         $view = new View($this->app->l11nManager, $request, $response);
         $view->setData('media', $media);
 
-        if (!\headers_sent()) {
-            $response->endAllOutputBuffering(); // for large files
-        }
+        $response->endAllOutputBuffering(); // for large files
 
         if (($type = $request->getData('type')) === null) {
             $view->setTemplate('/Modules/Media/Theme/Api/render');
@@ -681,7 +677,6 @@ final class ApiController extends Controller
     /**
      * Set header for report/template
      *
-     * @param View             $view     Media view
      * @param Media            $media    Media file
      * @param RequestAbstract  $request  Request
      * @param ResponseAbstract $response Response
@@ -690,7 +685,7 @@ final class ApiController extends Controller
      *
      * @since 1.0.0
      */
-    private function setMediaResponseHeader(View $view, Media $media, RequestAbstract $request, ResponseAbstract $response) : void
+    private function setMediaResponseHeader(Media $media, RequestAbstract $request, ResponseAbstract $response) : void
     {
         switch ($request->getData('type') ?? \strtolower($media->extension)) {
             case 'htm':

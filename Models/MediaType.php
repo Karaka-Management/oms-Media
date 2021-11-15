@@ -116,9 +116,9 @@ class MediaType implements \JsonSerializable, ArrayableInterface
     public function toArray() : array
     {
         return [
-            'id'    => $this->id,
-            'title' => $this->title,
-            'name'  => $this->name,
+            'id'     => $this->id,
+            'title'  => $this->title,
+            'name'   => $this->name,
         ];
     }
 
