@@ -35,6 +35,7 @@ final class MediaTypeMapper extends DataMapperAbstract
     protected static array $columns = [
         'media_type_id'    => ['name' => 'media_type_id',    'type' => 'int',    'internal' => 'id'],
         'media_type_name'  => ['name' => 'media_type_name', 'type' => 'string', 'internal' => 'name'],
+        'media_type_isvisible'  => ['name' => 'media_type_isvisible', 'type' => 'bool', 'internal' => 'isVisible'],
     ];
 
     /**

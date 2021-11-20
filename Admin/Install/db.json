@@ -13,6 +13,11 @@
                 "name": "media_type_name",
                 "type": "VARCHAR(255)",
                 "null": false
+            },
+            "media_type_isvisible": {
+                "name": "media_type_isvisible",
+                "type": "TINYINT(1)",
+                "null": false
             }
         }
     },

@@ -46,6 +46,14 @@ class MediaType implements \JsonSerializable, ArrayableInterface
     public string $name = '';
 
     /**
+     * Is this media type visible in lists or only internal?
+     *
+     * @var bool
+     * @since 1.0.0
+     */
+    public bool $isVisible = true;
+
+    /**
      * Title.
      *
      * @var string|MediaTypeL11n

@@ -14,11 +14,15 @@ declare(strict_types=1);
 
 namespace Modules\Media\Controller;
 
+use Model\NullSetting;
+use Model\SettingMapper;
 use Modules\Admin\Models\Account;
 use Modules\Media\Models\Collection;
 use Modules\Media\Models\CollectionMapper;
 use Modules\Media\Models\Media;
 use Modules\Media\Models\MediaMapper;
+use Modules\Media\Models\MediaTypeMapper;
+use Modules\Media\Models\MediaTypeL11nMapper;
 use Modules\Media\Models\NullMedia;
 use Modules\Media\Theme\Backend\Components\Media\ElementView;
 use Modules\Media\Theme\Backend\Components\Media\ListView;
@@ -258,6 +262,70 @@ final class BackendController extends Controller
             default:
                 $view->setTemplate('/Modules/Media/Theme/Backend/Components/Media/default');
         }
+
+        return $view;
+    }
+
+    /**
+     * Routing end-point for application behaviour.
+     *
+     * @param RequestAbstract  $request  Request
+     * @param ResponseAbstract $response Response
+     * @param mixed            $data     Generic data
+     *
+     * @return RenderableInterface
+     *
+     * @since 1.0.0
+     * @codeCoverageIgnore
+     */
+    public function viewModuleSettings(RequestAbstract $request, ResponseAbstract $response, $data = null) : RenderableInterface
+    {
+        $view = new View($this->app->l11nManager, $request, $response);
+        $view->addData('nav', $this->app->moduleManager->get('Navigation')->createNavigationMid(1000105001, $request, $response));
+
+        $id = $request->getData('id') ?? '';
+
+        $settings = SettingMapper::getFor($id, 'module');
+        if (!($settings instanceof NullSetting)) {
+            $view->setData('settings', !\is_array($settings) ? [$settings] : $settings);
+        }
+
+        $types = MediaTypeMapper::with('language', $response->getLanguage())::getAll();
+        $view->setData('types', $types);
+
+        if (\is_file(__DIR__ . '/../Admin/Settings/Theme/Backend/settings.tpl.php')) {
+            $view->setTemplate('/Modules/' . static::NAME . '/Admin/Settings/Theme/Backend/settings');
+        } else {
+            $view->setTemplate('/Modules/Admin/Theme/Backend/modules-settings');
+        }
+
+        return $view;
+    }
+
+    /**
+     * Routing end-point for application behaviour.
+     *
+     * @param RequestAbstract  $request  Request
+     * @param ResponseAbstract $response Response
+     * @param mixed            $data     Generic data
+     *
+     * @return RenderableInterface
+     *
+     * @since 1.0.0
+     * @codeCoverageIgnore
+     */
+    public function viewMediaTypeSettings(RequestAbstract $request, ResponseAbstract $response, $data = null) : RenderableInterface
+    {
+        $view = new View($this->app->l11nManager, $request, $response);
+        $view->setTemplate('/Modules/' . static::NAME . '/Admin/Settings/Theme/Backend/settings-type');
+
+        $type  = MediaTypeMapper::with('language', $response->getLanguage())::get((int) $request->getData('id'));
+
+        $view->addData('nav', $this->app->moduleManager->get('Navigation')->createNavigationMid(1007501001, $request, $response));
+        $view->addData('type', $type);
+
+        $l11n = MediaTypeL11nMapper::with('tag', $type->getId())::getAll();
+        $view->addData('l11n', $l11n);
 
         return $view;
     }

@@ -642,7 +642,9 @@ final class ApiController extends Controller
         $view = new View($this->app->l11nManager, $request, $response);
         $view->setData('media', $media);
 
-        $response->endAllOutputBuffering(); // for large files
+        if (!\headers_sent()) {
+            $response->endAllOutputBuffering(); // for large files
+        }
 
         if (($type = $request->getData('type')) === null) {
             $view->setTemplate('/Modules/Media/Theme/Api/render');

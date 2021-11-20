@@ -272,6 +272,8 @@ trait ApiControllerMediaTrait
         $response = new HttpResponse();
         $request  = new HttpRequest(new HttpUri(''));
 
+        $response->header->lock();
+
         $request->header->account = 1;
         $request->setData('type', 'html');
 
