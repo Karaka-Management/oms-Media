@@ -69,7 +69,7 @@ final class Installer extends InstallerAbstract
         // However, the admin account is created before the Media module is installed
         // Because of this, the directory needs to be created manually after the Media installation
         // The admin account should be the only DB account, but we use a loop of all accounts to avoid bugs
-        $accounts = AccountMapper::getAll();
+        $accounts = AccountMapper::getAll()->execute();
 
         foreach ($accounts as $account) {
             $collection       = new Collection();
@@ -79,7 +79,7 @@ final class Installer extends InstallerAbstract
             // The installation is always run by the admin account since the module is a "base" module which is always installed during the application setup
             $collection->createdBy = new NullAccount(1);
 
-            CollectionMapper::create($collection);
+            CollectionMapper::create()->execute($collection);
         }
     }
 
@@ -176,7 +176,7 @@ final class Installer extends InstallerAbstract
         $collection->setPath($path);
         $collection->createdBy = new NullAccount((int) $data['user'] ?? 1);
 
-        CollectionMapper::create($collection);
+        CollectionMapper::create()->execute($collection);
 
         if ($data['create_directory'] && !\is_dir($dirPath)) {
             // @todo fix permission mode
@@ -201,13 +201,13 @@ final class Installer extends InstallerAbstract
         $type       = new MediaType();
         $type->name = $data['name'] ?? '';
 
-        $id = MediaTypeMapper::create($type);
+        $id = MediaTypeMapper::create()->execute($type);
 
         foreach ($data['l11n'] as $l11n) {
             $l11n       = new MediaTypeL11n($l11n['title'], $l11n['lang']);
             $l11n->type = $id;
 
-            MediaTypeL11nMapper::create($l11n);
+            MediaTypeL11nMapper::create()->execute($l11n);
         }
 
         return $type;
@@ -279,7 +279,7 @@ final class Installer extends InstallerAbstract
             $media->setVirtualPath((string) ($data['virtualPath'] ?? '/'));
             $media->type = $data['media_type'] ?? null; // = identifier for modules
 
-            MediaMapper::create($media);
+            MediaMapper::create()->execute($media);
 
             $mediaFiles[] = $media;
         }
@@ -293,7 +293,7 @@ final class Installer extends InstallerAbstract
 
             $collection->setSources($mediaFiles);
 
-            CollectionMapper::create($collection);
+            CollectionMapper::create()->execute($collection);
             return [$collection];
         }
 

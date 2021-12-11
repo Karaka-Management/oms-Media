@@ -142,7 +142,7 @@ trait ApiControllerCollectionTrait
         $media->size      = 11;
         $media->extension = 'png';
         $media->name      = 'Media for collection';
-        $id               = MediaMapper::create($media);
+        $id               = MediaMapper::create()->execute($media);
 
         self::assertGreaterThan(0, $media->getId());
         self::assertEquals($id, $media->getId());

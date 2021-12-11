@@ -73,8 +73,8 @@ final class BackendController extends Controller
         $path = \str_replace('+', ' ', (string) ($request->getData('path') ?? '/'));
 
         /** @var Media[] $media */
-        $media      = MediaMapper::getByVirtualPath($path);
-        $collection = CollectionMapper::getParentCollection($path);
+        $media      = MediaMapper::getByVirtualPath($path)->where('tags/title/language', $request->getLanguage())->execute();
+        $collection = CollectionMapper::getParentCollection($path)->where('tags/title/language', $request->getLanguage())->execute();
 
         if (\is_array($collection) && \is_dir(__DIR__ . '/../Files' . $path)) {
             $collection       = new Collection();
@@ -160,13 +160,20 @@ final class BackendController extends Controller
                 $view->addData('view', $this->createMediaView($media, $request, $response));
             }
         } else {
-            $media = MediaMapper::get($id);
+            $media = MediaMapper::get()
+                ->with('createdBy')
+                ->with('tags')
+                ->with('tags/title')
+                ->where('id', $id)
+                ->where('tags/title/language', $request->getLanguage())
+                ->execute();
+
             if ($media->extension === 'collection') {
                 $media = MediaMapper::getByVirtualPath(
                     $media->getVirtualPath() . ($media->getVirtualPath() !== '/' ? '/' : '') . $media->name
-                );
+                )->with('tags/title/language', $request->getLanguage())->execute();
 
-                $collection = CollectionMapper::get($id);
+                $collection = CollectionMapper::get()->where('id', $id)->execute();
                 $media      = \array_merge($media, $collection->getSources());
 
                 $view->addData('path', $collection->getVirtualPath() . '/' . $collection->name);
@@ -285,12 +292,12 @@ final class BackendController extends Controller
 
         $id = $request->getData('id') ?? '';
 
-        $settings = SettingMapper::getFor($id, 'module');
+        $settings = SettingMapper::getAll()->where('module', $id)->execute();
         if (!($settings instanceof NullSetting)) {
             $view->setData('settings', !\is_array($settings) ? [$settings] : $settings);
         }
 
-        $types = MediaTypeMapper::with('language', $response->getLanguage())::getAll();
+        $types = MediaTypeMapper::getAll()->with('title')->where('title/language', $response->getLanguage())->execute();
         $view->setData('types', $types);
 
         if (\is_file(__DIR__ . '/../Admin/Settings/Theme/Backend/settings.tpl.php')) {
@@ -319,12 +326,12 @@ final class BackendController extends Controller
         $view = new View($this->app->l11nManager, $request, $response);
         $view->setTemplate('/Modules/' . static::NAME . '/Admin/Settings/Theme/Backend/settings-type');
 
-        $type  = MediaTypeMapper::with('language', $response->getLanguage())::get((int) $request->getData('id'));
+        $type = MediaTypeMapper::get()->with('title')->where('title/language', $response->getLanguage())->where('id', (int) $request->getData('id'))->execute();
 
         $view->addData('nav', $this->app->moduleManager->get('Navigation')->createNavigationMid(1007501001, $request, $response));
         $view->addData('type', $type);
 
-        $l11n = MediaTypeL11nMapper::with('tag', $type->getId())::getAll();
+        $l11n = MediaTypeL11nMapper::getAll()->where('type', $type->getId())->execute();
         $view->addData('l11n', $l11n);
 
         return $view;

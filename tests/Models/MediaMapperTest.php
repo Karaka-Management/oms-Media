@@ -39,12 +39,12 @@ final class MediaMapperTest extends \PHPUnit\Framework\TestCase
         $media->size      = 11;
         $media->extension = 'png';
         $media->name      = 'Image';
-        $id               = MediaMapper::create($media);
+        $id               = MediaMapper::create()->execute($media);
 
         self::assertGreaterThan(0, $media->getId());
         self::assertEquals($id, $media->getId());
 
-        $mediaR = MediaMapper::get($media->getId());
+        $mediaR = MediaMapper::get()->where('id', $media->getId())->execute();
         self::assertEquals($media->createdAt->format('Y-m-d'), $mediaR->createdAt->format('Y-m-d'));
         self::assertEquals($media->createdBy->getId(), $mediaR->createdBy->getId());
         self::assertEquals($media->description, $mediaR->description);
@@ -70,12 +70,12 @@ final class MediaMapperTest extends \PHPUnit\Framework\TestCase
         $media->size       = 11;
         $media->extension  = 'png';
         $media->name       = 'Absolute path';
-        $id                = MediaMapper::create($media);
+        $id                = MediaMapper::create()->execute($media);
 
         self::assertGreaterThan(0, $media->getId());
         self::assertEquals($id, $media->getId());
 
-        $mediaR = MediaMapper::get($media->getId());
+        $mediaR = MediaMapper::get()->where('id', $media->getId())->execute();
         self::assertEquals($media->createdAt->format('Y-m-d'), $mediaR->createdAt->format('Y-m-d'));
         self::assertEquals($media->createdBy->getId(), $mediaR->createdBy->getId());
         self::assertEquals($media->description, $mediaR->description);
@@ -100,12 +100,12 @@ final class MediaMapperTest extends \PHPUnit\Framework\TestCase
         $media->size       = 11;
         $media->extension  = 'collection';
         $media->name       = 'Directory';
-        $id                = MediaMapper::create($media);
+        $id                = MediaMapper::create()->execute($media);
 
         self::assertGreaterThan(0, $media->getId());
         self::assertEquals($id, $media->getId());
 
-        $mediaR = MediaMapper::get($media->getId());
+        $mediaR = MediaMapper::get()->where('id', $media->getId())->execute();
         self::assertEquals($media->createdAt->format('Y-m-d'), $mediaR->createdAt->format('Y-m-d'));
         self::assertEquals($media->createdBy->getId(), $mediaR->createdBy->getId());
         self::assertEquals($media->description, $mediaR->description);
@@ -131,12 +131,12 @@ final class MediaMapperTest extends \PHPUnit\Framework\TestCase
         $media->size       = 11;
         $media->extension  = 'png';
         $media->name       = 'With virtual path';
-        $id                = MediaMapper::create($media);
+        $id                = MediaMapper::create()->execute($media);
 
         self::assertGreaterThan(0, $media->getId());
         self::assertEquals($id, $media->getId());
 
-        $found  = MediaMapper::getByVirtualPath($media->getVirtualPath());
+        $found  = MediaMapper::getByVirtualPath($media->getVirtualPath())->execute();
         $mediaR = \reset($found);
         self::assertEquals($media->createdAt->format('Y-m-d'), $mediaR->createdAt->format('Y-m-d'));
         self::assertEquals($media->createdBy->getId(), $mediaR->createdBy->getId());
@@ -162,7 +162,7 @@ final class MediaMapperTest extends \PHPUnit\Framework\TestCase
         $collection->setVirtualPath('/virtual/path');
         $collection->size = 11;
         $collection->name = 'Collection';
-        $idCollection     = CollectionMapper::create($collection);
+        $idCollection     = CollectionMapper::create()->execute($collection);
 
         self::assertGreaterThan(0, $collection->getId());
         self::assertEquals($idCollection, $collection->getId());
@@ -176,12 +176,12 @@ final class MediaMapperTest extends \PHPUnit\Framework\TestCase
         $media->size       = 11;
         $media->extension  = 'png';
         $media->name       = 'Absolute path';
-        $idMedia           = MediaMapper::create($media);
+        $idMedia           = MediaMapper::create()->execute($media);
 
         self::assertGreaterThan(0, $media->getId());
         self::assertEquals($idMedia, $media->getId());
 
-        $collectionR = MediaMapper::getParentCollection($media->getVirtualPath());
+        $collectionR = MediaMapper::getParentCollection($media->getVirtualPath())->execute();
         self::assertEquals($idCollection, $collectionR->getId());
         self::assertEquals($collection->name, $collectionR->name);
     }

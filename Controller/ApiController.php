@@ -296,7 +296,7 @@ final class ApiController extends Controller
         $media->setVirtualPath($virtualPath);
         $media->type = \is_int($type) ? new NullMediaType($type) : null;
 
-        MediaMapper::create($media);
+        MediaMapper::create()->execute($media);
 
         return $media;
     }
@@ -340,7 +340,7 @@ final class ApiController extends Controller
     public function apiMediaUpdate(RequestAbstract $request, ResponseAbstract $response, $data = null) : void
     {
         /** @var Media $old */
-        $old = clone MediaMapper::get((int) $request->getData('id'));
+        $old = clone MediaMapper::get()->where('id', (int) $request->getData('id'))->execute();
 
         /** @var Media $new */
         $new = $this->updateMediaFromRequest($request);
@@ -363,7 +363,7 @@ final class ApiController extends Controller
         $id = (int) $request->getData('id');
 
         /** @var Media $media */
-        $media              = MediaMapper::get($id);
+        $media              = MediaMapper::get()->where('id', $id)->execute();
         $media->name        = (string) ($request->getData('name') ?? $media->name);
         $media->description = (string) ($request->getData('description') ?? $media->description);
         $media->setPath((string) ($request->getData('path') ?? $media->getPath()));
@@ -479,7 +479,7 @@ final class ApiController extends Controller
         $mediaCollection->setVirtualPath($virtualPath);
         $mediaCollection->setPath($outputDir);
 
-        CollectionMapper::create($mediaCollection);
+        CollectionMapper::create()->execute($mediaCollection);
 
         return $mediaCollection;
     }
@@ -604,7 +604,7 @@ final class ApiController extends Controller
     {
         if (((int) $request->getData('id')) !== 0) {
             /** @var Media $media */
-            $media = MediaMapper::get((int) $request->getData('id'));
+            $media = MediaMapper::get()->where('id', (int) $request->getData('id'))->execute();
         } else {
             $path  = \urldecode($request->getData('path'));
             $media = new NullMedia();

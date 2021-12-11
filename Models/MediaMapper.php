@@ -16,8 +16,8 @@ namespace Modules\Media\Models;
 
 use Modules\Admin\Models\AccountMapper;
 use Modules\Tag\Models\TagMapper;
-use phpOMS\DataStorage\Database\DataMapperAbstract;
-use phpOMS\DataStorage\Database\RelationType;
+use phpOMS\DataStorage\Database\Mapper\DataMapperFactory;
+use phpOMS\DataStorage\Database\Mapper\ReadMapper;
 
 /**
  * Media mapper class.
@@ -27,7 +27,7 @@ use phpOMS\DataStorage\Database\RelationType;
  * @link    https://orange-management.org
  * @since   1.0.0
  */
-class MediaMapper extends DataMapperAbstract
+class MediaMapper extends DataMapperFactory
 {
     /**
      * Columns.
@@ -35,7 +35,7 @@ class MediaMapper extends DataMapperAbstract
      * @var array<string, array{name:string, type:string, internal:string, autocomplete?:bool, readonly?:bool, writeonly?:bool, annotations?:array}>
      * @since 1.0.0
      */
-    protected static array $columns = [
+    public const COLUMNS = [
         'media_id'                    => ['name' => 'media_id',              'type' => 'int',      'internal' => 'id'],
         'media_name'                  => ['name' => 'media_name',            'type' => 'string',   'internal' => 'name',          'autocomplete' => true],
         'media_type'                  => ['name' => 'media_type',            'type' => 'int',   'internal' => 'type'],
@@ -61,7 +61,7 @@ class MediaMapper extends DataMapperAbstract
      * @var array<string, array{mapper:string, external:string}>
      * @since 1.0.0
      */
-    protected static array $belongsTo = [
+    public const BELONGS_TO = [
         'createdBy' => [
             'mapper'     => AccountMapper::class,
             'external'   => 'media_created_by',
@@ -74,7 +74,7 @@ class MediaMapper extends DataMapperAbstract
      * @var array<string, array{mapper:string, external:string}>
      * @since 1.0.0
      */
-    protected static array $ownsOne = [
+    public const OWNS_ONE = [
         'type' => [
             'mapper'     => MediaTypeMapper::class,
             'external'   => 'media_type',
@@ -87,7 +87,7 @@ class MediaMapper extends DataMapperAbstract
      * @var array<string, array{mapper:string, table:string, self?:?string, external?:?string, column?:string}>
      * @since 1.0.0
      */
-    protected static array $hasMany = [
+    public const HAS_MANY = [
         'tags'         => [
             'mapper'   => TagMapper::class,
             'table'    => 'media_tag',
@@ -102,7 +102,7 @@ class MediaMapper extends DataMapperAbstract
      * @var string
      * @since 1.0.0
      */
-    protected static string $model = Media::class;
+    public const MODEL = Media::class;
 
     /**
      * Primary table.
@@ -110,7 +110,7 @@ class MediaMapper extends DataMapperAbstract
      * @var string
      * @since 1.0.0
      */
-    protected static string $table = 'media';
+    public const TABLE = 'media';
 
     /**
      * Created at.
@@ -118,7 +118,7 @@ class MediaMapper extends DataMapperAbstract
      * @var string
      * @since 1.0.0
      */
-    protected static string $createdAt = 'media_created_at';
+    public const CREATED_AT = 'media_created_at';
 
     /**
      * Primary field name.
@@ -126,7 +126,7 @@ class MediaMapper extends DataMapperAbstract
      * @var string
      * @since 1.0.0
      */
-    protected static string $primaryField = 'media_id';
+    public const PRIMARYFIELD ='media_id';
 
     /**
      * Get media based on virtual path.
@@ -146,21 +146,18 @@ class MediaMapper extends DataMapperAbstract
      * @param string $virtualPath Virtual path
      * @param bool   $hidden      Get hidden files
      *
-     * @return array
+     * @return ReadMapper
      *
      * @since 1.0.0
      */
-    public static function getByVirtualPath(string $virtualPath = '/', bool $hidden = false) : array
+    public static function getByVirtualPath(string $virtualPath = '/', bool $hidden = false) : ReadMapper
     {
-        $depth = 3;
-        $query = self::getQuery(depth: $depth);
-        $query->where(self::$table . '_d' . $depth . '.media_virtual', '=', $virtualPath);
-
-        if ($hidden === false) {
-            $query->andWhere(self::$table . '_d' . $depth . '.media_hidden', '=', (int) $hidden);
-        }
-
-        return self::getAllByQuery($query, RelationType::ALL, $depth);
+        return self::getAll()
+            ->with('createdBy')
+            ->with('tags')
+            ->with('tags/title')
+            ->where('virtualPath', $virtualPath)
+            ->where('isHidden', $hidden);
     }
 
     /**
@@ -168,22 +165,18 @@ class MediaMapper extends DataMapperAbstract
      *
      * @param string $path Virtual path
      *
-     * @return mixed
+     * @return ReadMapper
      *
      * @since 1.0.0
      */
-    public static function getParentCollection(string $path = '/')
+    public static function getParentCollection(string $path = '/') : ReadMapper
     {
         $virtualPath = '/' . \trim(\substr($path, 0, \strripos($path, '/') + 1), '/');
         $name        = \substr($path, \strripos($path, '/') + 1);
 
-        $depth = 3;
-        $query = self::getQuery();
-        $query->where(self::$table. '_d' . $depth  . '.media_virtual', '=', $virtualPath)
-            ->andWhere(self::$table. '_d' . $depth  . '.media_name', '=', $name);
-
-        $objs = self::getAllByQuery($query, RelationType::ALL, $depth);
-
-        return \count($objs) === 1 ? \reset($objs) : $objs;
+        return self::get()
+            ->with('sources')
+            ->where('virtualPath', $virtualPath)
+            ->where('name', $name);
     }
 }

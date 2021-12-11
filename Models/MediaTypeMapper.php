@@ -14,7 +14,7 @@ declare(strict_types=1);
 
 namespace Modules\Media\Models;
 
-use phpOMS\DataStorage\Database\DataMapperAbstract;
+use phpOMS\DataStorage\Database\Mapper\DataMapperFactory;
 
 /**
  * Media type mapper class.
@@ -24,7 +24,7 @@ use phpOMS\DataStorage\Database\DataMapperAbstract;
  * @link    https://orange-management.org
  * @since   1.0.0
  */
-final class MediaTypeMapper extends DataMapperAbstract
+final class MediaTypeMapper extends DataMapperFactory
 {
     /**
      * Columns.
@@ -32,7 +32,7 @@ final class MediaTypeMapper extends DataMapperAbstract
      * @var array<string, array{name:string, type:string, internal:string, autocomplete?:bool, readonly?:bool, writeonly?:bool, annotations?:array}>
      * @since 1.0.0
      */
-    protected static array $columns = [
+    public const COLUMNS = [
         'media_type_id'    => ['name' => 'media_type_id',    'type' => 'int',    'internal' => 'id'],
         'media_type_name'  => ['name' => 'media_type_name', 'type' => 'string', 'internal' => 'name'],
         'media_type_isvisible'  => ['name' => 'media_type_isvisible', 'type' => 'bool', 'internal' => 'isVisible'],
@@ -44,13 +44,12 @@ final class MediaTypeMapper extends DataMapperAbstract
      * @var array<string, array{mapper:string, table:string, self?:?string, external?:?string, column?:string}>
      * @since 1.0.0
      */
-    protected static array $hasMany = [
+    public const HAS_MANY = [
         'title' => [
             'mapper'            => MediaTypeL11nMapper::class,
             'table'             => 'media_type_l11n',
             'self'              => 'media_type_l11n_type',
             'column'            => 'title',
-            'conditional'       => true,
             'external'          => null,
         ],
     ];
@@ -61,7 +60,7 @@ final class MediaTypeMapper extends DataMapperAbstract
      * @var string
      * @since 1.0.0
      */
-    protected static string $model = MediaType::class;
+    public const MODEL = MediaType::class;
 
     /**
      * Primary table.
@@ -69,7 +68,7 @@ final class MediaTypeMapper extends DataMapperAbstract
      * @var string
      * @since 1.0.0
      */
-    protected static string $table = 'media_type';
+    public const TABLE = 'media_type';
 
     /**
      * Primary field name.
@@ -77,5 +76,5 @@ final class MediaTypeMapper extends DataMapperAbstract
      * @var string
      * @since 1.0.0
      */
-    protected static string $primaryField = 'media_type_id';
+    public const PRIMARYFIELD ='media_type_id';
 }

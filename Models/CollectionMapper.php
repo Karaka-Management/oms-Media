@@ -15,7 +15,7 @@ declare(strict_types=1);
 namespace Modules\Media\Models;
 
 use Modules\Admin\Models\Account;
-use phpOMS\DataStorage\Database\RelationType;
+use phpOMS\DataStorage\Database\Mapper\ReadMapper;
 
 /**
  * Mapper class.
@@ -33,7 +33,7 @@ final class CollectionMapper extends MediaMapper
      * @var array<string, array{mapper:string, table:string, self?:?string, external?:?string, column?:string}>
      * @since 1.0.0
      */
-    protected static array $hasMany = [
+    public const HAS_MANY = [
         'sources' => [
             'mapper'   => MediaMapper::class,
             'table'    => 'media_relation',
@@ -48,7 +48,7 @@ final class CollectionMapper extends MediaMapper
      * @var string
      * @since 1.0.0
      */
-    protected static string $model = Collection::class;
+    public const MODEL = Collection::class;
 
     /**
      * Primary table.
@@ -56,7 +56,7 @@ final class CollectionMapper extends MediaMapper
      * @var string
      * @since 1.0.0
      */
-    protected static string $table = 'media';
+    public const TABLE = 'media';
 
     /**
      * Created at.
@@ -64,7 +64,7 @@ final class CollectionMapper extends MediaMapper
      * @var string
      * @since 1.0.0
      */
-    protected static string $createdAt = 'media_created_at';
+    public const CREATED_AT = 'media_created_at';
 
     /**
      * Primary field name.
@@ -72,7 +72,7 @@ final class CollectionMapper extends MediaMapper
      * @var string
      * @since 1.0.0
      */
-    protected static string $primaryField = 'media_id';
+    public const PRIMARYFIELD ='media_id';
 
     /**
      * Get media based on virtual path.
@@ -92,22 +92,17 @@ final class CollectionMapper extends MediaMapper
      * @param string $virtualPath Virtual path
      * @param bool   $hidden      Get hidden files
      *
-     * @return array
+     * @return ReadMapper
      *
      * @since 1.0.0
      */
-    public static function getByVirtualPath(string $virtualPath = '/', bool $hidden = false) : array
+    public static function getByVirtualPath(string $virtualPath = '/', bool $hidden = false) : ReadMapper
     {
-        $depth = 3;
-        $query = self::getQuery(depth: $depth);
-        $query->where(self::$table . '_d' . $depth . '.media_virtual', '=', $virtualPath);
-        $query->where(self::$table . '_d' . $depth . '.media_collection', '=', 1);
-
-        if ($hidden === false) {
-            $query->andWhere(self::$table . '_d' . $depth . '.media_hidden', '=', (int) $hidden);
-        }
-
-        return self::getAllByQuery($query, RelationType::ALL, $depth);
+        return self::getAll()->where('virtualPath', $virtualPath)
+            ->with('createdBy')
+            ->with('tags')
+            ->where('isHidden', $hidden)
+            ->where('collection', true);
     }
 
     /**
@@ -123,11 +118,11 @@ final class CollectionMapper extends MediaMapper
     public static function getCollectionsByPath(string $virtualPath, bool $showDirectories = false) : array
     {
         /** @var Media[] $collection */
-        $collection = self::getByVirtualPath($virtualPath);
+        $collection = self::getByVirtualPath($virtualPath)->with('sources')->execute();
         $parent     = [];
 
         if ($showDirectories) {
-            $parent = self::getParentCollection($virtualPath);
+            $parent = self::getParentCollection($virtualPath)->execute();
             if (\is_array($parent) && \is_dir(__DIR__ . '/../../Media/Files' . $virtualPath)) {
                 $parent       = new Collection();
                 $parent->name = \basename($virtualPath);

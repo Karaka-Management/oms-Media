@@ -231,7 +231,7 @@ trait ApiControllerMediaTrait
         $request->setData('content', 'Test Content');
         $this->module->apiMediaUpdate($request, $response);
 
-        $media = MediaMapper::get($id);
+        $media = MediaMapper::get()->where('id', $id)->execute();
         self::assertEquals('Test Changed', $media->name);
         self::assertEquals('Test Content', \file_get_contents(__DIR__ . '/../test/path/testFile1.txt'));
 
