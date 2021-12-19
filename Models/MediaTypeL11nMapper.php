@@ -33,10 +33,10 @@ final class MediaTypeL11nMapper extends DataMapperFactory
      * @since 1.0.0
      */
     public const COLUMNS = [
-        'media_type_l11n_id'        => ['name' => 'media_type_l11n_id',       'type' => 'int',    'internal' => 'id'],
-        'media_type_l11n_title'     => ['name' => 'media_type_l11n_title',    'type' => 'string', 'internal' => 'title', 'autocomplete' => true],
-        'media_type_l11n_type'      => ['name' => 'media_type_l11n_type',      'type' => 'int',    'internal' => 'type'],
-        'media_type_l11n_language'  => ['name' => 'media_type_l11n_language', 'type' => 'string', 'internal' => 'language'],
+        'media_type_l11n_id'       => ['name' => 'media_type_l11n_id',       'type' => 'int',    'internal' => 'id'],
+        'media_type_l11n_title'    => ['name' => 'media_type_l11n_title',    'type' => 'string', 'internal' => 'title', 'autocomplete' => true],
+        'media_type_l11n_type'     => ['name' => 'media_type_l11n_type',     'type' => 'int',    'internal' => 'type'],
+        'media_type_l11n_language' => ['name' => 'media_type_l11n_language', 'type' => 'string', 'internal' => 'language'],
     ];
 
     /**

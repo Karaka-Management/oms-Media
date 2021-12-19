@@ -33,9 +33,9 @@ final class MediaTypeMapper extends DataMapperFactory
      * @since 1.0.0
      */
     public const COLUMNS = [
-        'media_type_id'    => ['name' => 'media_type_id',    'type' => 'int',    'internal' => 'id'],
-        'media_type_name'  => ['name' => 'media_type_name', 'type' => 'string', 'internal' => 'name'],
-        'media_type_isvisible'  => ['name' => 'media_type_isvisible', 'type' => 'bool', 'internal' => 'isVisible'],
+        'media_type_id'        => ['name' => 'media_type_id',        'type' => 'int',    'internal' => 'id'],
+        'media_type_name'      => ['name' => 'media_type_name',      'type' => 'string', 'internal' => 'name'],
+        'media_type_isvisible' => ['name' => 'media_type_isvisible', 'type' => 'bool',   'internal' => 'isVisible'],
     ];
 
     /**
@@ -46,11 +46,11 @@ final class MediaTypeMapper extends DataMapperFactory
      */
     public const HAS_MANY = [
         'title' => [
-            'mapper'            => MediaTypeL11nMapper::class,
-            'table'             => 'media_type_l11n',
-            'self'              => 'media_type_l11n_type',
-            'column'            => 'title',
-            'external'          => null,
+            'mapper'  => MediaTypeL11nMapper::class,
+            'table'   => 'media_type_l11n',
+            'self'    => 'media_type_l11n_type',
+            'column'  => 'title',
+            'external'=> null,
         ],
     ];
 

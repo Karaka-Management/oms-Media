@@ -171,7 +171,7 @@ final class BackendController extends Controller
             if ($media->extension === 'collection') {
                 $media = MediaMapper::getByVirtualPath(
                     $media->getVirtualPath() . ($media->getVirtualPath() !== '/' ? '/' : '') . $media->name
-                )->with('tags/title/language', $request->getLanguage())->execute();
+                )->where('tags/title/language', $request->getLanguage())->execute();
 
                 $collection = CollectionMapper::get()->where('id', $id)->execute();
                 $media      = \array_merge($media, $collection->getSources());

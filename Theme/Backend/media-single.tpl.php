@@ -17,6 +17,7 @@ use phpOMS\Utils\Converter\FileSizeType;
 
 include __DIR__ . '/template-functions.php';
 
+/** @var \Modules\Media\Views\MediaView $this */
 /** @var \Modules\Media\Models\Media $media */
 $media = $this->getData('media');
 $view  = $this->getData('view');
@@ -24,7 +25,8 @@ $view  = $this->getData('view');
 /** @var \Modules\Tag\Models\Tag[] $tag */
 $tags = $media->getTags();
 
-/** @var \Modules\Media\Views\MediaView $this */
+/** @var \phpOMS\Message\Http\HttpRequest $this->request */
+
 echo $this->getData('nav')->render();
 ?>
 <div class="row">
