@@ -100,12 +100,6 @@ final class Installer extends InstallerAbstract
      */
     public static function installExternal(ApplicationAbstract $app, array $data) : array
     {
-        try {
-            $app->dbPool->get()->con->query('select 1 from `media`');
-        } catch (\Exception $e) {
-            return []; // @codeCoverageIgnore
-        }
-
         if (!\is_file($data['path'] ?? '')) {
             throw new PathException($data['path'] ?? '');
         }
@@ -276,7 +270,16 @@ final class Installer extends InstallerAbstract
             $media->size      = $uFile['size'];
             $media->createdBy = new NullAccount((int) $data['user'] ?? 1);
             $media->extension = $uFile['extension'];
-            $media->setVirtualPath((string) ($data['virtualPath'] ?? '/'));
+
+            // Use defined virtual path if no collection is used.
+            // If a collection is created modify the virtual path so that it is the virtual path + the collection name for the uploaded files
+            $media->setVirtualPath((string) (
+                $data['create_collection']
+                    ? \rtrim($data['virtualPath'] ?? '/', '/') . '/' . ((string) $data['name'] ?? '')
+                    : ($data['virtualPath'] ?? '/')
+                )
+            );
+
             $media->type = $data['media_type'] ?? null; // = identifier for modules
 
             MediaMapper::create()->execute($media);

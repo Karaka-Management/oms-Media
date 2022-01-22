@@ -17,16 +17,20 @@ namespace Modules\Media\Controller;
 use Model\NullSetting;
 use Model\SettingMapper;
 use Modules\Admin\Models\Account;
+use Modules\Admin\Models\PermissionAbstractMapper;
 use Modules\Media\Models\Collection;
 use Modules\Media\Models\CollectionMapper;
 use Modules\Media\Models\Media;
 use Modules\Media\Models\MediaMapper;
 use Modules\Media\Models\MediaTypeMapper;
 use Modules\Media\Models\MediaTypeL11nMapper;
+use Modules\Media\Models\NullCollection;
 use Modules\Media\Models\NullMedia;
+use Modules\Media\Models\PermissionState;
 use Modules\Media\Theme\Backend\Components\Media\ElementView;
 use Modules\Media\Theme\Backend\Components\Media\ListView;
 use Modules\Media\Views\MediaView;
+use phpOMS\Account\PermissionType;
 use phpOMS\Contract\RenderableInterface;
 use phpOMS\Message\RequestAbstract;
 use phpOMS\Message\ResponseAbstract;
@@ -72,9 +76,51 @@ final class BackendController extends Controller
 
         $path = \str_replace('+', ' ', (string) ($request->getData('path') ?? '/'));
 
+        $hasPermission = $this->app->accountManager->get($request->header->account)
+            ->hasPermission(
+                PermissionType::READ,
+                $this->app->orgId,
+                $this->app->appName,
+                self::NAME,
+                PermissionState::MEDIA,
+            );
+
+        $mediaMapper = MediaMapper::getByVirtualPath($path)->where('tags/title/language', $request->getLanguage());
+
+        if (!$hasPermission) {
+            $permWhere = PermissionAbstractMapper::helper($this->app->dbPool->get('select'))
+                ->groups($this->app->accountManager->get($request->header->account)->getGroupIds())
+                ->account($request->header->account)
+                ->units([null, $this->app->orgId])
+                ->apps([null, 'Api', $this->app->appName])
+                ->modules([null, self::NAME])
+                ->types([null, PermissionState::MEDIA])
+                ->permission(PermissionType::READ)
+                ->query(MediaMapper::PRIMARYFIELD);
+
+                $mediaMapper ->where('', $permWhere);
+        }
+
         /** @var Media[] $media */
-        $media      = MediaMapper::getByVirtualPath($path)->where('tags/title/language', $request->getLanguage())->execute();
-        $collection = CollectionMapper::getParentCollection($path)->where('tags/title/language', $request->getLanguage())->execute();
+        $media = $mediaMapper->execute();
+
+        $collectionMapper = CollectionMapper::getParentCollection($path)->where('tags/title/language', $request->getLanguage());
+
+        if (!$hasPermission) {
+            $permWhere = PermissionAbstractMapper::helper($this->app->dbPool->get('select'))
+                ->groups($this->app->accountManager->get($request->header->account)->getGroupIds())
+                ->account($request->header->account)
+                ->units([null, $this->app->orgId])
+                ->apps([null, 'Api', $this->app->appName])
+                ->modules([null, self::NAME])
+                ->types([null, PermissionState::MEDIA])
+                ->permission(PermissionType::READ)
+                ->query(MediaMapper::PRIMARYFIELD);
+
+                $collectionMapper ->where('', $permWhere);
+        }
+
+        $collection = $collectionMapper->execute();
 
         if (\is_array($collection) && \is_dir(__DIR__ . '/../Files' . $path)) {
             $collection       = new Collection();
@@ -84,12 +130,12 @@ final class BackendController extends Controller
             $collection->isAbsolute = false;
         }
 
-        if ($collection instanceof Collection) {
+        if ($collection instanceof Collection && !($collection instanceof NullCollection)) {
             $media += $collection->getSources();
 
             /** @var string[] $glob */
             $glob = $collection->isAbsolute
-                ? $collection->getPath() . '/' . $collection->name . '/*'
+                ? \glob($collection->getPath() . '/' . $collection->name . '/*')
                 : \glob(__DIR__ . '/../Files/' . \trim($collection->getVirtualPath(), '/') . '/' . $collection->name . '/*');
             $glob = $glob === false ? [] : $glob;
 

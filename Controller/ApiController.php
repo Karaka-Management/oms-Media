@@ -294,7 +294,7 @@ final class ApiController extends Controller
         $media->createdBy = new NullAccount($account);
         $media->extension = $status['extension'];
         $media->setVirtualPath($virtualPath);
-        $media->type = \is_int($type) ? new NullMediaType($type) : null;
+        $media->type = $type === null ? null : new NullMediaType($type);
 
         MediaMapper::create()->execute($media);
 
