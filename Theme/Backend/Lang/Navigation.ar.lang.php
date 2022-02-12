@@ -13,7 +13,7 @@
 declare(strict_types=1);
 
 return ['Navigation' => [
-    'Create' => 'Erstellen',
-    'List'   => 'Aufführen',
-    'Media'  => 'Medien',
+    'Create' => 'يخلق',
+    'List'   => 'قائمة',
+    'Media'  => 'وسائط',
 ]];
