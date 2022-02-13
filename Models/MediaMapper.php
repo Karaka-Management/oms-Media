@@ -50,7 +50,8 @@ class MediaMapper extends DataMapperFactory
         'media_password'        => ['name' => 'media_password',        'type' => 'string',            'internal' => 'password'],
         'media_extension'       => ['name' => 'media_extension',       'type' => 'string',            'internal' => 'extension'],
         'media_size'            => ['name' => 'media_size',            'type' => 'int',               'internal' => 'size'],
-        'media_collection'      => ['name' => 'media_collection',      'type' => 'bool',              'internal' => 'collection'],
+        'media_source'      => ['name' => 'media_source',      'type' => 'int',              'internal' => 'source'],
+        'media_class'      => ['name' => 'media_class',      'type' => 'int',              'internal' => 'class'],
         'media_created_by'      => ['name' => 'media_created_by',      'type' => 'int',               'internal' => 'createdBy',   'readonly' => true],
         'media_created_at'      => ['name' => 'media_created_at',      'type' => 'DateTimeImmutable', 'internal' => 'createdAt',   'readonly' => true],
     ];
@@ -78,6 +79,10 @@ class MediaMapper extends DataMapperFactory
         'type' => [
             'mapper'   => MediaTypeMapper::class,
             'external' => 'media_type',
+        ],
+        'source' => [
+            'mapper'   => self::class,
+            'external' => 'media_source',
         ],
     ];
 
@@ -154,6 +159,7 @@ class MediaMapper extends DataMapperFactory
     {
         return self::getAll()
             ->with('createdBy')
+            ->with('source')
             ->with('tags')
             ->with('tags/title')
             ->where('virtualPath', $virtualPath)
@@ -176,7 +182,9 @@ class MediaMapper extends DataMapperFactory
 
         return self::get()
             ->with('sources')
+            ->with('source')
             ->where('virtualPath', $virtualPath)
+            ->where('class', MediaClass::COLLECTION)
             ->where('name', $name);
     }
 }

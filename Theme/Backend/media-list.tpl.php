@@ -12,6 +12,8 @@
  */
 declare(strict_types=1);
 
+use Modules\Media\Models\MediaClass;
+use Modules\Media\Models\Reference;
 use phpOMS\System\File\FileUtils;
 use phpOMS\Uri\UriFactory;
 use phpOMS\Utils\Converter\FileSizeType;
@@ -170,6 +172,10 @@ $next     = empty($media) ? '{/prefix}media/list' : '{/prefix}media/list?{?}&id=
                     <?php $count = 0;
                         foreach ($media as $key => $value) :
                             ++$count;
+
+                            if ($value->class === MediaClass::REFERENCE) {
+                                $value = $value->source;
+                            }
 
                             $url = $value->extension === 'collection'
                                 ? UriFactory::build('{/prefix}media/list?path=' . \rtrim($value->getVirtualPath(), '/') . '/' . $value->name)

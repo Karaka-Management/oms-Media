@@ -15,38 +15,30 @@ declare(strict_types=1);
 namespace Modules\Media\Models;
 
 /**
- * Media class.
+ * Reference class.
  *
  * @package Modules\Media\Models
  * @license OMS License 1.0
  * @link    https://orange-management.org
  * @since   1.0.0
  */
-class Collection extends Media implements \Iterator
+class Reference extends Media
 {
-    /**
-     * Resource id.
-     *
-     * @var array<int, Media>
-     * @since 1.0.0
-     */
-    private array $sources = [];
-
     /**
      * Extension name.
      *
      * @var string
      * @since 1.0.0
      */
-    public string $extension = 'collection';
+    public string $extension = 'reference';
 
     /**
-     * Is collection.
+     * Is reference.
      *
      * @var int
      * @since 1.0.0
      */
-    public int $class = MediaClass::COLLECTION;
+    public int $class = MediaClass::REFERENCE;
 
     /**
      * Set sources.

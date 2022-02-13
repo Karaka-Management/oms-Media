@@ -87,12 +87,6 @@
                 "default": null,
                 "null": true
             },
-            "media_path": {
-                "name": "media_path",
-                "type": "VARCHAR(255)",
-                "default": null,
-                "null": true
-            },
             "media_versioned": {
                 "name": "media_versioned",
                 "type": "TINYINT",
@@ -136,8 +130,8 @@
                 "default": null,
                 "null": true
             },
-            "media_collection": {
-                "name": "media_collection",
+            "media_class": {
+                "name": "media_class",
                 "type": "TINYINT",
                 "default": null,
                 "null": true
@@ -147,6 +141,13 @@
                 "type": "INT",
                 "default": null,
                 "null": true
+            },
+            "media_source": {
+                "name": "media_source",
+                "type": "INT",
+                "null": true,
+                "foreignTable": "media",
+                "foreignKey": "media_id"
             },
             "media_created_by": {
                 "name": "media_created_by",

@@ -134,6 +134,14 @@ class Media implements \JsonSerializable
     public string $descriptionRaw = '';
 
     /**
+     * Resource id.
+     *
+     * @var null|Media
+     * @since 1.0.0
+     */
+    public ?Media $source = null;
+
+    /**
      * Media encryption nonce.
      *
      * @var null|string
@@ -158,12 +166,12 @@ class Media implements \JsonSerializable
     public bool $isHidden = false;
 
     /**
-     * Is collection.
+     * Media class.
      *
-     * @var bool
+     * @var int
      * @since 1.0.0
      */
-    protected bool $collection = false;
+    public int $class = MediaClass::FILE;
 
     /**
      * Tags.

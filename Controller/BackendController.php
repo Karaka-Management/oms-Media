@@ -34,6 +34,7 @@ use phpOMS\Account\PermissionType;
 use phpOMS\Contract\RenderableInterface;
 use phpOMS\Message\RequestAbstract;
 use phpOMS\Message\ResponseAbstract;
+use phpOMS\Utils\StringUtils;
 use phpOMS\Views\View;
 
 /**
@@ -131,7 +132,16 @@ final class BackendController extends Controller
         }
 
         if ($collection instanceof Collection && !($collection instanceof NullCollection)) {
-            $media += $collection->getSources();
+            $collectionSources = $collection->getSources();
+            foreach ($collectionSources as $source) {
+                foreach ($media as $obj) {
+                    if ($obj->getId() === $source->getId()) {
+                        continue 2;
+                    }
+                }
+
+                $media[] = $source;
+            }
 
             /** @var string[] $glob */
             $glob = $collection->isAbsolute
@@ -148,6 +158,7 @@ final class BackendController extends Controller
                 foreach ($media as $obj) {
                     if ($obj->name === $basename
                         || $obj->name . '.' . $obj->extension === $basename
+                        || StringUtils::endsWith(\realpath($file), $obj->getPath())
                     ) {
                         continue 2;
                     }
@@ -238,6 +249,7 @@ final class BackendController extends Controller
             }
         }
 
+        $view->addData('account', $this->app->accountManager->get($request->header->account));
         $view->addData('media', $media);
 
         return $view;

@@ -51,30 +51,6 @@ final class CollectionMapper extends MediaMapper
     public const MODEL = Collection::class;
 
     /**
-     * Primary table.
-     *
-     * @var string
-     * @since 1.0.0
-     */
-    public const TABLE = 'media';
-
-    /**
-     * Created at.
-     *
-     * @var string
-     * @since 1.0.0
-     */
-    public const CREATED_AT = 'media_created_at';
-
-    /**
-     * Primary field name.
-     *
-     * @var string
-     * @since 1.0.0
-     */
-    public const PRIMARYFIELD ='media_id';
-
-    /**
      * Get media based on virtual path.
      *
      * The virtual path is equivalent to the directory path on a file system.
@@ -102,7 +78,7 @@ final class CollectionMapper extends MediaMapper
             ->with('createdBy')
             ->with('tags')
             ->where('isHidden', $hidden)
-            ->where('collection', true);
+            ->where('class', MediaClass::COLLECTION);
     }
 
     /**

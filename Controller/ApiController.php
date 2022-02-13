@@ -520,6 +520,53 @@ final class ApiController extends Controller
         return $mediaCollection;
     }
 
+    public function createRecursiveMediaCollection(string $basePath, string $path, int $account, string $physicalPath = '') : Collection
+    {
+        $status = false;
+        if (!empty($physicalPath)) {
+            $status = !\is_dir($physicalPath) ? \mkdir($physicalPath, 0755, true) : true;
+        }
+
+        $path = \trim($path, '/');
+        $paths = \explode('/', $path);
+        $tempPaths = $paths;
+        $length = \count($paths);
+
+        $temp = '';
+
+        /** @var Collection $parentCollection */
+        $parentCollection = null;
+
+        for ($i = $length; $i > 0; --$i) {
+            $temp = '/' . \implode('/', $tempPaths);
+
+            /** @var Collection $parentCollection */
+            $parentCollection = CollectionMapper::getParentCollection($temp)->execute();
+            if ($parentCollection->getId() > 0) {
+                break;
+            }
+
+            \array_pop($tempPaths);
+        }
+
+        for (; $i < $length; ++$i) {
+            /* Create collection */
+            $childCollection                 = new Collection();
+            $childCollection->name           = $paths[$i];
+            $childCollection->createdBy      = new NullAccount($account);
+            $childCollection->setVirtualPath('/'. \ltrim($temp, '/'));
+            $childCollection->setPath('/Modules/Media/Files' . $temp);
+
+            CollectionMapper::create()->execute($childCollection);
+            CollectionMapper::writer()->createRelationTable('sources', [$childCollection->getId()], $parentCollection->getId());
+
+            $parentCollection = $childCollection;
+            $temp .= '/' . $paths[$i];
+        }
+
+        return $parentCollection;
+    }
+
     /**
      * Api method to create media file.
      *
