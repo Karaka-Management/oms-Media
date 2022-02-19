@@ -44,7 +44,7 @@ jsOMS.Modules.Media = class {
                 this.app.uiManager.getFormManager().get(form.id).injectSubmit(function (e, requestId)
                 {
                     /**
-                     * @todo Orange-Management/Modules#198
+                     * @todo Karaka/Modules#198
                      *  The uploader should support multiple upload fields.
                      *  Currently only one is supported per form.
                      */

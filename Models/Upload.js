@@ -151,7 +151,7 @@ export class Upload {
     upload (formId)
     {
         /**
-         * @todo Orange-Management/oms-Media#5
+         * @todo Karaka/oms-Media#5
          *  Validate file type and file size on the frontend before uploading
          */
         const request = new HttpRequest(),
