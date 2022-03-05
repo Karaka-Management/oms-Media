@@ -119,6 +119,12 @@ class UploadFile
         foreach ($files as $key => $f) {
             ++$fCounter;
 
+            if (!\is_file($f['tmp_name'])) {
+                $result[$key]['status'] = UploadStatus::FILE_NOT_FOUND;
+
+                return $result;
+            }
+
             if ($path === '') {
                 $path = File::dirpath($f['tmp_name']);
             }
@@ -240,8 +246,9 @@ class UploadFile
      */
     private function createFileName(string $path, string $tempName, string $extension) : string
     {
-        $rnd   = '';
-        $limit = -1;
+        $rnd      = '';
+        $limit    = -1;
+        $fileName = '';
 
         $nameWithoutExtension = empty($tempName) ? '' : \substr($tempName, 0, -\strlen($extension) - 1);
 
@@ -311,6 +318,8 @@ class UploadFile
      */
     private function findOutputDir() : string
     {
+        $rndPath = '';
+
         do {
             $rndPath = \str_pad(\dechex(\mt_rand(0, 65535)), 4, '0', \STR_PAD_LEFT);
         } while (\is_dir($this->outputDir . '/_' . $rndPath));

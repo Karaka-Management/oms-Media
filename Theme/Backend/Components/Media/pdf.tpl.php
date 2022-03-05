@@ -18,6 +18,6 @@ use \phpOMS\Uri\UriFactory;
 
 <section id="mediaFile" class="portlet">
     <div class="portlet-body">
-        <iframe style="min-height: 600px;" data-form="iUiSettings" data-name="iframeHelper" id="iHelperFrame" src="<?= UriFactory::build('{/backend}Resources/mozilla/Pdf/web/viewer.html?{?}&file=' . ($this->media->isAbsolute ? '' : '/../../../../') . $this->media->getPath()); ?>" allowfullscreen></iframe>
+        <iframe style="min-height: 600px;" data-form="iUiSettings" data-name="iframeHelper" id="iHelperFrame" src="<?= UriFactory::build('{/backend}Resources/mozilla/Pdf/web/viewer.html?{?}&file=' . \urlencode(($this->media->isAbsolute ? '' : '/../../../../') . $this->media->getPath())); ?>" allowfullscreen></iframe>
     </div>
 </section>

@@ -312,6 +312,11 @@ class Media implements \JsonSerializable
         return $this->isAbsolute ? $this->path : \ltrim($this->path, '\\/');
     }
 
+    public function getAbsolutePath() : string
+    {
+        return $this->isAbsolute ? $this->path : __DIR__ . '/../../../' . \ltrim($this->path, '\\/');
+    }
+
     /**
      * @return string
      *
