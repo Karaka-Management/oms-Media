@@ -123,7 +123,7 @@ final class BackendController extends Controller
 
         $collection = $collectionMapper->execute();
 
-        if (\is_array($collection) && \is_dir(__DIR__ . '/../Files' . $path)) {
+        if ((\is_array($collection) || $collection instanceof NullCollection) && \is_dir(__DIR__ . '/../Files' . $path)) {
             $collection       = new Collection();
             $collection->name = \basename($path);
             $collection->setVirtualPath(\dirname($path));
@@ -149,6 +149,8 @@ final class BackendController extends Controller
                 : \glob(__DIR__ . '/../Files/' . \trim($collection->getVirtualPath(), '/') . '/' . $collection->name . '/*');
             $glob = $glob === false ? [] : $glob;
 
+            $unIndexedFiles = [];
+
             foreach ($glob as $file) {
                 $basename = \basename($file);
                 if ($basename[0] === '_' && \strlen($basename) === 5) {
@@ -158,7 +160,7 @@ final class BackendController extends Controller
                 foreach ($media as $obj) {
                     if ($obj->name === $basename
                         || $obj->name . '.' . $obj->extension === $basename
-                        || StringUtils::endsWith(\realpath($file), $obj->getPath())
+                        || ($obj->getPath() !== '' && StringUtils::endsWith(\realpath($file), $obj->getPath()))
                     ) {
                         continue 2;
                     }
@@ -172,8 +174,10 @@ final class BackendController extends Controller
                 $localMedia->setVirtualPath($path);
                 $localMedia->createdBy = new Account();
 
-                $media[] = $localMedia;
+                $unIndexedFiles[] = $localMedia;
             }
+
+            $media = \array_merge($media, $unIndexedFiles);
         }
 
         $view->addData('media', $media);
@@ -221,6 +225,7 @@ final class BackendController extends Controller
                 ->with('createdBy')
                 ->with('tags')
                 ->with('tags/title')
+                ->with('content')
                 ->where('id', $id)
                 ->where('tags/title/language', $request->getLanguage())
                 ->execute();

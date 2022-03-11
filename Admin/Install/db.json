@@ -53,6 +53,23 @@
             }
         }
     },
+    "media_parsed": {
+        "name": "media_parsed",
+        "fields": {
+            "media_parsed_id": {
+                "name": "media_parsed_id",
+                "type": "INT",
+                "null": false,
+                "primary": true,
+                "autoincrement": true
+            },
+            "media_parsed_content": {
+                "name": "media_parsed_content",
+                "type": "LONGTEXT",
+                "null": false
+            }
+        }
+    },
     "media": {
         "name": "media",
         "fields": {
@@ -141,6 +158,14 @@
                 "type": "INT",
                 "default": null,
                 "null": true
+            },
+            "media_content": {
+                "name": "media_content",
+                "type": "INT",
+                "null": true,
+                "default": null,
+                "foreignTable": "media_parsed",
+                "foreignKey": "media_parsed_id"
             },
             "media_source": {
                 "name": "media_source",

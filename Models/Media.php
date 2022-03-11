@@ -46,6 +46,14 @@ class Media implements \JsonSerializable
     public string $name = '';
 
     /**
+     * Content.
+     *
+     * @var null|MediaContent
+     * @since 1.0.0
+     */
+    public ?MediaContent $content = null;
+
+    /**
      * Type.
      *
      * @var null|int|MediaType

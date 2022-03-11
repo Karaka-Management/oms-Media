@@ -41,6 +41,7 @@ class MediaMapper extends DataMapperFactory
         'media_type'            => ['name' => 'media_type',            'type' => 'int',               'internal' => 'type'],
         'media_description'     => ['name' => 'media_description',     'type' => 'string',            'internal' => 'description', 'autocomplete' => true],
         'media_description_raw' => ['name' => 'media_description_raw', 'type' => 'string',            'internal' => 'descriptionRaw'],
+        'media_content' => ['name' => 'media_content', 'type' => 'int',            'internal' => 'content'],
         'media_versioned'       => ['name' => 'media_versioned',       'type' => 'bool',              'internal' => 'isVersioned'],
         'media_hidden'          => ['name' => 'media_hidden',          'type' => 'bool',              'internal' => 'isHidden'],
         'media_file'            => ['name' => 'media_file',            'type' => 'string',            'internal' => 'path',        'autocomplete' => true],
@@ -83,6 +84,10 @@ class MediaMapper extends DataMapperFactory
         'source' => [
             'mapper'   => self::class,
             'external' => 'media_source',
+        ],
+        'content' => [
+            'mapper'   => MediaContentMapper::class,
+            'external' => 'media_content',
         ],
     ];
 
@@ -180,7 +185,7 @@ class MediaMapper extends DataMapperFactory
         $virtualPath = '/' . \trim(\substr($path, 0, \strripos($path, '/') + 1), '/');
         $name        = \substr($path, \strripos($path, '/') + 1);
 
-        return self::get()
+        return CollectionMapper::get()
             ->with('sources')
             ->with('source')
             ->where('virtualPath', $virtualPath)

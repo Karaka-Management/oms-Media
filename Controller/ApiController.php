@@ -19,6 +19,7 @@ use Modules\Admin\Models\NullAccount;
 use Modules\Media\Models\Collection;
 use Modules\Media\Models\CollectionMapper;
 use Modules\Media\Models\Media;
+use Modules\Media\Models\MediaContent;
 use Modules\Media\Models\MediaMapper;
 use Modules\Media\Models\NullCollection;
 use Modules\Media\Models\NullMedia;
@@ -43,6 +44,11 @@ use phpOMS\System\File\Local\Directory;
 use phpOMS\System\MimeType;
 use phpOMS\Utils\Parser\Markdown\Markdown;
 use phpOMS\Views\View;
+use PhpOffice\PhpWord\IOFactory;
+use PhpOffice\PhpWord\Writer\HTML;
+use phpOMS\Application\ApplicationAbstract;
+use phpOMS\Autoloader;
+use phpOMS\Utils\Parser\Pdf\PdfParser;
 
 /**
  * Media class.
@@ -133,6 +139,7 @@ final class ApiController extends Controller
      * @param int    $pathSettings  Settings which describe where the file should be uploaded to (physically)
      *                              RANDOM_PATH = random location in the base path
      *                              FILE_PATH   = combination of base path and virtual path
+     * @param bool   $hasAccountRelation The uploaded files should be related to an account
      *
      * @return array
      *
@@ -148,7 +155,8 @@ final class ApiController extends Controller
         int $type = null,
         string $password = '',
         string $encryptionKey = '',
-        int $pathSettings = PathSettings::RANDOM_PATH
+        int $pathSettings = PathSettings::RANDOM_PATH,
+        bool $hasAccountRelation = true
     ) : array
     {
         if (empty($files)) {
@@ -174,12 +182,22 @@ final class ApiController extends Controller
 
         $sameLength = \count($names) === \count($status);
         $nCounter   = -1;
+
+        $created = [];
         foreach ($status as &$stat) {
             ++$nCounter;
             $stat['name'] = $sameLength ? $names[$nCounter] : $stat['filename'];
+
+            $created[] = self::createDbEntry(
+                $stat,
+                $account,
+                $virtualPath,
+                $type,
+                app: $hasAccountRelation ? $this->app : null
+            );
         }
 
-        return $this->createDbEntries($status, $account, $virtualPath, $type);
+        return $created;
     }
 
     /**
@@ -221,66 +239,26 @@ final class ApiController extends Controller
     }
 
     /**
-     * Create database entries for uploaded files
-     *
-     * @param array    $status      Files
-     * @param int      $account     Uploader
-     * @param string   $virtualPath Virtual path
-     * @param null|int $type        Media type (internal categorization = identifier for modules)
-     * @param string   $ip          Ip
-     *
-     * @return Media[]
-     *
-     * @since 1.0.0
-     */
-    public function createDbEntries(
-        array $status,
-        int $account,
-        string $virtualPath = '',
-        int $type = null,
-        string $ip = '127.0.0.1'
-    ) : array
-    {
-        $mediaCreated = [];
-
-        foreach ($status as $uFile) {
-            if (($created = self::createDbEntry($uFile, $account, $virtualPath, $type)) !== null) {
-                $mediaCreated[] = $created;
-
-                $this->app->moduleManager->get('Admin')->createAccountModelPermission(
-                    new AccountPermission(
-                        $account,
-                        $this->app->orgId,
-                        $this->app->appName,
-                        self::NAME,
-                        self::NAME,
-                        PermissionState::MEDIA,
-                        $created->getId(),
-                        null,
-                        PermissionType::READ | PermissionType::MODIFY | PermissionType::DELETE | PermissionType::PERMISSION
-                    ),
-                    $account,
-                    $ip
-                );
-            }
-        }
-
-        return $mediaCreated;
-    }
-
-    /**
      * Create db entry for uploaded file
      *
      * @param array    $status      Files
      * @param int      $account     Uploader
      * @param string   $virtualPath Virtual path (not on the hard-drive)
      * @param null|int $type        Media type (internal categorization)
+     * @param ApplicationAbstract     $app Should create relation to uploader
      *
      * @return null|Media
      *
      * @since 1.0.0
      */
-    public static function createDbEntry(array $status, int $account, string $virtualPath = '', int $type = null) : ?Media
+    public static function createDbEntry(
+        array $status,
+        int $account,
+        string $virtualPath = '',
+        int $type = null,
+        string $ip = '127.0.0.1',
+        ApplicationAbstract $app = null
+    ) : ?Media
     {
         if ($status['status'] !== UploadStatus::OK) {
             return null;
@@ -296,9 +274,61 @@ final class ApiController extends Controller
         $media->setVirtualPath($virtualPath);
         $media->type = $type === null ? null : new NullMediaType($type);
 
+        if (\is_file($media->getAbsolutePath())) {
+            $content = self::loadFileContent($media->getAbsolutePath(), $media->extension);
+
+            if (!empty($content)) {
+                $media->content = new MediaContent();
+                $media->content->content = $content;
+            }
+        }
+
         MediaMapper::create()->execute($media);
 
+        if ($app !== null) {
+            $app->moduleManager->get('Admin')->createAccountModelPermission(
+                new AccountPermission(
+                    $account,
+                    $app->orgId,
+                    $app->appName,
+                    self::NAME,
+                    self::NAME,
+                    PermissionState::MEDIA,
+                    $media->getId(),
+                    null,
+                    PermissionType::READ | PermissionType::MODIFY | PermissionType::DELETE | PermissionType::PERMISSION
+                ),
+                $account,
+                $ip
+            );
+        }
+
         return $media;
+    }
+
+    private static function loadFileContent(string $path, string $extension) : string
+    {
+        switch ($extension) {
+            case 'pdf':
+                return PdfParser::pdf2text($path);
+                break;
+            case 'doc':
+            case 'docx':
+                Autoloader::addPath(__DIR__ . '/../../../Resources/');
+
+                $reader = IOFactory::createReader('Word2007');
+                $doc    = $reader->load($path);
+
+                $writer = new HTML($doc);
+                return $writer->getContent();
+                break;
+            case 'txt':
+            case 'md':
+                return \file_get_contents($path);
+                break;
+            default:
+                return '';
+        };
     }
 
     /**
@@ -624,11 +654,18 @@ final class ApiController extends Controller
             ],
         ];
 
-        $created = $this->createDbEntries($status, $request->header->account, $virtualPath, $request->getData('type', 'int'));
-
         $ids = [];
-        foreach ($created as $file) {
-            $ids[] = $file->getId();
+        foreach ($status as $stat) {
+            $created = self::createDbEntry(
+                $status,
+                $request->header->account,
+                $virtualPath,
+                $request->getData('type', 'int'),
+                $request->getOrigin(),
+                $this->app
+            );
+
+            $ids[] = $created->getId();
         }
 
         $this->fillJsonResponse($request, $response, NotificationLevel::OK, 'Media', 'Media successfully created.', $ids);
