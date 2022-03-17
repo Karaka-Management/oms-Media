@@ -13,7 +13,7 @@
 declare(strict_types=1);
 
 use Modules\Media\Controller\ApiController;
-use Modules\Media\Models\PermissionState;
+use Modules\Media\Models\PermissionCategory;
 use phpOMS\Account\PermissionType;
 use phpOMS\Router\RouteVerb;
 
@@ -25,7 +25,7 @@ return [
             'permission' => [
                 'module' => ApiController::NAME,
                 'type'   => PermissionType::CREATE,
-                'state'  => PermissionState::MEDIA,
+                'state'  => PermissionCategory::MEDIA,
             ],
         ],
         [
@@ -34,7 +34,7 @@ return [
             'permission' => [
                 'module' => ApiController::NAME,
                 'type'   => PermissionType::CREATE,
-                'state'  => PermissionState::MEDIA,
+                'state'  => PermissionCategory::MEDIA,
             ],
         ],
     ],
@@ -45,7 +45,7 @@ return [
             'permission' => [
                 'module' => ApiController::NAME,
                 'type'   => PermissionType::CREATE,
-                'state'  => PermissionState::MEDIA,
+                'state'  => PermissionCategory::MEDIA,
             ],
         ],
     ],
@@ -56,7 +56,7 @@ return [
             'permission' => [
                 'module' => ApiController::NAME,
                 'type'   => PermissionType::READ,
-                'state'  => PermissionState::MEDIA,
+                'state'  => PermissionCategory::MEDIA,
             ],
         ],
     ],
@@ -67,7 +67,7 @@ return [
             'permission' => [
                 'module' => ApiController::NAME,
                 'type'   => PermissionType::CREATE,
-                'state'  => PermissionState::MEDIA,
+                'state'  => PermissionCategory::MEDIA,
             ],
         ],
     ],

@@ -27,7 +27,7 @@ use Modules\Media\Models\MediaTypeMapper;
 use Modules\Media\Models\MediaTypeL11nMapper;
 use Modules\Media\Models\NullCollection;
 use Modules\Media\Models\NullMedia;
-use Modules\Media\Models\PermissionState;
+use Modules\Media\Models\PermissionCategory;
 use Modules\Media\Theme\Backend\Components\Media\ElementView;
 use Modules\Media\Theme\Backend\Components\Media\ListView;
 use Modules\Media\Views\MediaView;
@@ -84,7 +84,7 @@ final class BackendController extends Controller
                 $this->app->orgId,
                 $this->app->appName,
                 self::NAME,
-                PermissionState::MEDIA,
+                PermissionCategory::MEDIA,
             );
 
         $mediaMapper = MediaMapper::getByVirtualPath($path)->where('tags/title/language', $request->getLanguage());
@@ -96,7 +96,7 @@ final class BackendController extends Controller
                 ->units([null, $this->app->orgId])
                 ->apps([null, 'Api', $this->app->appName])
                 ->modules([null, self::NAME])
-                ->types([null, PermissionState::MEDIA])
+                ->categories([null, PermissionCategory::MEDIA])
                 ->permission(PermissionType::READ)
                 ->query(MediaMapper::PRIMARYFIELD);
 
@@ -115,7 +115,7 @@ final class BackendController extends Controller
                 ->units([null, $this->app->orgId])
                 ->apps([null, 'Api', $this->app->appName])
                 ->modules([null, self::NAME])
-                ->types([null, PermissionState::MEDIA])
+                ->categories([null, PermissionCategory::MEDIA])
                 ->permission(PermissionType::READ)
                 ->query(MediaMapper::PRIMARYFIELD);
 

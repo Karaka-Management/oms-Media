@@ -25,7 +25,7 @@ use Modules\Media\Models\NullCollection;
 use Modules\Media\Models\NullMedia;
 use Modules\Media\Models\NullMediaType;
 use Modules\Media\Models\PathSettings;
-use Modules\Media\Models\PermissionState;
+use Modules\Media\Models\PermissionCategory;
 use Modules\Media\Models\UploadFile;
 use Modules\Media\Models\UploadStatus;
 use Modules\Tag\Models\NullTag;
@@ -293,7 +293,7 @@ final class ApiController extends Controller
                     $app->appName,
                     self::NAME,
                     self::NAME,
-                    PermissionState::MEDIA,
+                    PermissionCategory::MEDIA,
                     $media->getId(),
                     null,
                     PermissionType::READ | PermissionType::MODIFY | PermissionType::DELETE | PermissionType::PERMISSION
@@ -532,7 +532,7 @@ final class ApiController extends Controller
     {
         if (empty($media)
             || !$this->app->accountManager->get($account)->hasPermission(
-                PermissionType::CREATE, $this->app->orgId, null, self::NAME, PermissionState::COLLECTION, null)
+                PermissionType::CREATE, $this->app->orgId, null, self::NAME, PermissionCategory::COLLECTION, null)
         ) {
             return new NullCollection();
         }

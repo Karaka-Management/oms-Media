@@ -13,7 +13,7 @@
 declare(strict_types=1);
 
 use Modules\Media\Controller\BackendController;
-use Modules\Media\Models\PermissionState;
+use Modules\Media\Models\PermissionCategory;
 use phpOMS\Account\PermissionType;
 use phpOMS\Router\RouteVerb;
 
@@ -25,7 +25,7 @@ return [
             'permission' => [
                 'module' => BackendController::NAME,
                 'type'   => PermissionType::READ,
-                'state'  => \Modules\Admin\Models\PermissionState::MODULE,
+                'state'  => \Modules\Admin\Models\PermissionCategory::MODULE,
             ],
         ],
     ],
@@ -36,7 +36,7 @@ return [
             'permission' => [
                 'module' => BackendController::NAME,
                 'type'   => PermissionType::READ,
-                'state'  => \Modules\Admin\Models\PermissionState::MODULE,
+                'state'  => \Modules\Admin\Models\PermissionCategory::MODULE,
             ],
         ],
     ],
@@ -47,7 +47,7 @@ return [
             'permission' => [
                 'module' => BackendController::NAME,
                 'type'   => PermissionType::READ,
-                'state'  => PermissionState::MEDIA,
+                'state'  => PermissionCategory::MEDIA,
             ],
         ],
     ],
@@ -58,7 +58,7 @@ return [
             'permission' => [
                 'module' => BackendController::NAME,
                 'type'   => PermissionType::CREATE,
-                'state'  => PermissionState::MEDIA,
+                'state'  => PermissionCategory::MEDIA,
             ],
         ],
     ],
@@ -69,7 +69,7 @@ return [
             'permission' => [
                 'module' => BackendController::NAME,
                 'type'   => PermissionType::CREATE,
-                'state'  => PermissionState::MEDIA,
+                'state'  => PermissionCategory::MEDIA,
             ],
         ],
     ],
@@ -80,7 +80,7 @@ return [
             'permission' => [
                 'module' => BackendController::NAME,
                 'type'   => PermissionType::CREATE,
-                'state'  => PermissionState::MEDIA,
+                'state'  => PermissionCategory::MEDIA,
             ],
         ],
     ],
@@ -91,7 +91,7 @@ return [
             'permission' => [
                 'module' => BackendController::NAME,
                 'type'   => PermissionType::READ,
-                'state'  => PermissionState::MEDIA,
+                'state'  => PermissionCategory::MEDIA,
             ],
         ],
     ],
