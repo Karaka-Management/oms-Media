@@ -109,8 +109,8 @@
                 "type": "TINYINT",
                 "null": false
             },
-            "media_hidden": {
-                "name": "media_hidden",
+            "media_status": {
+                "name": "media_status",
                 "type": "TINYINT",
                 "null": false
             },

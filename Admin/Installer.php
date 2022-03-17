@@ -56,13 +56,13 @@ final class Installer extends InstallerAbstract
     /**
      * {@inheritdoc}
      */
-    public static function install(DatabasePool $dbPool, ModuleInfo $info, SettingsInterface $cfgHandler) : void
+    public static function install(ApplicationAbstract $app, ModuleInfo $info, SettingsInterface $cfgHandler) : void
     {
         if (!\is_dir(__DIR__ . '/../Files')) {
             \mkdir(__DIR__ . '/../Files');
         }
 
-        parent::install($dbPool, $info, $cfgHandler);
+        parent::install($app, $info, $cfgHandler);
 
         // Create directory for admin account
         // All other accounts are automatically created in the admin module whenever they get created

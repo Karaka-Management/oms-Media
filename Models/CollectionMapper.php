@@ -66,18 +66,18 @@ final class CollectionMapper extends MediaMapper
      * path if so desired without deleting or moving the orginal media files.
      *
      * @param string $virtualPath Virtual path
-     * @param bool   $hidden      Get hidden files
+     * @param int    $status      Media status
      *
      * @return ReadMapper
      *
      * @since 1.0.0
      */
-    public static function getByVirtualPath(string $virtualPath = '/', bool $hidden = false) : ReadMapper
+    public static function getByVirtualPath(string $virtualPath = '/', int $status = MediaStatus::NORMAL) : ReadMapper
     {
         return self::getAll()->where('virtualPath', $virtualPath)
             ->with('createdBy')
             ->with('tags')
-            ->where('isHidden', $hidden)
+            ->where('status', $status)
             ->where('class', MediaClass::COLLECTION);
     }
 

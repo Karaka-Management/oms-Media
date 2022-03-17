@@ -25,25 +25,19 @@ namespace Modules\Media\Models;
 use phpOMS\Stdlib\Base\Enum;
 
 /**
- * Media class enum.
- *
- * Used to differentiate the type/class of media
+ * Media status enum.
  *
  * @package phpOMS\DataStorage\Database
  * @license OMS License 1.0
  * @link    https://karaka.app
  * @since   1.0.0
  */
-abstract class MediaClass extends Enum
+abstract class MediaStatus extends Enum
 {
-    public const FILE = 0;
+    public const NORMAL = 1;
 
-    public const COLLECTION = 1;
+    public const HIDDEN = 2;
 
-    public const REFERENCE = 2;
-
-    public const SYSTEM_FILE = 3;
-
-    public const SYSTEM_DIRECTORY = 4;
+    public const DELETED = 3;
 
 }

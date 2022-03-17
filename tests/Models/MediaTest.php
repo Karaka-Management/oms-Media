@@ -16,6 +16,7 @@ namespace Modules\Media\tests\Models;
 
 use Modules\Admin\Models\NullAccount;
 use Modules\Media\Models\Media;
+use Modules\Media\Models\MediaStatus;
 use Modules\Tag\Models\Tag;
 
 /**
@@ -164,8 +165,8 @@ final class MediaTest extends \PHPUnit\Framework\TestCase
      */
     public function testHiddenInputOutput() : void
     {
-        $this->media->isHidden = true;
-        self::assertTrue($this->media->isHidden);
+        $this->media->status = MediaStatus::HIDDEN;
+        self::assertEquals(MediaStatus::HIDDEN, $this->media->status);
     }
 
     /**
@@ -236,7 +237,7 @@ final class MediaTest extends \PHPUnit\Framework\TestCase
         $this->media->size           = 11;
         $this->media->isVersioned    = true;
         $this->media->setVirtualPath('/test/path');
-        $this->media->isHidden = true;
+        $this->media->status = MediaStatus::HIDDEN;
 
         self::assertEquals($this->media->toArray(), $this->media->jsonSerialize());
 
@@ -252,7 +253,7 @@ final class MediaTest extends \PHPUnit\Framework\TestCase
                 'extension'      => 'pdf',
                 'virtualpath'    => '/test/path',
                 'size'           => 11,
-                'hidden'         => true,
+                'status'         => MediaStatus::HIDDEN,
                 'path'           => '/home/root',
                 'absolute'       => true,
             ],

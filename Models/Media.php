@@ -168,10 +168,10 @@ class Media implements \JsonSerializable
     /**
      * Media is hidden.
      *
-     * @var bool
+     * @var int
      * @since 1.0.0
      */
-    public bool $isHidden = false;
+    public int $status = MediaStatus::NORMAL;
 
     /**
      * Media class.
@@ -438,7 +438,7 @@ class Media implements \JsonSerializable
             'extension'      => $this->extension,
             'virtualpath'    => $this->virtualPath,
             'size'           => $this->size,
-            'hidden'         => $this->isHidden,
+            'status'         => $this->status,
             'path'           => $this->path,
             'absolute'       => $this->isAbsolute,
             'createdBy'      => $this->createdBy,

@@ -25,6 +25,8 @@ $view  = $this->getData('view');
 /** @var \Modules\Tag\Models\Tag[] $tag */
 $tags = $media->getTags();
 
+$mediaPath = \urldecode($media->getVirtualPath() ?? '/');
+
 /** @var \phpOMS\Message\Http\HttpRequest $this->request */
 
 echo $this->getData('nav')->render();
@@ -37,6 +39,38 @@ echo $this->getData('nav')->render();
             <?php else: ?>
                 <a tabindex="0" class="button" href="<?= $this->request->getReferer() !== '' ? $this->request->getReferer() : UriFactory::build('{/prefix}media/list'); ?>"><?= $this->getHtml('Back'); ?></a>
             <?php endif; ?>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xs-12">
+        <div class="box">
+            <ul class="crumbs-2">
+                <li data-href="<?= UriFactory::build('{/prefix}media/list?path=/Accounts/' . $accountDir); ?>"><a href="<?= UriFactory::build('{/prefix}media/list?path=/Accounts/' . $accountDir); ?>"><i class="fa fa-home"></i></a>
+                <li data-href="<?= UriFactory::build('{/prefix}media/list?path=/'); ?>"><a href="<?= UriFactory::build('{/prefix}media/list?path=/'); ?>">/</a></li>
+                <?php
+                    $subPath    = '';
+                    $paths      = \explode('/', \ltrim($mediaPath, '/'));
+                    $length     = \count($paths);
+                    $parentPath = '';
+
+                    for ($i = 0; $i < $length; ++$i) :
+                        if ($paths[$i] === '') {
+                            continue;
+                        }
+
+                        if ($i === $length - 1) {
+                            $parentPath = $subPath === '' ? '/' : $subPath;
+                        }
+
+                        $subPath .= '/' . $paths[$i];
+
+                        $url = UriFactory::build('{/prefix}media/list?path=' . $subPath);
+                ?>
+                    <li data-href="<?= $url; ?>"<?= $i === $length - 1 ? 'class="active"' : ''; ?>><a href="<?= $url; ?>"><?= $this->printHtml($paths[$i]); ?></a></li>
+                <?php endfor; ?>
+            </ul>
         </div>
     </div>
 </div>

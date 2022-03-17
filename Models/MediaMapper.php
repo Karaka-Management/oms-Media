@@ -43,7 +43,7 @@ class MediaMapper extends DataMapperFactory
         'media_description_raw' => ['name' => 'media_description_raw', 'type' => 'string',            'internal' => 'descriptionRaw'],
         'media_content' => ['name' => 'media_content', 'type' => 'int',            'internal' => 'content'],
         'media_versioned'       => ['name' => 'media_versioned',       'type' => 'bool',              'internal' => 'isVersioned'],
-        'media_hidden'          => ['name' => 'media_hidden',          'type' => 'bool',              'internal' => 'isHidden'],
+        'media_status'          => ['name' => 'media_status',          'type' => 'bool',              'internal' => 'status'],
         'media_file'            => ['name' => 'media_file',            'type' => 'string',            'internal' => 'path',        'autocomplete' => true],
         'media_virtual'         => ['name' => 'media_virtual',         'type' => 'string',            'internal' => 'virtualPath', 'autocomplete' => true],
         'media_absolute'        => ['name' => 'media_absolute',        'type' => 'bool',              'internal' => 'isAbsolute'],
@@ -154,13 +154,13 @@ class MediaMapper extends DataMapperFactory
      * path if so desired without deleting or moving the orginal media files.
      *
      * @param string $virtualPath Virtual path
-     * @param bool   $hidden      Get hidden files
+     * @param int    $status      Media status
      *
      * @return ReadMapper
      *
      * @since 1.0.0
      */
-    public static function getByVirtualPath(string $virtualPath = '/', bool $hidden = false) : ReadMapper
+    public static function getByVirtualPath(string $virtualPath = '/', int $status = MediaStatus::NORMAL) : ReadMapper
     {
         return self::getAll()
             ->with('createdBy')
@@ -168,7 +168,7 @@ class MediaMapper extends DataMapperFactory
             ->with('tags')
             ->with('tags/title')
             ->where('virtualPath', $virtualPath)
-            ->where('isHidden', $hidden);
+            ->where('status', $status);
     }
 
     /**

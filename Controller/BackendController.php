@@ -21,6 +21,7 @@ use Modules\Admin\Models\PermissionAbstractMapper;
 use Modules\Media\Models\Collection;
 use Modules\Media\Models\CollectionMapper;
 use Modules\Media\Models\Media;
+use Modules\Media\Models\MediaClass;
 use Modules\Media\Models\MediaMapper;
 use Modules\Media\Models\MediaTypeMapper;
 use Modules\Media\Models\MediaTypeL11nMapper;
@@ -173,6 +174,9 @@ final class BackendController extends Controller
                 $localMedia->extension = \is_dir($file) ? 'collection' : $pathinfo['extension'] ?? '';
                 $localMedia->setVirtualPath($path);
                 $localMedia->createdBy = new Account();
+                $localMedia->class = $localMedia->extension === 'collection'
+                    ? MediaClass::SYSTEM_DIRECTORY
+                    : MediaClass::SYSTEM_FILE;
 
                 $unIndexedFiles[] = $localMedia;
             }
