@@ -25,6 +25,10 @@ $view  = $this->getData('view');
 /** @var \Modules\Tag\Models\Tag[] $tag */
 $tags = $media->getTags();
 
+/** @var \Modules\Admin\Models\Account $account */
+$account = $this->getData('account');
+$accountDir = $account->getId() . ' ' . $account->login;
+
 $mediaPath = \urldecode($media->getVirtualPath() ?? '/');
 
 /** @var \phpOMS\Message\Http\HttpRequest $this->request */

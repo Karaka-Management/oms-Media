@@ -30,7 +30,6 @@ $media = $this->getData('media') ?? [];
 
 /** @var \Modules\Admin\Models\Account $account */
 $account = $this->getData('account');
-
 $accountDir = $account->getId() . ' ' . $account->login;
 
 $previous = empty($media) ? '{/prefix}media/list' : '{/prefix}media/list?{?}&id=' . \reset($media)->getId() . '&ptype=p';
