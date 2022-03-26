@@ -21,6 +21,10 @@ use Modules\Media\Models\CollectionMapper;
 use Modules\Media\Models\Media;
 use Modules\Media\Models\MediaContent;
 use Modules\Media\Models\MediaMapper;
+use Modules\Media\Models\MediaType;
+use Modules\Media\Models\MediaTypeL11n;
+use Modules\Media\Models\MediaTypeL11nMapper;
+use Modules\Media\Models\MediaTypeMapper;
 use Modules\Media\Models\NullCollection;
 use Modules\Media\Models\NullMedia;
 use Modules\Media\Models\NullMediaType;
@@ -76,16 +80,16 @@ final class ApiController extends Controller
     public function apiMediaUpload(RequestAbstract $request, ResponseAbstract $response, $data = null) : void
     {
         $uploads = $this->uploadFiles(
-            $request->getDataList('names') ?? [],
-            $request->getDataList('filenames') ?? [],
-            $request->getFiles(),
-            $request->header->account,
-            __DIR__ . '/../../../Modules/Media/Files' . \urldecode((string) ($request->getData('path') ?? '')),
-            \urldecode((string) ($request->getData('virtualpath') ?? '')),
-            $request->getData('type', 'int'),
-            (string) ($request->getData('password') ?? ''),
-            (string) ($request->getData('encrypt') ?? ''),
-            (int) ($request->getData('pathsettings') ?? PathSettings::RANDOM_PATH)
+            names:         $request->getDataList('names') ?? [],
+            fileNames:     $request->getDataList('filenames') ?? [],
+            files:         $request->getFiles(),
+            account:       $request->header->account,
+            basePath:      __DIR__ . '/../../../Modules/Media/Files' . \urldecode((string) ($request->getData('path') ?? '')),
+            virtualPath:   \urldecode((string) ($request->getData('virtualpath') ?? '')),
+            type:          $request->getData('type', 'int'),
+            password:      (string) ($request->getData('password') ?? ''),
+            encryptionKey: (string) ($request->getData('encrypt') ?? ''),
+            pathSettings:  (int) ($request->getData('pathsettings') ?? PathSettings::RANDOM_PATH) // IMPORTANT!!!
         );
 
         $ids = [];
@@ -166,6 +170,8 @@ final class ApiController extends Controller
         $outputDir = '';
         $absolute  = false;
 
+        // @todo sandatize $basePath, we don't know if it might be relative!
+
         if ($pathSettings === PathSettings::RANDOM_PATH) {
             $outputDir = self::createMediaPath($basePath);
         } elseif ($pathSettings === PathSettings::FILE_PATH) {
@@ -177,6 +183,7 @@ final class ApiController extends Controller
 
         $upload            = new UploadFile();
         $upload->outputDir = $outputDir;
+        $upload->preserveFileName = empty($fileNames) || \count($fileNames) === \count($files);
 
         $status = $upload->upload($files, $fileNames, $absolute, $encryptionKey);
 
@@ -186,6 +193,8 @@ final class ApiController extends Controller
         $created = [];
         foreach ($status as &$stat) {
             ++$nCounter;
+
+            // Possible: name != filename (name = database media name, filename = name on the file system)
             $stat['name'] = $sameLength ? $names[$nCounter] : $stat['filename'];
 
             $created[] = self::createDbEntry(
@@ -450,6 +459,7 @@ final class ApiController extends Controller
 
         $collection = $this->createCollectionFromRequest($request);
         $this->createModel($request->header->account, $collection, CollectionMapper::class, 'collection', $request->getOrigin());
+
         $this->fillJsonResponse($request, $response, NotificationLevel::OK, 'Collection', 'Collection successfully created.', $collection);
     }
 
@@ -504,12 +514,18 @@ final class ApiController extends Controller
             Directory::create($outputDir . '/' . $request->getData('name'), 0775, true);
         }
 
+        $dirPath   = $outputDir . '/' . $request->getData('name');
         $outputDir = \substr($outputDir, \strlen(__DIR__ . '/../../..'));
 
         $mediaCollection->setVirtualPath($virtualPath);
         $mediaCollection->setPath($outputDir);
 
         CollectionMapper::create()->execute($mediaCollection);
+
+        if (((bool) ($request->getData('create_directory') ?? false))
+            && !\is_dir($dirPath)) {
+            \mkdir($dirPath, 0755, true);
+        }
 
         return $mediaCollection;
     }
@@ -613,7 +629,7 @@ final class ApiController extends Controller
     public function apiMediaCreate(RequestAbstract $request, ResponseAbstract $response, $data = null) : void
     {
         $path        = \urldecode((string) ($request->getData('path') ?? ''));
-        $virtualPath = \urldecode((string) ($request->getData('virtualpath') ?? ''));
+        $virtualPath = \urldecode((string) ($request->getData('virtualpath') ?? '/'));
         $fileName    = (string) ($request->getData('filename') ?? ($request->getData('name') ?? ''));
         $fileName   .= \strripos($fileName, '.') === false ? '.txt' : '';
 
@@ -842,5 +858,144 @@ final class ApiController extends Controller
             default:
                 $response->header->set('Content-Type', MimeType::M_BIN, true);
         }
+    }
+
+    /**
+     * Validate document create request
+     *
+     * @param RequestAbstract $request Request
+     *
+     * @return array<string, bool>
+     *
+     * @since 1.0.0
+     */
+    private function validateMediaTypeCreate(RequestAbstract $request) : array
+    {
+        $val = [];
+        if (($val['name'] = empty($request->getData('name')))
+        ) {
+            return $val;
+        }
+
+        return [];
+    }
+
+    /**
+     * Api method to create document
+     *
+     * @param RequestAbstract  $request  Request
+     * @param ResponseAbstract $response Response
+     * @param mixed            $data     Generic data
+     *
+     * @return void
+     *
+     * @api
+     *
+     * @since 1.0.0
+     */
+    public function apiMediaTypeCreate(RequestAbstract $request, ResponseAbstract $response, $data = null) : void
+    {
+        if (!empty($val = $this->validateMediaTypeCreate($request))) {
+            $response->set('media_type_create', new FormValidation($val));
+            $response->header->status = RequestStatusCode::R_400;
+
+            return;
+        }
+
+        $type = $this->createDocTypeFromRequest($request);
+        $this->createModel($request->header->account, $type, MediaTypeMapper::class, 'doc_type', $request->getOrigin());
+
+        $this->fillJsonResponse($request, $response, NotificationLevel::OK, 'Media', 'Media type successfully created', $type);
+    }
+
+     /**
+     * Method to create task from request.
+     *
+     * @param RequestAbstract $request Request
+     *
+     * @return EditorDoc
+     *
+     * @since 1.0.0
+     */
+    private function createDocTypeFromRequest(RequestAbstract $request) : MediaType
+    {
+        $type       = new MediaType();
+        $type->name = $request->getData('name');
+
+        if (!empty($request->getData('title'))) {
+            $type->setL11n($request->getData('title'), $request->getData('lang') ?? $request->getLanguage());
+        }
+
+        return $type;
+    }
+
+    /**
+     * Validate l11n create request
+     *
+     * @param RequestAbstract $request Request
+     *
+     * @return array<string, bool>
+     *
+     * @since 1.0.0
+     */
+    private function validateMediaTypeL11nCreate(RequestAbstract $request) : array
+    {
+        $val = [];
+        if (($val['title'] = empty($request->getData('title')))
+            || ($val['type'] = empty($request->getData('type')))
+        ) {
+            return $val;
+        }
+
+        return [];
+    }
+
+    /**
+     * Api method to create tag localization
+     *
+     * @param RequestAbstract  $request  Request
+     * @param ResponseAbstract $response Response
+     * @param mixed            $data     Generic data
+     *
+     * @return void
+     *
+     * @api
+     *
+     * @since 1.0.0
+     */
+    public function apiMediaTypeL11nCreate(RequestAbstract $request, ResponseAbstract $response, $data = null) : void
+    {
+        if (!empty($val = $this->validateMediaTypeL11nCreate($request))) {
+            $response->set('media_type_l11n_create', new FormValidation($val));
+            $response->header->status = RequestStatusCode::R_400;
+
+            return;
+        }
+
+        $l11nMediaType = $this->createMediaTypeL11nFromRequest($request);
+        $this->createModel($request->header->account, $l11nMediaType, MediaTypeL11nMapper::class, 'media_type_l11n', $request->getOrigin());
+
+        $this->fillJsonResponse($request, $response, NotificationLevel::OK, 'Localization', 'Category localization successfully created', $l11nMediaType);
+    }
+
+    /**
+     * Method to create tag localization from request.
+     *
+     * @param RequestAbstract $request Request
+     *
+     * @return MediaTypeL11n
+     *
+     * @since 1.0.0
+     */
+    private function createMediaTypeL11nFromRequest(RequestAbstract $request) : MediaTypeL11n
+    {
+        $l11nMediaType           = new MediaTypeL11n();
+        $l11nMediaType->type = (int) ($request->getData('type') ?? 0);
+        $l11nMediaType->setLanguage((string) (
+            $request->getData('language') ?? $request->getLanguage()
+        ));
+        $l11nMediaType->title = (string) ($request->getData('title') ?? '');
+
+        return $l11nMediaType;
     }
 }

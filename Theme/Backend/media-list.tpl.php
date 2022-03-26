@@ -172,10 +172,6 @@ $next     = empty($media) ? '{/prefix}media/list' : '{/prefix}media/list?{?}&id=
                         foreach ($media as $key => $value) :
                             ++$count;
 
-                            if ($value->class === MediaClass::REFERENCE) {
-                                $value = $value->source;
-                            }
-
                             $url = $value->extension === 'collection'
                                 ? UriFactory::build('{/prefix}media/list?path=' . \rtrim($value->getVirtualPath(), '/') . '/' . $value->name)
                                 : UriFactory::build('{/prefix}media/single?id=' . $value->getId()

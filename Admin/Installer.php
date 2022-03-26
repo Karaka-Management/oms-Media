@@ -25,15 +25,19 @@ use Modules\Media\Models\MediaType;
 use Modules\Media\Models\MediaTypeL11n;
 use Modules\Media\Models\MediaTypeL11nMapper;
 use Modules\Media\Models\MediaTypeMapper;
+use Modules\Media\Models\PathSettings;
 use Modules\Media\Models\UploadFile;
 use phpOMS\Application\ApplicationAbstract;
 use phpOMS\Config\SettingsInterface;
 use phpOMS\DataStorage\Database\DatabasePool;
+use phpOMS\Message\Http\HttpRequest;
+use phpOMS\Message\Http\HttpResponse;
 use phpOMS\Module\InstallerAbstract;
 use phpOMS\Module\ModuleInfo;
 use phpOMS\System\File\Local\Directory;
 use phpOMS\System\File\Local\File;
 use phpOMS\System\File\PathException;
+use phpOMS\Uri\HttpUri;
 
 /**
  * Installer class.
@@ -114,9 +118,17 @@ final class Installer extends InstallerAbstract
             throw new \Exception(); // @codeCoverageIgnore
         }
 
-        if (\is_dir(__DIR__ . '/tmp')) {
-            Directory::delete(__DIR__ . '/tmp');
-        }
+        $apiApp = new class() extends ApplicationAbstract
+        {
+            protected string $appName = 'Api';
+        };
+
+        $apiApp->dbPool = $app->dbPool;
+        $apiApp->orgId = $app->orgId;
+        $apiApp->accountManager = $app->accountManager;
+        $apiApp->appSettings = $app->appSettings;
+        $apiApp->moduleManager = $app->moduleManager;
+        $apiApp->eventManager = $app->eventManager;
 
         $result = [
             'collection' => [],
@@ -124,22 +136,24 @@ final class Installer extends InstallerAbstract
             'type'       => [],
         ];
 
-        \mkdir(__DIR__ . '/tmp');
+        if (!\is_dir(__DIR__ . '/../../../temp')) {
+            \mkdir(__DIR__ . '/../../../temp');
+        }
+
         foreach ($mediaData as $media) {
             switch ($media['type']) {
                 case 'collection':
-                    $result['collection'][] = self::createCollection($app->dbPool, $media);
+                    $result['collection'][] = self::createCollection($apiApp, $media);
                     break;
                 case 'upload':
-                    $result['upload'][] = self::uploadMedia($app->dbPool, $media);
+                    $result['upload'][] = self::uploadMedia($apiApp, $media);
                     break;
                 case 'type':
-                    $result['type'][] = self::createType($app->dbPool, $media);
+                    $result['type'][] = self::createType($apiApp, $media);
                     break;
                 default:
             }
         }
-        Directory::delete(__DIR__ . '/tmp');
 
         return $result;
     }
@@ -147,61 +161,74 @@ final class Installer extends InstallerAbstract
     /**
      * Create collection.
      *
-     * @param DatabasePool $dbPool Database instance
+     * @param ApplicationAbstract $app  Application
      * @param array        $data   Media info
      *
      * @return Collection
      *
      * @since 1.0.0
      */
-    private static function createCollection(DatabasePool $dbPool, array $data) : Collection
+    private static function createCollection(ApplicationAbstract $app, array $data) : Collection
     {
+        /** @var \Modules\Media\Controller\ApiController $module */
+        $module = $app->moduleManager->getModuleInstance('Media');
+
         if (!isset($data['path'])) {
-            $dirPath = __DIR__ . '/../../../Modules/Media/Files' . ($data['virtualPath'] ?? '/') . '/' . ($data['name'] ?? '');
-            $path    = '/Modules/Media/Files' . ($data['virtualPath'] ?? '') . '/' . ($data['name'] ?? '');
+            $path = '/Modules/Media/Files' . ($data['virtualPath'] ?? '') . '/' . ($data['name'] ?? '');
         } else {
-            $dirPath = $data['path'] . '/' . ($data['name'] ?? '');
-            $path    = $data['path'] ?? '/Modules/Media/Files/' . ($data['name'] ?? '');
+            $path = $data['path'] ?? '/Modules/Media/Files/' . ($data['name'] ?? '');
         }
 
-        $collection       = new Collection();
-        $collection->name = $data['name'] ?? '';
-        $collection->setVirtualPath($data['virtualPath'] ?? '/');
-        $collection->setPath($path);
-        $collection->createdBy = new NullAccount((int) $data['user'] ?? 1);
+        $response = new HttpResponse();
+        $request  = new HttpRequest(new HttpUri(''));
 
-        CollectionMapper::create()->execute($collection);
+        $request->header->account = 1;
+        $request->setData('name', $data['name'] ?? '');
+        $request->setData('virtualpath', $data['virtualPath'] ?? '/');
+        $request->setData('path', $path);
+        $request->setData('create_directory', $data['create_directory'] ?? false);
 
-        if ($data['create_directory'] && !\is_dir($dirPath)) {
-            // @todo fix permission mode
-            \mkdir($dirPath, 0755, true);
-        }
+        $module->apiCollectionCreate($request, $response);
 
-        return $collection;
+        return $response->get('')['response'];
     }
 
     /**
      * Create type.
      *
-     * @param DatabasePool $dbPool Database instance
+     * @param ApplicationAbstract $app  Application
      * @param array        $data   Media info
      *
      * @return MediaType
      *
      * @since 1.0.0
      */
-    private static function createType(DatabasePool $dbPool, array $data) : MediaType
+    private static function createType(ApplicationAbstract $app, array $data) : MediaType
     {
-        $type       = new MediaType();
-        $type->name = $data['name'] ?? '';
+        /** @var \Modules\Media\Controller\ApiController $module */
+        $module = $app->moduleManager->get('Media');
 
-        $id = MediaTypeMapper::create()->execute($type);
+        $response = new HttpResponse();
+        $request  = new HttpRequest(new HttpUri(''));
+
+        $request->header->account = 1;
+        $request->setData('name', $data['name'] ?? '');
+
+        $module->apiMediaTypeCreate($request, $response);
+
+        $type = $response->get('')['response'];
+        $id = $type->getId();
 
         foreach ($data['l11n'] as $l11n) {
-            $l11n       = new MediaTypeL11n($l11n['title'], $l11n['lang']);
-            $l11n->type = $id;
+            $response = new HttpResponse();
+            $request  = new HttpRequest(new HttpUri(''));
 
-            MediaTypeL11nMapper::create()->execute($l11n);
+            $request->header->account = 1;
+            $request->setData('title', $l11n['title'] ?? '');
+            $request->setData('lang', $l11n['lang'] ?? null);
+            $request->setData('type', $id);
+
+            $module->apiMediaTypeL11nCreate($request, $response);
         }
 
         return $type;
@@ -210,31 +237,50 @@ final class Installer extends InstallerAbstract
     /**
      * Upload media.
      *
-     * @param DatabasePool $dbPool Database instance
+     * @param ApplicationAbstract $app  Application
      * @param array        $data   Media info
      *
      * @return array
      *
      * @since 1.0.0
      */
-    private static function uploadMedia(DatabasePool $dbPool, array $data) : array
+    private static function uploadMedia(ApplicationAbstract $app, array $data) : array
     {
-        $files = [];
+        /** @var \Modules\Media\Controller\ApiController $module */
+        $module = $app->moduleManager->get('Media');
+
+        $response = new HttpResponse();
+        $request  = new HttpRequest(new HttpUri(''));
+
+        $request->header->account = 1;
+        $request->setData('path', empty($data['path'] ?? '') ? '' : $data['path']);
+        $request->setData('virtualPath',
+            (string) (
+                $data['create_collection']
+                    ? \rtrim($data['virtualPath'] ?? '/', '/') . '/' . ((string) $data['name'] ?? '')
+                    : ($data['virtualPath'] ?? '/')
+            )
+        );
+        $request->setData('type', $data['media_type'] ?? null); // = identifier for modules
+        $request->setData('pathsettings', $data['path_setting'] ?? PathSettings::FILE_PATH);
+
+        $tempPath = __DIR__ . '/../../../temp/';
+
         foreach ($data['files'] as $file) {
             if (\is_file(__DIR__ . '/../../..' . $file)) {
-                File::copy(__DIR__ . '/../../..' . $file, __DIR__ . '/tmp' . $file);
+                File::copy(__DIR__ . '/../../..' . $file, $tempPath . $file);
 
-                $files[] = [
-                    'size'     => \filesize(__DIR__ . '/tmp' . $file),
+                $request->addFile([
+                    'size'     => \filesize($tempPath . $file),
                     'name'     => \basename($file),
-                    'tmp_name' => __DIR__ . '/tmp' . $file,
+                    'tmp_name' => $tempPath . $file,
                     'error'    => \UPLOAD_ERR_OK,
-                ];
+                ]);
             } if (\is_dir(__DIR__ . '/../../..' . $file)) {
-                Directory::copy(__DIR__ . '/../../..' . $file, __DIR__ . '/tmp' . $file);
+                Directory::copy(__DIR__ . '/../../..' . $file, $tempPath . $file);
 
                 $iterator = new \RecursiveIteratorIterator(
-                    new \RecursiveDirectoryIterator(__DIR__ . '/tmp' . $file . '/', \RecursiveDirectoryIterator::SKIP_DOTS),
+                    new \RecursiveDirectoryIterator($tempPath . $file . '/', \RecursiveDirectoryIterator::SKIP_DOTS),
                     \RecursiveIteratorIterator::SELF_FIRST
                 );
 
@@ -243,63 +289,32 @@ final class Installer extends InstallerAbstract
                         continue;
                     }
 
-                    $files[] = [
+                    $request->addFile([
                         'size'     => \filesize($item->getPathname()),
                         'name'     => \basename($item->getPathname()),
                         'tmp_name' => $item->getPathname(),
                         'error'    => \UPLOAD_ERR_OK,
-                    ];
+                    ]);
                 }
             }
         }
 
-        $upload                   = new UploadFile();
-        $upload->preserveFileName = $data['fixed_names'] ?? true;
-        $upload->outputDir        = empty($data['path'] ?? '')
-            ? ApiController::createMediaPath()
-            : __DIR__ . '/../../..' . $data['path'];
-
-        $status = $upload->upload($files, ($data['fixed_names'] ?? true) ? [] : [$data['name']], true);
-
-        $mediaFiles = [];
-        foreach ($status as $uFile) {
-            $media = new Media();
-
-            $media->setPath(ApiController::normalizeDbPath($data['path']) . '/' . $uFile['filename']);
-            $media->name      = !empty($uFile['name']) ? $uFile['name'] : $uFile['filename'];
-            $media->size      = $uFile['size'];
-            $media->createdBy = new NullAccount((int) $data['user'] ?? 1);
-            $media->extension = $uFile['extension'];
-
-            // Use defined virtual path if no collection is used.
-            // If a collection is created modify the virtual path so that it is the virtual path + the collection name for the uploaded files
-            $media->setVirtualPath((string) (
-                $data['create_collection']
-                    ? \rtrim($data['virtualPath'] ?? '/', '/') . '/' . ((string) $data['name'] ?? '')
-                    : ($data['virtualPath'] ?? '/')
-                )
-            );
-
-            $media->type = $data['media_type'] ?? null; // = identifier for modules
-
-            MediaMapper::create()->execute($media);
-
-            $mediaFiles[] = $media;
-        }
+        $module->apiMediaUpload($request, $response);
 
         if ($data['create_collection']) {
-            $collection       = new Collection();
-            $collection->name = (string) $data['name'] ?? '';
-            $collection->setVirtualPath((string) $data['virtualPath'] ?? '/');
-            $collection->setPath((string) ($data['path'] ?? '/Modules/Media/Files/' . ((string) $data['name'] ?? '')));
-            $collection->createdBy = new NullAccount((int) $data['user'] ?? 1);
+            $response = new HttpResponse();
+            $request  = new HttpRequest(new HttpUri(''));
 
-            $collection->setSources($mediaFiles);
+            $request->header->account = 1;
+            $request->setData('name', (string) $data['name'] ?? '');
+            $request->setData('virtualpath', (string) $data['virtualPath'] ?? '/');
+            $request->setData('path', (string) ($data['path'] ?? '/Modules/Media/Files/' . ((string) $data['name'] ?? '')));
 
-            CollectionMapper::create()->execute($collection);
-            return [$collection];
+            $module->apiCollectionCreate($request, $response);
+
+            return $response->get('')['resposne'];
         }
 
-        return $mediaFiles;
+        return $response->get('')['response'];
     }
 }

@@ -36,6 +36,8 @@ $fileIconFunction = function (int $extensionType) : string
         return 'file-excel-o';
     } elseif ($extensionType === ExtensionType::DIRECTORY) {
         return 'folder-open-o';
+    } elseif ($extensionType === ExtensionType::REFERENCE) {
+        return 'share';
     }
 
     return 'file';

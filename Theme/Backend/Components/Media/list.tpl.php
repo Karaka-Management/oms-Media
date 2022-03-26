@@ -29,6 +29,7 @@ $next     = empty($this->media)
     <table class="default">
         <thead>
             <td>
+            <td><?= $this->getHtml('Path', 'Media'); ?>
             <td class="wf-100"><?= $this->getHtml('Name', 'Media'); ?>
             <td><?= $this->getHtml('Type', 'Media'); ?>
             <td><?= $this->getHtml('Size', 'Media'); ?>
@@ -44,6 +45,7 @@ $next     = empty($this->media)
         ?>
         <tr data-href="<?= $url; ?>">
             <td data-label="<?= $this->getHtml('Type'); ?>"><a href="<?= $url; ?>"><i class="fa fa-<?= $this->printHtml($icon); ?>"></i></a>
+            <td data-label="<?= $this->getHtml('Path'); ?>"><a class="content" href="<?= UriFactory::build('{/prefix}media/list?{?}&path=' . $value->getVirtualPath()); ?>"><?= $this->printHtml($value->getVirtualPath()); ?></a>
             <td data-label="<?= $this->getHtml('Name'); ?>"><a href="<?= $url; ?>"><?= $this->printHtml($value->name); ?></a>
             <td data-label="<?= $this->getHtml('Extension'); ?>"><a href="<?= $url; ?>"><?= $this->printHtml($value->extension); ?></a>
             <td data-label="<?= $this->getHtml('Size'); ?>"><a href="<?= $url; ?>"><?= $value->size; ?></a>
