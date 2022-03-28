@@ -145,7 +145,7 @@ final class ApiController extends Controller
      *                              FILE_PATH   = combination of base path and virtual path
      * @param bool   $hasAccountRelation The uploaded files should be related to an account
      *
-     * @return array
+     * @return Media[]
      *
      * @since 1.0.0
      */
@@ -256,7 +256,7 @@ final class ApiController extends Controller
      * @param null|int $type        Media type (internal categorization)
      * @param ApplicationAbstract     $app Should create relation to uploader
      *
-     * @return null|Media
+     * @return Media
      *
      * @since 1.0.0
      */
@@ -267,10 +267,10 @@ final class ApiController extends Controller
         int $type = null,
         string $ip = '127.0.0.1',
         ApplicationAbstract $app = null
-    ) : ?Media
+    ) : Media
     {
         if ($status['status'] !== UploadStatus::OK) {
-            return null;
+            return new NullMedia();
         }
 
         $media = new Media();
