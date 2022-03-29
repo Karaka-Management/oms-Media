@@ -49,6 +49,7 @@ Autoloader::addPath(__DIR__ . '/../../../../../../Resources/');
                     $data = \ob_get_clean();
                     $csv  = \explode("\n", \trim($data, "\n"));
                     ?>
+                    <div class="slider">
                     <table class="default">
                     <?php
                     foreach ($csv as $line)  {
@@ -68,6 +69,7 @@ Autoloader::addPath(__DIR__ . '/../../../../../../Resources/');
                     }
                     ?>
                     </table>
+                    </div>
             </div>
         </div>
     </div>

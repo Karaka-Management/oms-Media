@@ -26,6 +26,7 @@ $next     = empty($this->media)
 ?>
 <div class="portlet">
     <div class="portlet-head"><?= $this->getHtml('Media', 'Media'); ?><i class="fa fa-download floatRight download btn"></i></div>
+    <div class="slider">
     <table class="default">
         <thead>
             <td>
@@ -56,6 +57,7 @@ $next     = empty($this->media)
             <tr><td colspan="6" class="empty"><?= $this->getHtml('Empty', '0', '0'); ?>
         <?php endif; ?>
     </table>
+    </div>
     <div class="portlet-foot">
         <a tabindex="0" class="button" href="<?= UriFactory::build($previous); ?>"><?= $this->getHtml('Previous', '0', '0'); ?></a>
         <a tabindex="0" class="button" href="<?= UriFactory::build($next); ?>"><?= $this->getHtml('Next', '0', '0'); ?></a>
