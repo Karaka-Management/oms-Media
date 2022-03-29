@@ -516,10 +516,11 @@ final class ApiController extends Controller
         $virtualPath = \urldecode((string) ($request->getData('virtualpath') ?? '/'));
 
         $outputDir = '';
+        $basePath  = __DIR__ . '/../../../Modules/Media/Files';
         if (empty($request->getData('path'))) {
-            $outputDir = self::createMediaPath(__DIR__ . '/../../../Modules/Media/Files');
+            $outputDir = self::createMediaPath($basePath);
         } else {
-            $outputDir = __DIR__ . '/../../../Modules/Media/Files/' . \ltrim($request->getData('path'), '\\/');
+            $outputDir = $basePath . '/' . \ltrim($request->getData('path'), '\\/');
             Directory::create($outputDir . '/' . $request->getData('name'), 0775, true);
         }
 
@@ -655,17 +656,18 @@ final class ApiController extends Controller
         $fileName   .= \strripos($fileName, '.') === false ? '.txt' : '';
 
         $outputDir = '';
+        $basePath  = __DIR__ . '/../../../Modules/Media/Files';
         if (empty($request->getData('path'))) {
-            $outputDir = self::createMediaPath(__DIR__ . '/../../../Modules/Media/Files');
+            $outputDir = self::createMediaPath($basePath);
         } else {
             if (\stripos(
-                    FileUtils::absolute(__DIR__ . '/../../../Modules/Media/Files/' . \ltrim($path, '\\/')),
+                    FileUtils::absolute($basePath . '/' . \ltrim($path, '\\/')),
                     FileUtils::absolute(__DIR__ . '/../../../')
                 ) !== 0
             ) {
-                $outputDir = self::createMediaPath(__DIR__ . '/../../../Modules/Media/Files');
+                $outputDir = self::createMediaPath($basePath);
             } else {
-                $outputDir = __DIR__ . '/../../../Modules/Media/Files/' . \ltrim($path, '\\/');
+                $outputDir = $basePath . '/' . \ltrim($path, '\\/');
             }
         }
 
