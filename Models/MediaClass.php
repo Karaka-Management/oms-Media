@@ -45,5 +45,4 @@ abstract class MediaClass extends Enum
     public const SYSTEM_FILE = 3;
 
     public const SYSTEM_DIRECTORY = 4;
-
 }

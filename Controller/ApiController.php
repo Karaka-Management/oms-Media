@@ -130,19 +130,19 @@ final class ApiController extends Controller
     /**
      * Upload a media file
      *
-     * @param array  $names         Database names
-     * @param array  $fileNames     FileNames
-     * @param array  $files         Files
-     * @param int    $account       Uploader
-     * @param string $basePath      Base path. The path which is used for the upload.
-     * @param string $virtualPath   virtual path The path which is used to visually structure the files, like directories
-     * @param int    $type          Media type (internal/custom media categorization)
-     *                              The file storage on the system can be different
-     * @param string $password      File password. The password to protect the file (only database)
-     * @param string $encryptionKey Encryption key. Used to encrypt the file on the local file storage.
-     * @param int    $pathSettings  Settings which describe where the file should be uploaded to (physically)
-     *                              RANDOM_PATH = random location in the base path
-     *                              FILE_PATH   = combination of base path and virtual path
+     * @param array  $names              Database names
+     * @param array  $fileNames          FileNames
+     * @param array  $files              Files
+     * @param int    $account            Uploader
+     * @param string $basePath           Base path. The path which is used for the upload.
+     * @param string $virtualPath        virtual path The path which is used to visually structure the files, like directories
+     * @param int    $type               Media type (internal/custom media categorization)
+     *                                   The file storage on the system can be different
+     * @param string $password           File password. The password to protect the file (only database)
+     * @param string $encryptionKey      Encryption key. Used to encrypt the file on the local file storage.
+     * @param int    $pathSettings       Settings which describe where the file should be uploaded to (physically)
+     *                                   - RANDOM_PATH = random location in the base path
+     *                                   - FILE_PATH   = combination of base path and virtual path
      * @param bool   $hasAccountRelation The uploaded files should be related to an account
      *
      * @return Media[]
@@ -181,8 +181,8 @@ final class ApiController extends Controller
             return [];
         }
 
-        $upload            = new UploadFile();
-        $upload->outputDir = $outputDir;
+        $upload                   = new UploadFile();
+        $upload->outputDir        = $outputDir;
         $upload->preserveFileName = empty($fileNames) || \count($fileNames) === \count($files);
 
         $status = $upload->upload($files, $fileNames, $absolute, $encryptionKey);
@@ -250,11 +250,12 @@ final class ApiController extends Controller
     /**
      * Create db entry for uploaded file
      *
-     * @param array    $status      Files
-     * @param int      $account     Uploader
-     * @param string   $virtualPath Virtual path (not on the hard-drive)
-     * @param null|int $type        Media type (internal categorization)
-     * @param ApplicationAbstract     $app Should create relation to uploader
+     * @param array                    $status      Files
+     * @param int                      $account     Uploader
+     * @param string                   $virtualPath Virtual path (not on the hard-drive)
+     * @param null|int                 $type        Media type (internal categorization)
+     * @param string                   $ip          Ip of the origin
+     * @param null|ApplicationAbstract $app         Should create relation to uploader
      *
      * @return Media
      *
@@ -280,14 +281,14 @@ final class ApiController extends Controller
         $media->size      = $status['size'];
         $media->createdBy = new NullAccount($account);
         $media->extension = $status['extension'];
+        $media->type      = $type === null ? null : new NullMediaType($type);
         $media->setVirtualPath($virtualPath);
-        $media->type = $type === null ? null : new NullMediaType($type);
 
         if (\is_file($media->getAbsolutePath())) {
             $content = self::loadFileContent($media->getAbsolutePath(), $media->extension);
 
             if (!empty($content)) {
-                $media->content = new MediaContent();
+                $media->content          = new MediaContent();
                 $media->content->content = $content;
             }
         }
@@ -315,12 +316,21 @@ final class ApiController extends Controller
         return $media;
     }
 
+    /**
+     * Load the text content of a file
+     *
+     * @param string $path      Path of the file
+     * @param string $extension File extension
+     *
+     * @return string
+     *
+     * @since 1.0.0
+     */
     private static function loadFileContent(string $path, string $extension) : string
     {
         switch ($extension) {
             case 'pdf':
                 return PdfParser::pdf2text($path);
-                break;
             case 'doc':
             case 'docx':
                 Autoloader::addPath(__DIR__ . '/../../../Resources/');
@@ -330,11 +340,10 @@ final class ApiController extends Controller
 
                 $writer = new HTML($doc);
                 return $writer->getContent();
-                break;
             case 'txt':
             case 'md':
-                return \file_get_contents($path);
-                break;
+                $contents = \file_get_contents($path);
+                return $contents === false ? '' : $contents;
             default:
                 return '';
         };
@@ -566,23 +575,35 @@ final class ApiController extends Controller
         return $mediaCollection;
     }
 
-    public function createRecursiveMediaCollection(string $basePath, string $path, int $account, string $physicalPath = '') : Collection
+    /**
+     * Create a collection recursively
+     *
+     * The function also creates all parent collections if they don't exist
+     *
+     * @param string $path         Virtual path of the collection
+     * @param int    $account      Account who creates this collection
+     * @param int    $physicalPath The physical path where the corresponding directory should be created
+     *
+     * @return Collection
+     *
+     * @since 1.0.0
+     */
+    public function createRecursiveMediaCollection(string $path, int $account, string $physicalPath = '') : Collection
     {
         $status = false;
         if (!empty($physicalPath)) {
             $status = !\is_dir($physicalPath) ? \mkdir($physicalPath, 0755, true) : true;
         }
 
-        $path = \trim($path, '/');
-        $paths = \explode('/', $path);
+        $path      = \trim($path, '/');
+        $paths     = \explode('/', $path);
         $tempPaths = $paths;
-        $length = \count($paths);
-
-        $temp = '';
+        $length    = \count($paths);
 
         /** @var Collection $parentCollection */
         $parentCollection = null;
 
+        $temp = '';
         for ($i = $length; $i > 0; --$i) {
             $temp = '/' . \implode('/', $tempPaths);
 
@@ -597,9 +618,9 @@ final class ApiController extends Controller
 
         for (; $i < $length; ++$i) {
             /* Create collection */
-            $childCollection                 = new Collection();
-            $childCollection->name           = $paths[$i];
-            $childCollection->createdBy      = new NullAccount($account);
+            $childCollection            = new Collection();
+            $childCollection->name      = $paths[$i];
+            $childCollection->createdBy = new NullAccount($account);
             $childCollection->setVirtualPath('/'. \ltrim($temp, '/'));
             $childCollection->setPath('/Modules/Media/Files' . $temp);
 
@@ -607,7 +628,7 @@ final class ApiController extends Controller
             CollectionMapper::writer()->createRelationTable('sources', [$childCollection->getId()], $parentCollection->getId());
 
             $parentCollection = $childCollection;
-            $temp .= '/' . $paths[$i];
+            $temp            .= '/' . $paths[$i];
         }
 
         return $parentCollection;
@@ -711,11 +732,11 @@ final class ApiController extends Controller
             if (\is_file(__DIR__ . '/../../../' . \ltrim($path, '\\/'))) {
                 $name = \explode('.', \basename($path));
 
-                $media->name      = $name[0];
-                $media->extension = $name[1] ?? '';
+                $media->name       = $name[0];
+                $media->extension  = $name[1] ?? '';
+                $media->isAbsolute = false;
                 $media->setVirtualPath(\dirname($path));
                 $media->setPath('/' . \ltrim($path, '\\/'));
-                $media->isAbsolute = false;
             }
         }
 
@@ -913,7 +934,7 @@ final class ApiController extends Controller
      *
      * @param RequestAbstract $request Request
      *
-     * @return EditorDoc
+     * @return MediaType
      *
      * @since 1.0.0
      */
@@ -989,12 +1010,12 @@ final class ApiController extends Controller
      */
     private function createMediaTypeL11nFromRequest(RequestAbstract $request) : MediaTypeL11n
     {
-        $l11nMediaType           = new MediaTypeL11n();
-        $l11nMediaType->type = (int) ($request->getData('type') ?? 0);
+        $l11nMediaType        = new MediaTypeL11n();
+        $l11nMediaType->type  = (int) ($request->getData('type') ?? 0);
+        $l11nMediaType->title = (string) ($request->getData('title') ?? '');
         $l11nMediaType->setLanguage((string) (
             $request->getData('language') ?? $request->getLanguage()
         ));
-        $l11nMediaType->title = (string) ($request->getData('title') ?? '');
 
         return $l11nMediaType;
     }

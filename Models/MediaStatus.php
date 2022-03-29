@@ -39,5 +39,4 @@ abstract class MediaStatus extends Enum
     public const HIDDEN = 2;
 
     public const DELETED = 3;
-
 }

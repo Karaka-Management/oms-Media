@@ -100,7 +100,7 @@ final class BackendController extends Controller
                 ->permission(PermissionType::READ)
                 ->query(MediaMapper::PRIMARYFIELD);
 
-                $mediaMapper ->where('', $permWhere);
+                $mediaMapper->where('', $permWhere);
         }
 
         /** @var Media[] $media */
@@ -119,7 +119,7 @@ final class BackendController extends Controller
                 ->permission(PermissionType::READ)
                 ->query(MediaMapper::PRIMARYFIELD);
 
-                $collectionMapper ->where('', $permWhere);
+                $collectionMapper->where('', $permWhere);
         }
 
         $collection = $collectionMapper->execute();
@@ -154,14 +154,15 @@ final class BackendController extends Controller
 
             foreach ($glob as $file) {
                 $basename = \basename($file);
-                if ($basename[0] === '_' && \strlen($basename) === 5) {
+                $realpath = \realpath($file);
+                if (($basename[0] === '_' && \strlen($basename) === 5) || $realpath === false) {
                     continue;
                 }
 
                 foreach ($media as $obj) {
                     if ($obj->name === $basename
                         || $obj->name . '.' . $obj->extension === $basename
-                        || ($obj->getPath() !== '' && StringUtils::endsWith(\realpath($file), $obj->getPath()))
+                        || ($obj->getPath() !== '' && StringUtils::endsWith($realpath, $obj->getPath()))
                     ) {
                         continue 2;
                     }
@@ -172,11 +173,11 @@ final class BackendController extends Controller
                 $localMedia            = new Media();
                 $localMedia->name      = $pathinfo['basename'];
                 $localMedia->extension = \is_dir($file) ? 'collection' : $pathinfo['extension'] ?? '';
-                $localMedia->setVirtualPath($path);
                 $localMedia->createdBy = new Account();
-                $localMedia->class = $localMedia->extension === 'collection'
+                $localMedia->class     = $localMedia->extension === 'collection'
                     ? MediaClass::SYSTEM_DIRECTORY
                     : MediaClass::SYSTEM_FILE;
+                $localMedia->setVirtualPath($path);
 
                 $unIndexedFiles[] = $localMedia;
             }

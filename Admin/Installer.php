@@ -123,12 +123,12 @@ final class Installer extends InstallerAbstract
             protected string $appName = 'Api';
         };
 
-        $apiApp->dbPool = $app->dbPool;
-        $apiApp->orgId = $app->orgId;
+        $apiApp->dbPool         = $app->dbPool;
+        $apiApp->orgId          = $app->orgId;
         $apiApp->accountManager = $app->accountManager;
-        $apiApp->appSettings = $app->appSettings;
-        $apiApp->moduleManager = $app->moduleManager;
-        $apiApp->eventManager = $app->eventManager;
+        $apiApp->appSettings    = $app->appSettings;
+        $apiApp->moduleManager  = $app->moduleManager;
+        $apiApp->eventManager   = $app->eventManager;
 
         $result = [
             'collection' => [],
@@ -162,7 +162,7 @@ final class Installer extends InstallerAbstract
      * Create collection.
      *
      * @param ApplicationAbstract $app  Application
-     * @param array        $data   Media info
+     * @param array               $data Media info
      *
      * @return Collection
      *
@@ -197,7 +197,7 @@ final class Installer extends InstallerAbstract
      * Create type.
      *
      * @param ApplicationAbstract $app  Application
-     * @param array        $data   Media info
+     * @param array               $data Media info
      *
      * @return MediaType
      *
@@ -217,7 +217,7 @@ final class Installer extends InstallerAbstract
         $module->apiMediaTypeCreate($request, $response);
 
         $type = $response->get('')['response'];
-        $id = $type->getId();
+        $id   = $type->getId();
 
         foreach ($data['l11n'] as $l11n) {
             $response = new HttpResponse();
@@ -238,7 +238,7 @@ final class Installer extends InstallerAbstract
      * Upload media.
      *
      * @param ApplicationAbstract $app  Application
-     * @param array        $data   Media info
+     * @param array               $data Media info
      *
      * @return array
      *

@@ -10,7 +10,7 @@
         "icon": null,
         "order": 20,
         "from": "Media",
-        "permission": { "permission": 2, "type": null, "element": null },
+        "permission": { "permission": 2, "category": null, "element": null },
         "parent": 1006901001,
         "children": [
         ]
@@ -26,7 +26,7 @@
         "icon": null,
         "order": 3,
         "from": "Media",
-        "permission": { "permission": 2, "type": null, "element": null },
+        "permission": { "permission": 2, "category": null, "element": null },
         "parent": 1000301001,
         "children": []
     }

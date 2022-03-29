@@ -311,6 +311,8 @@ class Media implements \JsonSerializable
     }
 
     /**
+     * Get the media path
+     *
      * @return string
      *
      * @since 1.0.0
@@ -320,6 +322,13 @@ class Media implements \JsonSerializable
         return $this->isAbsolute ? $this->path : \ltrim($this->path, '\\/');
     }
 
+    /**
+     * Get the absolute media path
+     *
+     * @return string
+     *
+     * @since 1.0.0
+     */
     public function getAbsolutePath() : string
     {
         return $this->isAbsolute ? $this->path : __DIR__ . '/../../../' . \ltrim($this->path, '\\/');
