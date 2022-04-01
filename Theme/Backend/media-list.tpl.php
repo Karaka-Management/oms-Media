@@ -86,8 +86,8 @@ $next     = empty($media) ? '{/prefix}media/list' : '{/prefix}media/list?{?}&id=
             <table id="iMediaList" class="default sticky">
                 <thead>
                 <tr>
-                    <td><label class="checkbox" for="iMediaSelect-0">
-                            <input type="checkbox" id="iMediaSelect-0" name="mediaselect">
+                    <td><label class="checkbox" for="iMediaSelect-">
+                            <input type="checkbox" id="iMediaSelect-" name="mediaselect">
                             <span class="checkmark"></span>
                         </label>
                     <td>
