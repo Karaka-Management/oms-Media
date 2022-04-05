@@ -16,20 +16,12 @@ namespace Modules\Media\Admin;
 
 use Modules\Admin\Models\AccountMapper;
 use Modules\Admin\Models\NullAccount;
-use Modules\Media\Controller\ApiController;
 use Modules\Media\Models\Collection;
 use Modules\Media\Models\CollectionMapper;
-use Modules\Media\Models\Media;
-use Modules\Media\Models\MediaMapper;
 use Modules\Media\Models\MediaType;
-use Modules\Media\Models\MediaTypeL11n;
-use Modules\Media\Models\MediaTypeL11nMapper;
-use Modules\Media\Models\MediaTypeMapper;
 use Modules\Media\Models\PathSettings;
-use Modules\Media\Models\UploadFile;
 use phpOMS\Application\ApplicationAbstract;
 use phpOMS\Config\SettingsInterface;
-use phpOMS\DataStorage\Database\DatabasePool;
 use phpOMS\Message\Http\HttpRequest;
 use phpOMS\Message\Http\HttpResponse;
 use phpOMS\Module\InstallerAbstract;
@@ -257,7 +249,7 @@ final class Installer extends InstallerAbstract
         $request->setData('virtualPath',
             (string) (
                 $data['create_collection']
-                    ? \rtrim($data['virtualPath'] ?? '/', '/') . '/' . ((string) $data['name'] ?? '')
+                    ? \rtrim($data['virtualPath'] ?? '/', '/') . '/' . ((string) ($data['name'] ?? ''))
                     : ($data['virtualPath'] ?? '/')
             )
         );
@@ -267,8 +259,10 @@ final class Installer extends InstallerAbstract
         $tempPath = __DIR__ . '/../../../temp/';
 
         foreach ($data['files'] as $file) {
-            if (\is_file(__DIR__ . '/../../..' . $file)) {
-                File::copy(__DIR__ . '/../../..' . $file, $tempPath . $file);
+            $filePath = __DIR__ . '/../../..' . $file;
+
+            if (\is_file($filePath)) {
+                File::copy($filePath, $tempPath . $file);
 
                 $request->addFile([
                     'size'     => \filesize($tempPath . $file),
@@ -276,8 +270,8 @@ final class Installer extends InstallerAbstract
                     'tmp_name' => $tempPath . $file,
                     'error'    => \UPLOAD_ERR_OK,
                 ]);
-            } if (\is_dir(__DIR__ . '/../../..' . $file)) {
-                Directory::copy(__DIR__ . '/../../..' . $file, $tempPath . $file);
+            } if (\is_dir($filePath)) {
+                Directory::copy($filePath, $tempPath . $file);
 
                 $iterator = new \RecursiveIteratorIterator(
                     new \RecursiveDirectoryIterator($tempPath . $file . '/', \RecursiveDirectoryIterator::SKIP_DOTS),
@@ -306,9 +300,9 @@ final class Installer extends InstallerAbstract
             $request  = new HttpRequest(new HttpUri(''));
 
             $request->header->account = 1;
-            $request->setData('name', (string) $data['name'] ?? '');
-            $request->setData('virtualpath', (string) $data['virtualPath'] ?? '/');
-            $request->setData('path', (string) ($data['path'] ?? '/Modules/Media/Files/' . ((string) $data['name'] ?? '')));
+            $request->setData('name', (string) ($data['name'] ?? ''));
+            $request->setData('virtualpath', (string) ($data['virtualPath'] ?? '/'));
+            $request->setData('path', (string) ($data['path'] ?? '/Modules/Media/Files/' . ((string) ($data['name'] ?? ''))));
 
             $module->apiCollectionCreate($request, $response);
 

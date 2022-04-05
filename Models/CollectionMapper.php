@@ -136,7 +136,7 @@ final class CollectionMapper extends MediaMapper
 
                     $localMedia            = new Collection();
                     $localMedia->name      = $pathinfo['filename'];
-                    $localMedia->extension = \is_dir($file) ? 'collection' : $pathinfo['extension'] ?? '';
+                    $localMedia->extension = $pathinfo['extension'] ?? '';
                     $localMedia->setVirtualPath($virtualPath);
                     $localMedia->createdBy = new Account();
 

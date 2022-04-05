@@ -73,7 +73,7 @@ class MediaMapper extends DataMapperFactory
     /**
      * Belongs to.
      *
-     * @var array<string, array{mapper:string, external:string}>
+     * @var array<string, array{mapper:string, external:string, by?:string, column?:string, conditional?:bool}>
      * @since 1.0.0
      */
     public const OWNS_ONE = [

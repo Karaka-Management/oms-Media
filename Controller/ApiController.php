@@ -80,8 +80,8 @@ final class ApiController extends Controller
     public function apiMediaUpload(RequestAbstract $request, ResponseAbstract $response, $data = null) : void
     {
         $uploads = $this->uploadFiles(
-            names:         $request->getDataList('names') ?? [],
-            fileNames:     $request->getDataList('filenames') ?? [],
+            names:         $request->getDataList('names'),
+            fileNames:     $request->getDataList('filenames'),
             files:         $request->getFiles(),
             account:       $request->header->account,
             basePath:      __DIR__ . '/../../../Modules/Media/Files' . \urldecode((string) ($request->getData('path') ?? '')),
