@@ -14,11 +14,6 @@ declare(strict_types=1);
 
 namespace Modules\Media\Models;
 
-use Modules\Admin\Models\Account;
-use Modules\Admin\Models\NullAccount;
-use Modules\Tag\Models\NullTag;
-use Modules\Tag\Models\Tag;
-
 /**
  * Media class.
  *
@@ -55,7 +50,7 @@ class MediaContent implements \JsonSerializable
     public function toArray() : array
     {
         return [
-            'id'             => $this->id,
+            'id'                => $this->id,
             'content'           => $this->content,
         ];
     }

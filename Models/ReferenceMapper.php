@@ -14,9 +14,6 @@ declare(strict_types=1);
 
 namespace Modules\Media\Models;
 
-use Modules\Admin\Models\Account;
-use phpOMS\DataStorage\Database\Mapper\ReadMapper;
-
 /**
  * Mapper class.
  *

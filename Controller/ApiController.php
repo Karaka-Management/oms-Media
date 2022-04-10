@@ -33,8 +33,12 @@ use Modules\Media\Models\PermissionCategory;
 use Modules\Media\Models\UploadFile;
 use Modules\Media\Models\UploadStatus;
 use Modules\Tag\Models\NullTag;
+use PhpOffice\PhpWord\IOFactory;
+use PhpOffice\PhpWord\Writer\HTML;
 use phpOMS\Account\PermissionType;
+use phpOMS\Application\ApplicationAbstract;
 use phpOMS\Asset\AssetType;
+use phpOMS\Autoloader;
 use phpOMS\Message\Http\HttpRequest;
 use phpOMS\Message\Http\HttpResponse;
 use phpOMS\Message\Http\RequestStatusCode;
@@ -47,12 +51,8 @@ use phpOMS\System\File\FileUtils;
 use phpOMS\System\File\Local\Directory;
 use phpOMS\System\MimeType;
 use phpOMS\Utils\Parser\Markdown\Markdown;
-use phpOMS\Views\View;
-use PhpOffice\PhpWord\IOFactory;
-use PhpOffice\PhpWord\Writer\HTML;
-use phpOMS\Application\ApplicationAbstract;
-use phpOMS\Autoloader;
 use phpOMS\Utils\Parser\Pdf\PdfParser;
+use phpOMS\Views\View;
 
 /**
  * Media class.
@@ -346,7 +346,7 @@ final class ApiController extends Controller
                 return $contents === false ? '' : $contents;
             default:
                 return '';
-        };
+        }
     }
 
     /**
@@ -931,7 +931,7 @@ final class ApiController extends Controller
         $this->fillJsonResponse($request, $response, NotificationLevel::OK, 'Media', 'Media type successfully created', $type);
     }
 
-     /**
+    /**
      * Method to create task from request.
      *
      * @param RequestAbstract $request Request

@@ -26,7 +26,7 @@ $view  = $this->getData('view');
 $tags = $media->getTags();
 
 /** @var \Modules\Admin\Models\Account $account */
-$account = $this->getData('account');
+$account    = $this->getData('account');
 $accountDir = $account->getId() . ' ' . $account->login;
 
 $mediaPath = \urldecode($media->getVirtualPath() ?? '/');
