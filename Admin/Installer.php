@@ -306,9 +306,9 @@ final class Installer extends InstallerAbstract
 
             $module->apiCollectionCreate($request, $response);
 
-            return $response->get('')['resposne'];
+            return !\is_array($response->get('')['response']) ? $response->get('')['response']->toArray() : $response->get('')['response'];
         }
 
-        return $response->get('')['response'];
+        return !\is_array($response->get('')['response']) ? $response->get('')['response']->toArray() : $response->get('')['response'];
     }
 }

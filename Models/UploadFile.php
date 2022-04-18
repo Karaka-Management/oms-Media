@@ -113,11 +113,18 @@ class UploadFile
             $this->outputDir = $this->findOutputDir();
         }
 
-        $path     = $this->outputDir;
         $fCounter = -1;
-
         foreach ($files as $key => $f) {
             ++$fCounter;
+
+            $path = $this->outputDir;
+
+            $subdir = '';
+            if (\stripos($f['name'], '/') !== false) {
+                $last = \strripos($f['name'], '/');
+                $subdir    = \substr($f['name'], 0, $last);
+                $f['name'] = \substr($f['name'], $last + 1);
+            }
 
             if (!\is_file($f['tmp_name'])) {
                 $result[$key]['status'] = UploadStatus::FILE_NOT_FOUND;
@@ -127,6 +134,10 @@ class UploadFile
 
             if ($path === '') {
                 $path = File::dirpath($f['tmp_name']);
+            }
+
+            if ($subdir !== '') {
+                $path .= '/' . $subdir;
             }
 
             $result[$key]           = [];

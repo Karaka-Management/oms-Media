@@ -69,7 +69,7 @@ echo $this->getData('nav')->render(); ?>
                 <tbody>
                 <?php $count = 0;
                 foreach ($types as $key => $type) : ++$count;
-                    $url = UriFactory::build('{/prefix}admin/module/settings?id=Media&type=' . $type->id); ?>
+                    $url = UriFactory::build('{/prefix}admin/module/settings?id=Media&type=' . $type->getId()); ?>
                     <tr tabindex="0" data-href="<?= $url; ?>">
                         <td><a href="<?= $url; ?>"><?= $type->getId(); ?></a>
                         <td><a href="<?= $url; ?>"><?= $this->printHtml($type->name); ?></a>

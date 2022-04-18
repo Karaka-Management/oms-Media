@@ -14,6 +14,8 @@ declare(strict_types=1);
 
 namespace Modules\Media\Models;
 
+use phpOMS\Utils\StringUtils;
+
 /**
  * Media class.
  *
@@ -102,6 +104,26 @@ class Collection extends Media implements \Iterator
         foreach ($this->sources as $source) {
             if ($source->name === $name) {
                 return $source;
+            }
+        }
+
+        return new NullMedia();
+    }
+
+    /**
+     * Find file by file name
+     *
+     * @param string $name File name
+     *
+     * @return Media
+     *
+     * @since 1.0.0
+     */
+    public function findFile(string $name) : Media
+    {
+        foreach ($this->sources as $file) {
+            if (StringUtils::endsWith($file->getPath(), $name)) {
+                return $file;
             }
         }
 
