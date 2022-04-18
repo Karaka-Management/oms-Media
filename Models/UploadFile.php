@@ -121,7 +121,7 @@ class UploadFile
 
             $subdir = '';
             if (\stripos($f['name'], '/') !== false) {
-                $last = \strripos($f['name'], '/');
+                $last      = \strripos($f['name'], '/');
                 $subdir    = \substr($f['name'], 0, $last);
                 $f['name'] = \substr($f['name'], $last + 1);
             }
