@@ -2,7 +2,7 @@
 /**
  * Karaka
  *
- * PHP Version 8.0
+ * PHP Version 8.1
  *
  * @package   Modules\Media\Admin
  * @copyright Dennis Eichhorn
@@ -160,7 +160,7 @@ final class Installer extends InstallerAbstract
      *
      * @since 1.0.0
      */
-    private static function createCollection(ApplicationAbstract $app, array $data) : Collection
+    private static function createCollection(ApplicationAbstract $app, array $data) : array
     {
         /** @var \Modules\Media\Controller\ApiController $module */
         $module = $app->moduleManager->getModuleInstance('Media');
@@ -182,7 +182,9 @@ final class Installer extends InstallerAbstract
 
         $module->apiCollectionCreate($request, $response);
 
-        return $response->get('')['response'];
+        return !\is_array($response->get('')['response'])
+            ? $response->get('')['response']->toArray()
+            : $response->get('')['response'];
     }
 
     /**
@@ -195,7 +197,7 @@ final class Installer extends InstallerAbstract
      *
      * @since 1.0.0
      */
-    private static function createType(ApplicationAbstract $app, array $data) : MediaType
+    private static function createType(ApplicationAbstract $app, array $data) : array
     {
         /** @var \Modules\Media\Controller\ApiController $module */
         $module = $app->moduleManager->get('Media');
@@ -223,7 +225,9 @@ final class Installer extends InstallerAbstract
             $module->apiMediaTypeL11nCreate($request, $response);
         }
 
-        return $type;
+        return !\is_array($type)
+            ? $type->toArray()
+            : $type;
     }
 
     /**
@@ -309,6 +313,8 @@ final class Installer extends InstallerAbstract
             return !\is_array($response->get('')['response']) ? $response->get('')['response']->toArray() : $response->get('')['response'];
         }
 
-        return !\is_array($response->get('')['response']) ? $response->get('')['response']->toArray() : $response->get('')['response'];
+        return !\is_array($response->get('')['response'])
+            ? $response->get('')['response']->toArray()
+            : $response->get('')['response'];
     }
 }

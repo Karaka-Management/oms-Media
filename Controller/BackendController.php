@@ -2,7 +2,7 @@
 /**
  * Karaka
  *
- * PHP Version 8.0
+ * PHP Version 8.1
  *
  * @package   Modules\Media
  * @copyright Dennis Eichhorn
@@ -226,6 +226,7 @@ final class BackendController extends Controller
                 $view->addData('view', $this->createMediaView($media, $request, $response));
             }
         } else {
+            /** @var \Modules\Media\Models\Media $media */
             $media = MediaMapper::get()
                 ->with('createdBy')
                 ->with('tags')
@@ -236,12 +237,13 @@ final class BackendController extends Controller
                 ->execute();
 
             if ($media->extension === 'collection') {
-                $media = MediaMapper::getByVirtualPath(
+                /** @var \Modules\Media\Models\Media[] $files */
+                $files = MediaMapper::getByVirtualPath(
                     $media->getVirtualPath() . ($media->getVirtualPath() !== '/' ? '/' : '') . $media->name
                 )->where('tags/title/language', $request->getLanguage())->execute();
 
                 $collection = CollectionMapper::get()->where('id', $id)->execute();
-                $media      = \array_merge($media, $collection->getSources());
+                $media      = \array_merge($files, $collection->getSources());
 
                 $view->addData('path', $collection->getVirtualPath() . '/' . $collection->name);
                 $view->setTemplate('/Modules/Media/Theme/Backend/media-list');
