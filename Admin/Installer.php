@@ -65,6 +65,7 @@ final class Installer extends InstallerAbstract
         // However, the admin account is created before the Media module is installed
         // Because of this, the directory needs to be created manually after the Media installation
         // The admin account should be the only DB account, but we use a loop of all accounts to avoid bugs
+        /** @var \Modules\Admin\Models\Account[] $accounts */
         $accounts = AccountMapper::getAll()->execute();
 
         foreach ($accounts as $account) {
@@ -153,10 +154,10 @@ final class Installer extends InstallerAbstract
     /**
      * Create collection.
      *
-     * @param ApplicationAbstract $app  Application
-     * @param array               $data Media info
+     * @param ApplicationAbstract                                                            $app  Application
+     * @param array{path?:string, name?:string, virtualPath?:string, create_directory?:bool} $data Media info
      *
-     * @return Collection
+     * @return array
      *
      * @since 1.0.0
      */
@@ -193,7 +194,7 @@ final class Installer extends InstallerAbstract
      * @param ApplicationAbstract $app  Application
      * @param array               $data Media info
      *
-     * @return MediaType
+     * @return array
      *
      * @since 1.0.0
      */
@@ -282,6 +283,7 @@ final class Installer extends InstallerAbstract
                     \RecursiveIteratorIterator::SELF_FIRST
                 );
 
+                /** @var \DirectoryIterator $iterator */
                 foreach ($iterator as $item) {
                     if ($item->isDir()) {
                         continue;

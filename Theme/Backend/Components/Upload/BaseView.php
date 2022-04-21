@@ -68,6 +68,7 @@ class BaseView extends View
      */
     public function render(...$data) : string
     {
+        /** @var array{0:string, 1?:string, 2?:string} $data */
         $this->form        = $data[0];
         $this->name        = $data[1] ?? 'UNDEFINED';
         $this->virtualPath = $data[2] ?? '';

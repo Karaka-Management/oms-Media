@@ -84,11 +84,13 @@ class BaseView extends View
      */
     public function render(...$data) : string
     {
+        /** @var array{0:string, 1:string, 2:string, 3?:string, 4?:bool} $data */
         $this->form        = $data[0];
         $this->id          = $data[1];
         $this->name        = $data[2];
         $this->virtualPath = $data[3] ?? '/';
         $this->isRequired  = $data[4] ?? false;
+
         return parent::render();
     }
 

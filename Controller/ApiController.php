@@ -77,7 +77,7 @@ final class ApiController extends Controller
      *
      * @since 1.0.0
      */
-    public function apiMediaUpload(RequestAbstract $request, ResponseAbstract $response, $data = null) : void
+    public function apiMediaUpload(RequestAbstract $request, ResponseAbstract $response, mixed $data = null) : void
     {
         $uploads = $this->uploadFiles(
             names:         $request->getDataList('names'),
@@ -385,10 +385,10 @@ final class ApiController extends Controller
      *
      * @since 1.0.0
      */
-    public function apiMediaUpdate(RequestAbstract $request, ResponseAbstract $response, $data = null) : void
+    public function apiMediaUpdate(RequestAbstract $request, ResponseAbstract $response, mixed $data = null) : void
     {
         /** @var Media $old */
-        $old = clone MediaMapper::get()->where('id', (int) $request->getData('id'))->execute();
+        $old = MediaMapper::get()->where('id', (int) $request->getData('id'))->execute();
 
         /** @var Media $new */
         $new = $this->updateMediaFromRequest($request);
@@ -457,7 +457,7 @@ final class ApiController extends Controller
      *
      * @since 1.0.0
      */
-    public function apiCollectionCreate(RequestAbstract $request, ResponseAbstract $response, $data = null) : void
+    public function apiCollectionCreate(RequestAbstract $request, ResponseAbstract $response, mixed $data = null) : void
     {
         if (!empty($val = $this->validateCollectionCreate($request))) {
             $response->set('collection_create', new FormValidation($val));
@@ -648,7 +648,7 @@ final class ApiController extends Controller
      *
      * @since 1.0.0
      */
-    public function apiMediaCreate(RequestAbstract $request, ResponseAbstract $response, $data = null) : void
+    public function apiMediaCreate(RequestAbstract $request, ResponseAbstract $response, mixed $data = null) : void
     {
         $path        = \urldecode((string) ($request->getData('path') ?? ''));
         $virtualPath = \urldecode((string) ($request->getData('virtualpath') ?? '/'));
@@ -723,7 +723,7 @@ final class ApiController extends Controller
      *
      * @since 1.0.0
      */
-    public function apiMediaExport(RequestAbstract $request, ResponseAbstract $response, $data = null) : void
+    public function apiMediaExport(RequestAbstract $request, ResponseAbstract $response, mixed $data = null) : void
     {
         if (((int) $request->getData('id')) !== 0) {
             /** @var Media $media */
@@ -916,7 +916,7 @@ final class ApiController extends Controller
      *
      * @since 1.0.0
      */
-    public function apiMediaTypeCreate(RequestAbstract $request, ResponseAbstract $response, $data = null) : void
+    public function apiMediaTypeCreate(RequestAbstract $request, ResponseAbstract $response, mixed $data = null) : void
     {
         if (!empty($val = $this->validateMediaTypeCreate($request))) {
             $response->set('media_type_create', new FormValidation($val));
@@ -986,7 +986,7 @@ final class ApiController extends Controller
      *
      * @since 1.0.0
      */
-    public function apiMediaTypeL11nCreate(RequestAbstract $request, ResponseAbstract $response, $data = null) : void
+    public function apiMediaTypeL11nCreate(RequestAbstract $request, ResponseAbstract $response, mixed $data = null) : void
     {
         if (!empty($val = $this->validateMediaTypeL11nCreate($request))) {
             $response->set('media_type_l11n_create', new FormValidation($val));
