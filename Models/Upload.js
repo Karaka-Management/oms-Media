@@ -170,7 +170,7 @@ export class Upload {
         request.setSuccess(function (xhr)
         {
             try {
-                console.log(xhr.response);
+                window.omsApp.logger.log(xhr.response);
                 const response = JSON.parse(xhr.response);
 
                 if (!self.success[formId]) {
@@ -179,7 +179,7 @@ export class Upload {
                     self.success[formId](null, response);
                 }
             } catch (e) {
-                console.log(e);
+                window.omsApp.logger.log(e);
                 Logger.instance.error(e);
                 Logger.instance.error('Invalid media upload response: ' + xhr.response);
             }
