@@ -18,7 +18,6 @@ use Modules\Admin\Models\AccountMapper;
 use Modules\Admin\Models\NullAccount;
 use Modules\Media\Models\Collection;
 use Modules\Media\Models\CollectionMapper;
-use Modules\Media\Models\MediaType;
 use Modules\Media\Models\PathSettings;
 use phpOMS\Application\ApplicationAbstract;
 use phpOMS\Config\SettingsInterface;
