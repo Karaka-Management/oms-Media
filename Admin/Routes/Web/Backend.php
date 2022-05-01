@@ -18,17 +18,6 @@ use phpOMS\Account\PermissionType;
 use phpOMS\Router\RouteVerb;
 
 return [
-    '^.*/admin/module/settings\?id=Media$' => [
-        [
-            'dest'       => '\Modules\Media\Controller\BackendController:viewModuleSettings',
-            'verb'       => RouteVerb::GET,
-            'permission' => [
-                'module' => BackendController::NAME,
-                'type'   => PermissionType::READ,
-                'state'  => \Modules\Admin\Models\PermissionCategory::MODULE,
-            ],
-        ],
-    ],
     '^.*/admin/module/settings\?id=Media&type=.*?$' => [
         [
             'dest'       => '\Modules\Media\Controller\BackendController:viewMediaTypeSettings',

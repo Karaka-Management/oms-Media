@@ -166,11 +166,7 @@ final class Installer extends InstallerAbstract
         /** @var \Modules\Media\Controller\ApiController $module */
         $module = $app->moduleManager->getModuleInstance('Media');
 
-        if (!isset($data['path'])) {
-            $path = '/Modules/Media/Files' . ($data['virtualPath'] ?? '') . '/' . ($data['name'] ?? '');
-        } else {
-            $path = $data['path'] ?? '/Modules/Media/Files/' . ($data['name'] ?? '');
-        }
+        $path = !isset($data['path']) ? ($data['virtualPath'] ?? '') : $data['path'];
 
         $response = new HttpResponse();
         $request  = new HttpRequest(new HttpUri(''));
@@ -267,7 +263,7 @@ final class Installer extends InstallerAbstract
             $filePath = __DIR__ . '/../../..' . $file;
 
             if (\is_file($filePath)) {
-                File::copy($filePath, $tempPath . $file);
+                File::copy($filePath, $tempPath . $file, true);
 
                 $request->addFile([
                     'size'     => \filesize($tempPath . $file),
@@ -276,10 +272,10 @@ final class Installer extends InstallerAbstract
                     'error'    => \UPLOAD_ERR_OK,
                 ]);
             } if (\is_dir($filePath)) {
-                Directory::copy($filePath, $tempPath . $file);
+                Directory::copy($filePath, $tempPath . \basename($filePath), true);
 
                 $iterator = new \RecursiveIteratorIterator(
-                    new \RecursiveDirectoryIterator($tempPath . $file . '/', \RecursiveDirectoryIterator::SKIP_DOTS),
+                    new \RecursiveDirectoryIterator($tempPath . \basename($filePath), \RecursiveDirectoryIterator::SKIP_DOTS),
                     \RecursiveIteratorIterator::SELF_FIRST
                 );
 

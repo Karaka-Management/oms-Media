@@ -521,7 +521,6 @@ final class ApiController extends Controller
             $outputDir = self::createMediaPath($basePath);
         } else {
             $outputDir = $basePath . '/' . \ltrim($request->getData('path'), '\\/');
-            Directory::create($outputDir . '/' . $request->getData('name'), 0775, true);
         }
 
         $dirPath   = $outputDir . '/' . $request->getData('name');
@@ -533,7 +532,8 @@ final class ApiController extends Controller
         CollectionMapper::create()->execute($mediaCollection);
 
         if (((bool) ($request->getData('create_directory') ?? false))
-            && !\is_dir($dirPath)) {
+            && !\is_dir($dirPath)
+        ) {
             \mkdir($dirPath, 0755, true);
         }
 

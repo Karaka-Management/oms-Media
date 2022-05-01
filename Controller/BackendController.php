@@ -370,11 +370,7 @@ final class BackendController extends Controller
         $types = MediaTypeMapper::getAll()->with('title')->where('title/language', $response->getLanguage())->execute();
         $view->setData('types', $types);
 
-        if (\is_file(__DIR__ . '/../Admin/Settings/Theme/Backend/settings.tpl.php')) {
-            $view->setTemplate('/Modules/' . static::NAME . '/Admin/Settings/Theme/Backend/settings');
-        } else {
-            $view->setTemplate('/Modules/Admin/Theme/Backend/modules-settings');
-        }
+        $view->setTemplate('/Modules/' . static::NAME . '/Admin/Settings/Theme/Backend/settings');
 
         return $view;
     }
