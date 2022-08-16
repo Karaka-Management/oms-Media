@@ -218,7 +218,7 @@ final class BackendController extends Controller
                 $name = \explode('.', \basename($path));
 
                 $media->name      = $name[0];
-                $media->extension = $name[1] ?? '';
+                $media->extension = $name[\count($name) - 1] ?? '';
                 $media->setVirtualPath(\dirname($path));
                 $media->setPath('/Modules/Media/Files/' . \ltrim($path, '\\/'));
                 $media->isAbsolute = false;

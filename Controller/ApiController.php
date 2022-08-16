@@ -426,7 +426,7 @@ final class ApiController extends Controller
             $name = \explode('.', \basename($path));
 
             $media->name      = $name[0];
-            $media->extension = $name[1] ?? '';
+            $media->extension = $name[\count($name) - 1] ?? '';
             $media->setVirtualPath(\dirname($path));
             $media->setPath('/Modules/Media/Files/' . \ltrim($path, '\\/'));
             $media->isAbsolute = false;
@@ -735,7 +735,7 @@ final class ApiController extends Controller
                 $name = \explode('.', \basename($path));
 
                 $media->name       = $name[0];
-                $media->extension  = $name[1] ?? '';
+                $media->extension  = $name[\count($name) - 1] ?? '';
                 $media->isAbsolute = false;
                 $media->setVirtualPath(\dirname($path));
                 $media->setPath('/' . \ltrim($path, '\\/'));
@@ -781,7 +781,7 @@ final class ApiController extends Controller
             $css = \preg_replace('!\s+!', ' ', $css);
             $head->setStyle('core', $css ?? '');
 
-            $head->addAsset(AssetType::CSS, 'cssOMS/styles.css');
+            $head->addAsset(AssetType::CSS, 'cssOMS/styles.css?v=1.0.0');
             $view->setData('head', $head);
 
             switch (\strtolower($media->extension)) {
