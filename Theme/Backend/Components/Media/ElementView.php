@@ -39,7 +39,7 @@ class ElementView extends MediaView
     /**
      * {@inheritdoc}
      */
-    public function render(...$data) : string
+    public function render(mixed ...$data) : string
     {
         $this->media = $data[0];
         return parent::render();

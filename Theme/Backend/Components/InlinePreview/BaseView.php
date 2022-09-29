@@ -82,7 +82,7 @@ class BaseView extends View
     /**
      * {@inheritdoc}
      */
-    public function render(...$data) : string
+    public function render(mixed ...$data) : string
     {
         /** @var array{0:string, 1:string, 2:string, 3?:string, 4?:bool} $data */
         $this->form        = $data[0];
