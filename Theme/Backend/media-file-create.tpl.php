@@ -61,7 +61,7 @@ use phpOMS\Uri\UriFactory;
                     </table>
                 </div>
                 <div class="portlet-foot">
-                    <input type="submit" value="<?= $this->getHtml('Save', '0', '0'); ?>">
+                    <input type="submit" value="<?= $this->getHtml('Save', '0', '0'); ?>" name="save-media-file">
                 </div>
             </form>
         </div>
@@ -71,7 +71,7 @@ use phpOMS\Uri\UriFactory;
                 <form>
                     <table class="layout">
                         <tr><td colspan="2"><label><?= $this->getHtml('Permission'); ?></label>
-                        <tr><td><select>
+                        <tr><td><select name="permission">
                                     <option>
                                 </select>
                         <tr><td colspan="2"><label><?= $this->getHtml('GroupUser'); ?></label>
