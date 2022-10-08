@@ -43,7 +43,7 @@ class MediaMapper extends DataMapperFactory
         'media_description_raw' => ['name' => 'media_description_raw', 'type' => 'string',            'internal' => 'descriptionRaw'],
         'media_content'         => ['name' => 'media_content', 'type' => 'int',            'internal' => 'content'],
         'media_versioned'       => ['name' => 'media_versioned',       'type' => 'bool',              'internal' => 'isVersioned'],
-        'media_status'          => ['name' => 'media_status',          'type' => 'bool',              'internal' => 'status'],
+        'media_status'          => ['name' => 'media_status',          'type' => 'int',              'internal' => 'status'],
         'media_file'            => ['name' => 'media_file',            'type' => 'string',            'internal' => 'path',        'autocomplete' => true],
         'media_virtual'         => ['name' => 'media_virtual',         'type' => 'string',            'internal' => 'virtualPath', 'autocomplete' => true],
         'media_absolute'        => ['name' => 'media_absolute',        'type' => 'bool',              'internal' => 'isAbsolute'],
