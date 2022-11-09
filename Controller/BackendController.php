@@ -236,7 +236,7 @@ final class BackendController extends Controller
                 ->where('tags/title/language', $request->getLanguage())
                 ->execute();
 
-            if ($media->extension === 'collection') {
+            if ($media->class === MediaClass::COLLECTION) {
                 /** @var \Modules\Media\Models\Media[] $files */
                 $files = MediaMapper::getByVirtualPath(
                     $media->getVirtualPath() . ($media->getVirtualPath() !== '/' ? '/' : '') . $media->name
@@ -256,7 +256,20 @@ final class BackendController extends Controller
                     $listView->setTemplate('/modules/Media/Theme/Backend/Components/Media/list');
                     $view->addData('view', $listView);
                 } else {
-                    $view->addData('view', $this->createMediaView($media, $request, $response));
+                    if ($media->class === MediaClass::REFERENCE) {
+                        $media->source = MediaMapper::get()
+                            ->with('createdBy')
+                            ->with('tags')
+                            ->with('tags/title')
+                            ->with('content')
+                            ->where('id', $media->source->getId())
+                            ->where('tags/title/language', $request->getLanguage())
+                            ->execute();
+
+                        $view->addData('view', $this->createMediaView($media->source, $request, $response));
+                    } else {
+                        $view->addData('view', $this->createMediaView($media, $request, $response));
+                    }
                 }
             }
         }

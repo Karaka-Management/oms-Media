@@ -39,7 +39,7 @@ use phpOMS\Uri\UriFactory;
 
     <div class="col-xs-12 col-md-4">
         <div class="box">
-            <a tabindex="0" class="button" href="<?= UriFactory::build('{/prefix}media/list?path={?path}'); ?>"><?= $this->getHtml('Back'); ?></a>
+            <a tabindex="0" class="button" href="<?= UriFactory::build('media/list?path={?path}'); ?>"><?= $this->getHtml('Back'); ?></a>
         </div>
 
         <div class="portlet">

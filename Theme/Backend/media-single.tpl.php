@@ -12,6 +12,7 @@
  */
 declare(strict_types=1);
 
+use Modules\Media\Models\MediaClass;
 use \phpOMS\Uri\UriFactory;
 use phpOMS\Utils\Converter\FileSizeType;
 
@@ -39,9 +40,9 @@ echo $this->getData('nav')->render();
     <div class="col-xs-12">
         <div class="box">
             <?php if ($this->request->getData('path') !== null) : ?>
-                <a tabindex="0" class="button" href="<?= UriFactory::build('{/prefix}media/list?path=' . ($media->getId() === 0 ? $media->getVirtualPath() : '{?path}')); ?>"><?= $this->getHtml('Back'); ?></a>
+                <a tabindex="0" class="button" href="<?= UriFactory::build('media/list?path=' . ($media->getId() === 0 ? $media->getVirtualPath() : '{?path}')); ?>"><?= $this->getHtml('Back'); ?></a>
             <?php else: ?>
-                <a tabindex="0" class="button" href="<?= $this->request->getReferer() !== '' ? $this->request->getReferer() : UriFactory::build('{/prefix}media/list'); ?>"><?= $this->getHtml('Back'); ?></a>
+                <a tabindex="0" class="button" href="<?= $this->request->getReferer() !== '' ? $this->request->getReferer() : UriFactory::build('media/list'); ?>"><?= $this->getHtml('Back'); ?></a>
             <?php endif; ?>
         </div>
     </div>
@@ -51,8 +52,8 @@ echo $this->getData('nav')->render();
     <div class="col-xs-12">
         <div class="box">
             <ul class="crumbs-2">
-                <li data-href="<?= UriFactory::build('{/prefix}media/list?path=/Accounts/' . $accountDir); ?>"><a href="<?= UriFactory::build('{/prefix}media/list?path=/Accounts/' . $accountDir); ?>"><i class="fa fa-home"></i></a>
-                <li data-href="<?= UriFactory::build('{/prefix}media/list?path=/'); ?>"><a href="<?= UriFactory::build('{/prefix}media/list?path=/'); ?>">/</a></li>
+                <li data-href="<?= UriFactory::build('media/list?path=/Accounts/' . $accountDir); ?>"><a href="<?= UriFactory::build('media/list?path=/Accounts/' . $accountDir); ?>"><i class="fa fa-home"></i></a>
+                <li data-href="<?= UriFactory::build('media/list?path=/'); ?>"><a href="<?= UriFactory::build('media/list?path=/'); ?>">/</a></li>
                 <?php
                     $subPath    = '';
                     $paths      = \explode('/', \ltrim($mediaPath, '/'));
@@ -70,7 +71,7 @@ echo $this->getData('nav')->render();
 
                         $subPath .= '/' . $paths[$i];
 
-                        $url = UriFactory::build('{/prefix}media/list?path=' . $subPath);
+                        $url = UriFactory::build('media/list?path=' . $subPath);
                 ?>
                     <li data-href="<?= $url; ?>"<?= $i === $length - 1 ? 'class="active"' : ''; ?>><a href="<?= $url; ?>"><?= $this->printHtml($paths[$i]); ?></a></li>
                 <?php endfor; ?>
@@ -91,7 +92,7 @@ echo $this->getData('nav')->render();
                             $size = FileSizeType::autoFormat($media->size);
                             echo $this->printHtml(\number_format($size[0], 1, '.', ',') . $size[1]); ?>
                         <tr><td><?= $this->getHtml('Created'); ?><td><?= $this->printHtml($media->createdAt->format('Y-m-d')); ?>
-                        <tr><td><?= $this->getHtml('Creator'); ?><td><a href="<?= UriFactory::build('{/prefix}profile/single?for=' . $media->createdBy->getId()); ?>"><?= $this->printHtml(
+                        <tr><td><?= $this->getHtml('Creator'); ?><td><a href="<?= UriFactory::build('profile/single?for=' . $media->createdBy->getId()); ?>"><?= $this->printHtml(
                             \ltrim($media->createdBy->name2 . ', ' . $media->createdBy->name1, ', ')
                         ); ?></a>
                         <tr><td><?= $this->getHtml('Tags'); ?><td>
@@ -120,6 +121,10 @@ echo $this->getData('nav')->render();
         </section>
     </div>
 </div>
+
+<?php
+$media = $media->class === MediaClass::REFERENCE ? $media->source : $media;
+?>
 
 <div class="row" style="height: calc(100% - 85px);">
     <div class="col-xs-12">
