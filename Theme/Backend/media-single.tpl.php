@@ -12,8 +12,8 @@
  */
 declare(strict_types=1);
 
-use Modules\Media\Models\MediaClass;
 use \phpOMS\Uri\UriFactory;
+use Modules\Media\Models\MediaClass;
 use phpOMS\Utils\Converter\FileSizeType;
 
 include __DIR__ . '/template-functions.php';
