@@ -330,7 +330,7 @@ final class ApiController extends Controller
     {
         switch ($extension) {
             case 'pdf':
-                return PdfParser::pdf2text($path);
+                return PdfParser::pdf2text($path, __DIR__ . '/../../../Tools/OCRImageOptimizer/bin/App');
             case 'doc':
             case 'docx':
                 Autoloader::addPath(__DIR__ . '/../../../Resources/');
