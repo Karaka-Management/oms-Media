@@ -270,7 +270,7 @@ final class ApiController extends Controller
         ApplicationAbstract $app = null
     ) : Media
     {
-        if ($status['status'] !== UploadStatus::OK) {
+        if (!isset($status['status']) || $status['status'] !== UploadStatus::OK) {
             return new NullMedia();
         }
 
@@ -696,7 +696,7 @@ final class ApiController extends Controller
         $ids = [];
         foreach ($status as $stat) {
             $created = self::createDbEntry(
-                $status,
+                $stat,
                 $request->header->account,
                 $virtualPath,
                 $request->getData('type', 'int'),

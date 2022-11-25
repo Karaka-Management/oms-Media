@@ -119,6 +119,7 @@ trait ApiControllerCollectionTrait
         $request->header->account = 1;
         $request->setData('name', 'Test Collection');
         $request->setData('path', '/test/path');
+        $request->setData('create_directory', true);
 
         $this->module->apiCollectionCreate($request, $response);
 

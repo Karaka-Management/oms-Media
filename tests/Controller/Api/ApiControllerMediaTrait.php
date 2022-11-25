@@ -60,7 +60,18 @@ trait ApiControllerMediaTrait
             ],
         ];
 
-        $ids = $this->module->createDbEntries($status, 1);
+        $ids = [];
+        foreach ($status as $stat) {
+            $created = $this->module::createDbEntry(
+                $status,
+                1
+            );
+
+            if ($created->getId() > 0) {
+                $ids[] = $created->getId();
+            }
+        }
+
         self::assertCount(2, $ids);
     }
 
