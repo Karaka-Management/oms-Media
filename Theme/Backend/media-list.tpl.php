@@ -30,20 +30,20 @@ $media = $this->getData('media') ?? [];
 $account    = $this->getData('account');
 $accountDir = $account->getId() . ' ' . $account->login;
 
-$previous = empty($media) ? 'media/list' : 'media/list?{?}&id=' . \reset($media)->getId() . '&ptype=p';
-$next     = empty($media) ? 'media/list' : 'media/list?{?}&id=' . \end($media)->getId() . '&ptype=n';
+$previous = empty($media) ? '{/lang}/{/app}/media/list' : '{/lang}/{/app}/media/list?{?}&id=' . \reset($media)->getId() . '&ptype=p';
+$next     = empty($media) ? '{/lang}/{/app}/media/list' : '{/lang}/{/app}/media/list?{?}&id=' . \end($media)->getId() . '&ptype=n';
 ?>
 
 <div class="row">
     <div class="col-xs-12">
         <div class="box">
-            <a tabindex="0" class="button" href="<?= UriFactory::build('media/upload?path={?path}'); ?>">
+            <a tabindex="0" class="button" href="<?= UriFactory::build('{/lang}/{/app}/media/upload?path={?path}'); ?>">
                 <?= $this->getHtml('Upload'); ?>
             </a>
-            <a tabindex="0" class="button" href="<?= UriFactory::build('media/file/create?path={?path}'); ?>">
+            <a tabindex="0" class="button" href="<?= UriFactory::build('{/lang}/{/app}/media/file/create?path={?path}'); ?>">
                 <?= $this->getHtml('CreateFile'); ?>
             </a>
-            <a tabindex="0" class="button" href="<?= UriFactory::build('media/collection/create?path={?path}'); ?>">
+            <a tabindex="0" class="button" href="<?= UriFactory::build('{/lang}/{/app}/media/collection/create?path={?path}'); ?>">
                 <?= $this->getHtml('CreateCollection'); ?>
             </a>
         </div>
@@ -54,9 +54,9 @@ $next     = empty($media) ? 'media/list' : 'media/list?{?}&id=' . \end($media)->
     <div class="col-xs-12">
         <div class="box">
             <ul class="crumbs-2">
-                <li data-href="<?= $uri = UriFactory::build('media/list?path=/Accounts/' . $accountDir); ?>">
+                <li data-href="<?= $uri = UriFactory::build('{/lang}/{/app}/media/list?path=/Accounts/' . $accountDir); ?>">
                     <a href="<?= $uri; ?>"><i class="fa fa-home"></i></a>
-                <li data-href="<?= $uri = UriFactory::build('media/list?path=/'); ?>">
+                <li data-href="<?= $uri = UriFactory::build('{/lang}/{/app}/media/list?path=/'); ?>">
                     <a href="<?= $uri; ?>">/</a>
                 <?php
                     $subPath    = '';
@@ -75,7 +75,7 @@ $next     = empty($media) ? 'media/list' : 'media/list?{?}&id=' . \end($media)->
 
                         $subPath .= '/' . $paths[$i];
 
-                        $url = UriFactory::build('media/list?path=' . $subPath);
+                        $url = UriFactory::build('{/lang}/{/app}/media/list?path=' . $subPath);
                 ?>
                 <li data-href="<?= $url; ?>"<?= $i === $length - 1 ? 'class="active"' : ''; ?>>
                     <a href="<?= $url; ?>"><?= $this->printHtml($paths[$i]); ?></a>
@@ -166,7 +166,7 @@ $next     = empty($media) ? 'media/list' : 'media/list?{?}&id=' . \end($media)->
                         </label>
                 <tbody>
                     <?php if (!empty($parentPath)) :
-                        $url = UriFactory::build('media/list?path=' . $parentPath);
+                        $url = UriFactory::build('{/lang}/{/app}/media/list?path=' . $parentPath);
                     ?>
                         <tr tabindex="0" data-href="<?= $url; ?>">
                             <td>
@@ -186,8 +186,8 @@ $next     = empty($media) ? 'media/list' : 'media/list?{?}&id=' . \end($media)->
                             ++$count;
 
                             $url = $value->extension === 'collection'
-                                ? UriFactory::build('media/list?path=' . \rtrim($value->getVirtualPath(), '/') . '/' . $value->name)
-                                : UriFactory::build('media/single?id=' . $value->getId()
+                                ? UriFactory::build('{/lang}/{/app}/media/list?path=' . \rtrim($value->getVirtualPath(), '/') . '/' . $value->name)
+                                : UriFactory::build('{/lang}/{/app}/media/single?id=' . $value->getId()
                                     . '&path={?path}' . (
                                             $value->getId() === 0
                                                 ? '/' . $value->name
@@ -199,9 +199,9 @@ $next     = empty($media) ? 'media/list' : 'media/list?{?}&id=' . \end($media)->
                         ?>
                     <tr tabindex="0" data-href="<?= $url; ?>">
                         <td><label class="checkbox" for="iMediaSelect-<?= $key; ?>">
-                                    <input type="checkbox" id="iMediaSelect-<?= $key; ?>" name="mediaselect">
-                                    <span class="checkmark"></span>
-                                </label>
+                                <input type="checkbox" id="iMediaSelect-<?= $key; ?>" name="mediaselect">
+                                <span class="checkmark"></span>
+                            </label>
                         <td data-label="<?= $this->getHtml('Type'); ?>">
                             <a href="<?= $url; ?>"><i class="fa fa-<?= $this->printHtml($icon); ?>"></i></a>
                         <td data-label="<?= $this->getHtml('Name'); ?>">
@@ -220,7 +220,7 @@ $next     = empty($media) ? 'media/list' : 'media/list?{?}&id=' . \end($media)->
                             $size = FileSizeType::autoFormat($value->size);
                             echo $this->printHtml($value->extension !== 'collection' ? \number_format($size[0], 1, '.', ',') . $size[1] : ''); ?></a>
                         <td data-label="<?= $this->getHtml('Creator'); ?>">
-                            <a class="content" href="<?= UriFactory::build('profile/single?{?}&for=' . $value->createdBy->getId()); ?>">
+                            <a class="content" href="<?= UriFactory::build('{/lang}/{/app}/profile/single?{?}&for=' . $value->createdBy->getId()); ?>">
                                 <?= $this->printHtml($this->renderUserName(
                                     '%3$s %2$s %1$s',
                                     [$value->createdBy->name1, $value->createdBy->name2, $value->createdBy->name3, $value->createdBy->login ?? '']

@@ -22,7 +22,7 @@ use phpOMS\Uri\UriFactory;
 <div class="row">
     <div class="col-xs-12">
         <div class="box">
-            <a tabindex="0" class="button" href="<?= UriFactory::build('media/list?path={?path}'); ?>"><?= $this->getHtml('Back', '0', '0'); ?></a>
+            <a tabindex="0" class="button" href="<?= UriFactory::build('{/lang}/{/app}/media/list?path={?path}'); ?>"><?= $this->getHtml('Back', '0', '0'); ?></a>
         </div>
     </div>
 </div>
