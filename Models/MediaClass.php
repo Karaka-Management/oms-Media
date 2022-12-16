@@ -8,7 +8,7 @@
  * @copyright Dennis Eichhorn
  * @license   OMS License 1.0
  * @version   1.0.0
- * @link      https://karaka.app
+ * @link      https://jingga.app
  */
 declare(strict_types=1);
 
@@ -19,7 +19,7 @@ namespace Modules\Media\Models;
  *
  * @package Modules\Media\Models
  * @license OMS License 1.0
- * @link    https://karaka.app
+ * @link    https://jingga.app
  * @since   1.0.0
  */
 use phpOMS\Stdlib\Base\Enum;
@@ -31,7 +31,7 @@ use phpOMS\Stdlib\Base\Enum;
  *
  * @package phpOMS\DataStorage\Database
  * @license OMS License 1.0
- * @link    https://karaka.app
+ * @link    https://jingga.app
  * @since   1.0.0
  */
 abstract class MediaClass extends Enum
