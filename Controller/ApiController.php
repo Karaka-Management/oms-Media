@@ -1041,8 +1041,7 @@ final class ApiController extends Controller
         Media $media,
         int $width,
         int $height,
-        bool $crop = false)
-     : Media {
+        bool $crop = false) : Media {
         ImageUtils::resize(
             $media->getAbsolutePath(),
             $media->getAbsolutePath(),
