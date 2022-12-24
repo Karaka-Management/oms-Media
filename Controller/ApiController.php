@@ -50,6 +50,7 @@ use phpOMS\Model\Message\FormValidation;
 use phpOMS\System\File\FileUtils;
 use phpOMS\System\File\Local\Directory;
 use phpOMS\System\MimeType;
+use phpOMS\Utils\ImageUtils;
 use phpOMS\Utils\Parser\Markdown\Markdown;
 use phpOMS\Utils\Parser\Pdf\PdfParser;
 use phpOMS\Views\View;
@@ -212,9 +213,10 @@ final class ApiController extends Controller
     /**
      * Uploads a file to a destination
      *
-     * @param array  $files     Files to upload
-     * @param array  $fileNames Names on the directory
-     * @param string $path      Upload path
+     * @param array  $files            Files to upload
+     * @param array  $fileNames        Names on the directory
+     * @param string $path             Upload path
+     * @param bool   $preserveFileName Preserve file name
      *
      * @return array
      *
@@ -224,10 +226,12 @@ final class ApiController extends Controller
         array $files,
         array $fileNames = [],
         string $path = '',
+        bool $preserveFileName = true
     ) : array
     {
-        $upload            = new UploadFile();
-        $upload->outputDir = $path;
+        $upload                   = new UploadFile();
+        $upload->outputDir        = $path; //empty($path) ? $upload->outputDir : $path;
+        $upload->preserveFileName = $preserveFileName;
 
         return $upload->upload($files, $fileNames, true, '');
     }
@@ -583,7 +587,7 @@ final class ApiController extends Controller
      *
      * @param string $path         Virtual path of the collection
      * @param int    $account      Account who creates this collection
-     * @param int    $physicalPath The physical path where the corresponding directory should be created
+     * @param string $physicalPath The physical path where the corresponding directory should be created
      *
      * @return Collection
      *
@@ -1020,5 +1024,36 @@ final class ApiController extends Controller
         ));
 
         return $l11nMediaType;
+    }
+
+    /**
+     * Resize image file
+     *
+     * @param Media $media  Media object
+     * @param int   $width  New width
+     * @param int   $height New height
+     * @param bool  $crop   Crop image instead of resizing
+     *
+     * @return Media
+     * @since 1.0.0
+     */
+    public function resizeImage(
+        Media $media,
+        int $width,
+        int $height,
+        bool $crop = false)
+     : Media {
+        ImageUtils::resize(
+            $media->getAbsolutePath(),
+            $media->getAbsolutePath(),
+            $width,
+            $height,
+            $crop
+        );
+
+        $temp        = \filesize($media->getAbsolutePath());
+        $media->size = $temp === false ? 0 : $temp;
+
+        return $media;
     }
 }

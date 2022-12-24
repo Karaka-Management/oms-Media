@@ -262,7 +262,7 @@ final class BackendController extends Controller
                             ->with('tags')
                             ->with('tags/title')
                             ->with('content')
-                            ->where('id', $media->source->getId())
+                            ->where('id', $media->source?->getId() ?? 0)
                             ->where('tags/title/language', $request->getLanguage())
                             ->execute();
 

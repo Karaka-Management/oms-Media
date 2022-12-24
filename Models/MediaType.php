@@ -58,7 +58,7 @@ class MediaType implements \JsonSerializable
      * @var string|MediaTypeL11n
      * @since 1.0.0
      */
-    protected $title;
+    protected $title = '';
 
     /**
      * Constructor.
@@ -108,7 +108,7 @@ class MediaType implements \JsonSerializable
     {
         if ($title instanceof MediaTypeL11n) {
             $this->title = $title;
-        } elseif (isset($this->title) && $this->title instanceof MediaTypeL11n) {
+        } elseif ($this->title instanceof MediaTypeL11n) {
             $this->title->title = $title;
         } else {
             $this->title        = new MediaTypeL11n();

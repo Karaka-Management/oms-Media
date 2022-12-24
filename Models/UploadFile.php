@@ -120,8 +120,7 @@ class UploadFile
             $path = $this->outputDir;
 
             $subdir = '';
-            if (\stripos($f['name'], '/') !== false) {
-                $last      = \strripos($f['name'], '/');
+            if (($last = \strripos($f['name'], '/')) !== false) {
                 $subdir    = \substr($f['name'], 0, $last);
                 $f['name'] = \substr($f['name'], $last + 1);
             }
@@ -265,7 +264,7 @@ class UploadFile
 
         do {
             ++$limit;
-            $sha = empty($nameWithoutExtension) ? \sha1($tempName . $rnd) : $nameWithoutExtension . '_' . $rnd;
+            $sha = empty($nameWithoutExtension) ? \sha1($tempName . $rnd) : $nameWithoutExtension . (empty($rnd) ? '' : '_' . $rnd);
 
             if ($sha === false) {
                 throw new \Exception('No file path could be found. Potential attack!');
@@ -273,7 +272,7 @@ class UploadFile
 
             $sha     .= '.' . $extension;
             $fileName = $sha;
-            $rnd      = \mt_rand();
+            $rnd      = (string) \mt_rand();
         } while (\is_file($path . '/' . $fileName) && $limit < self::PATH_GENERATION_LIMIT);
 
         if ($limit >= self::PATH_GENERATION_LIMIT) {
@@ -293,6 +292,7 @@ class UploadFile
      *
      * @since 1.0.0
      */
+    /*
     private function interlace(string $extension, string $path) : void
     {
         if ($extension === 'png') {
@@ -319,6 +319,7 @@ class UploadFile
 
         \imagedestroy($img);
     }
+    */
 
     /**
      * Find unique output path for batch of files
