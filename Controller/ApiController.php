@@ -107,7 +107,12 @@ final class ApiController extends Controller
 
                         $internalResponse = new HttpResponse();
                         $this->app->moduleManager->get('Tag')->apiTagCreate($request, $internalResponse, null);
-                        $file->addTag($tId = $internalResponse->get($request->uri->__toString())['response']);
+
+                        if (!\is_array($data = $internalResponse->get($request->uri->__toString()))) {
+                            continue;
+                        }
+
+                        $file->addTag($tId = $data['response']);
                     } else {
                         $file->addTag(new NullTag($tId = (int) $tag['id']));
                     }
@@ -507,7 +512,7 @@ final class ApiController extends Controller
     private function createCollectionFromRequest(RequestAbstract $request) : Collection
     {
         $mediaCollection                 = new Collection();
-        $mediaCollection->name           = $request->getData('name') ?? '';
+        $mediaCollection->name           = (string) ($request->getData('name') ?? '');
         $mediaCollection->description    = ($description = Markdown::parse($request->getData('description') ?? ''));
         $mediaCollection->descriptionRaw = $description;
         $mediaCollection->createdBy      = new NullAccount($request->header->account);
@@ -947,7 +952,7 @@ final class ApiController extends Controller
     private function createDocTypeFromRequest(RequestAbstract $request) : MediaType
     {
         $type       = new MediaType();
-        $type->name = $request->getData('name');
+        $type->name = (string) ($request->getData('name') ?? '');
 
         if (!empty($request->getData('title'))) {
             $type->setL11n($request->getData('title'), $request->getData('lang') ?? $request->getLanguage());

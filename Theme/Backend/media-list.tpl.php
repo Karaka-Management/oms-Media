@@ -209,7 +209,7 @@ $next     = empty($media) ? '{/lang}/{/app}/media/list' : '{/lang}/{/app}/media/
                         <td data-label="<?= $this->getHtml('Tag'); ?>"><?php $tags = $value->getTags(); foreach ($tags as $tag) : ?>
                             <a href="<?= $url; ?>">
                                 <span class="tag" style="background: <?= $this->printHtml($tag->color); ?>">
-                                    <?= $tag->icon !== null ? '<i class="' . $this->printHtml($tag->icon ?? '') . '"></i>' : ''; ?>
+                                    <?= !empty($tag->icon) ? '<i class="' . $this->printHtml($tag->icon) . '"></i>' : ''; ?>
                                     <?= $this->printHtml($tag->getL11n()); ?>
                                 </span>
                             </a>

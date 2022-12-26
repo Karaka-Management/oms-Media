@@ -132,6 +132,7 @@ final class Installer extends InstallerAbstract
             \mkdir(__DIR__ . '/../../../temp');
         }
 
+        /** @var array<string, array> $mediaData */
         foreach ($mediaData as $media) {
             switch ($media['type']) {
                 case 'collection':
@@ -178,9 +179,14 @@ final class Installer extends InstallerAbstract
 
         $module->apiCollectionCreate($request, $response);
 
-        return !\is_array($response->get('')['response'])
-            ? $response->get('')['response']->toArray()
-            : $response->get('')['response'];
+        $responseData = $response->get('');
+        if (!\is_array($responseData)) {
+            return [];
+        }
+
+        return !\is_array($responseData['response'])
+            ? $responseData['response']->toArray()
+            : $responseData['response'];
     }
 
     /**
@@ -206,7 +212,12 @@ final class Installer extends InstallerAbstract
 
         $module->apiMediaTypeCreate($request, $response);
 
-        $type = $response->get('')['response'];
+        $responseData = $response->get('');
+        if (!\is_array($responseData)) {
+            return [];
+        }
+
+        $type = $responseData['response'];
         $id   = $type->getId();
 
         foreach ($data['l11n'] as $l11n) {
@@ -307,11 +318,23 @@ final class Installer extends InstallerAbstract
 
             $module->apiCollectionCreate($request, $response);
 
-            return !\is_array($response->get('')['response']) ? $response->get('')['response']->toArray() : $response->get('')['response'];
+            $responseData = $response->get('');
+            if (!\is_array($responseData)) {
+                return [];
+            }
+
+            return !\is_array($responseData['response'])
+                ? $responseData['response']->toArray()
+                : $responseData['response'];
         }
 
-        return !\is_array($response->get('')['response'])
-            ? $response->get('')['response']->toArray()
-            : $response->get('')['response'];
+        $responseData = $response->get('');
+        if (!\is_array($responseData)) {
+            return [];
+        }
+
+        return !\is_array($responseData['response'])
+            ? $responseData['response']->toArray()
+            : $responseData['response'];
     }
 }

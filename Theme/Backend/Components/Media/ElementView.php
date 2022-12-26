@@ -41,7 +41,9 @@ class ElementView extends MediaView
      */
     public function render(mixed ...$data) : string
     {
+        /** @var array{0:\Modules\Media\Models\Media} $data */
         $this->media = $data[0];
+
         return parent::render();
     }
 }

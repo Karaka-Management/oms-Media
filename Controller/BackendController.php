@@ -242,6 +242,7 @@ final class BackendController extends Controller
                     $media->getVirtualPath() . ($media->getVirtualPath() !== '/' ? '/' : '') . $media->name
                 )->where('tags/title/language', $request->getLanguage())->execute();
 
+                /** @var \Modules\Media\Models\Collection $collection */
                 $collection = CollectionMapper::get()->where('id', $id)->execute();
                 $media      = \array_merge($files, $collection->getSources());
 
@@ -405,7 +406,12 @@ final class BackendController extends Controller
         $view = new View($this->app->l11nManager, $request, $response);
         $view->setTemplate('/Modules/' . static::NAME . '/Admin/Settings/Theme/Backend/settings-type');
 
-        $type = MediaTypeMapper::get()->with('title')->where('title/language', $response->getLanguage())->where('id', (int) $request->getData('id'))->execute();
+        /** @var \Modules\Media\Models\MediaType $type */
+        $type = MediaTypeMapper::get()
+            ->with('title')
+            ->where('title/language', $response->getLanguage())
+            ->where('id', (int) $request->getData('id'))
+            ->execute();
 
         $view->addData('nav', $this->app->moduleManager->get('Navigation')->createNavigationMid(1007501001, $request, $response));
         $view->addData('type', $type);
