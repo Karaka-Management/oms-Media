@@ -63,7 +63,7 @@ trait ApiControllerMediaTrait
         $ids = [];
         foreach ($status as $stat) {
             $created = $this->module::createDbEntry(
-                $status,
+                $stat,
                 1
             );
 
