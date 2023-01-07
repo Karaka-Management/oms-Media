@@ -22,7 +22,7 @@ use Modules\Media\Models\Media;
 use Modules\Media\Models\MediaContent;
 use Modules\Media\Models\MediaMapper;
 use Modules\Media\Models\MediaType;
-use Modules\Media\Models\MediaTypeL11n;
+use phpOMS\Localization\BaseStringL11n;
 use Modules\Media\Models\MediaTypeL11nMapper;
 use Modules\Media\Models\MediaTypeMapper;
 use Modules\Media\Models\NullCollection;
@@ -52,7 +52,6 @@ use phpOMS\System\File\Local\Directory;
 use phpOMS\System\MimeType;
 use phpOMS\Utils\ImageUtils;
 use phpOMS\Utils\Parser\Markdown\Markdown;
-use phpOMS\Utils\Parser\Pdf\PdfParser;
 use phpOMS\Views\View;
 
 /**
@@ -81,16 +80,19 @@ final class ApiController extends Controller
     public function apiMediaUpload(RequestAbstract $request, ResponseAbstract $response, mixed $data = null) : void
     {
         $uploads = $this->uploadFiles(
-            names:         $request->getDataList('names'),
-            fileNames:     $request->getDataList('filenames'),
-            files:         $request->getFiles(),
-            account:       $request->header->account,
-            basePath:      __DIR__ . '/../../../Modules/Media/Files' . \urldecode((string) ($request->getData('path') ?? '')),
-            virtualPath:   \urldecode((string) ($request->getData('virtualpath') ?? '')),
-            type:          $request->getData('type', 'int'),
-            password:      (string) ($request->getData('password') ?? ''),
-            encryptionKey: (string) ($request->getData('encrypt') ?? ''),
-            pathSettings:  (int) ($request->getData('pathsettings') ?? PathSettings::RANDOM_PATH) // IMPORTANT!!!
+            names:              $request->getDataList('names'),
+            fileNames:          $request->getDataList('filenames'),
+            files:              $request->getFiles(),
+            account:            $request->header->account,
+            basePath:           __DIR__ . '/../../../Modules/Media/Files' . \urldecode((string) ($request->getData('path') ?? '')),
+            virtualPath:        \urldecode((string) ($request->getData('virtualpath') ?? '')),
+            type:               $request->getData('type', 'int'),
+            password:           (string) ($request->getData('password') ?? ''),
+            encryptionKey:      (string) ($request->getData('encrypt') ?? ''),
+            pathSettings:       (int) ($request->getData('pathsettings') ?? PathSettings::RANDOM_PATH), // IMPORTANT!!!
+            hasAccountRelation: (bool) ($request->getData('link_account') ?? false),
+            readContent:        (bool) ($request->getData('parse_content') ?? false),
+            unit:               $request->getData('unit', 'int')
         );
 
         $ids = [];
@@ -166,7 +168,9 @@ final class ApiController extends Controller
         string $password = '',
         string $encryptionKey = '',
         int $pathSettings = PathSettings::RANDOM_PATH,
-        bool $hasAccountRelation = true
+        bool $hasAccountRelation = true,
+        bool $readContent = false,
+        int $unit = null
     ) : array
     {
         if (empty($files)) {
@@ -208,7 +212,9 @@ final class ApiController extends Controller
                 $account,
                 $virtualPath,
                 $type,
-                app: $hasAccountRelation ? $this->app : null
+                app: $hasAccountRelation ? $this->app : null,
+                readContent: $readContent,
+                unit: $unit
             );
         }
 
@@ -265,6 +271,7 @@ final class ApiController extends Controller
      * @param null|int                 $type        Media type (internal categorization)
      * @param string                   $ip          Ip of the origin
      * @param null|ApplicationAbstract $app         Should create relation to uploader
+     * @param bool                     $readContent Should the content of the file be stored in the db
      *
      * @return Media
      *
@@ -276,7 +283,9 @@ final class ApiController extends Controller
         string $virtualPath = '',
         int $type = null,
         string $ip = '127.0.0.1',
-        ApplicationAbstract $app = null
+        ApplicationAbstract $app = null,
+        bool $readContent = false,
+        int $unit = null
     ) : Media
     {
         if (!isset($status['status']) || $status['status'] !== UploadStatus::OK) {
@@ -291,9 +300,10 @@ final class ApiController extends Controller
         $media->createdBy = new NullAccount($account);
         $media->extension = $status['extension'];
         $media->type      = $type === null ? null : new NullMediaType($type);
+        $media->unit      = $unit;
         $media->setVirtualPath($virtualPath);
 
-        if (\is_file($media->getAbsolutePath())) {
+        if ($readContent && \is_file($media->getAbsolutePath())) {
             $content = self::loadFileContent($media->getAbsolutePath(), $media->extension);
 
             if (!empty($content)) {
@@ -335,23 +345,36 @@ final class ApiController extends Controller
      *
      * @since 1.0.0
      */
-    private static function loadFileContent(string $path, string $extension) : string
+    public static function loadFileContent(string $path, string $extension, string $output = 'html') : string
     {
         switch ($extension) {
             case 'pdf':
-                return PdfParser::pdf2text($path, __DIR__ . '/../../../Tools/OCRImageOptimizer/bin/App');
+                return \phpOMS\Utils\Parser\Pdf\PdfParser::pdf2text($path/*, __DIR__ . '/../../../Tools/OCRImageOptimizer/bin/OCRImageOptimizerApp'*/);
             case 'doc':
             case 'docx':
-                Autoloader::addPath(__DIR__ . '/../../../Resources/');
+                if (!Autoloader::inPaths($include = \realpath(__DIR__ . '/../../../Resources/'))) {
+                    Autoloader::addPath($include);
+                }
 
-                $reader = IOFactory::createReader('Word2007');
-                $doc    = $reader->load($path);
+                return \phpOMS\Utils\Parser\Document\DocumentParser::parseDocument($path, $output);
+            case 'ppt':
+            case 'pptx':
+                if (!Autoloader::inPaths($include = \realpath(__DIR__ . '/../../../Resources/'))) {
+                    Autoloader::addPath($include);
+                }
 
-                $writer = new HTML($doc);
-                return $writer->getContent();
+                return \phpOMS\Utils\Parser\Presentation\PresentationParser::parsePresentation($path, $output);
+            case 'xls':
+            case 'xlsx':
+                if (!Autoloader::inPaths($include = \realpath(__DIR__ . '/../../../Resources/'))) {
+                    Autoloader::addPath($include);
+                }
+
+                return \phpOMS\Utils\Parser\Spreadsheet\SpreadsheetParser::parseSpreadsheet($path, $output);
             case 'txt':
             case 'md':
                 $contents = \file_get_contents($path);
+
                 return $contents === false ? '' : $contents;
             default:
                 return '';
@@ -710,7 +733,8 @@ final class ApiController extends Controller
                 $virtualPath,
                 $request->getData('type', 'int'),
                 $request->getOrigin(),
-                $this->app
+                $this->app,
+                unit: $request->getData('unit', 'int')
             );
 
             $ids[] = $created->getId();
@@ -1015,15 +1039,15 @@ final class ApiController extends Controller
      *
      * @param RequestAbstract $request Request
      *
-     * @return MediaTypeL11n
+     * @return BaseStringL11n
      *
      * @since 1.0.0
      */
-    private function createMediaTypeL11nFromRequest(RequestAbstract $request) : MediaTypeL11n
+    private function createMediaTypeL11nFromRequest(RequestAbstract $request) : BaseStringL11n
     {
-        $l11nMediaType        = new MediaTypeL11n();
-        $l11nMediaType->type  = (int) ($request->getData('type') ?? 0);
-        $l11nMediaType->title = (string) ($request->getData('title') ?? '');
+        $l11nMediaType        = new BaseStringL11n();
+        $l11nMediaType->ref  = (int) ($request->getData('type') ?? 0);
+        $l11nMediaType->content = (string) ($request->getData('title') ?? '');
         $l11nMediaType->setLanguage((string) (
             $request->getData('language') ?? $request->getLanguage()
         ));

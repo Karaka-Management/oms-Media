@@ -15,6 +15,7 @@ declare(strict_types=1);
 namespace Modules\Media\Models;
 
 use phpOMS\Localization\ISO639x1Enum;
+use phpOMS\Localization\BaseStringL11n;
 
 /**
  * Media type class.
@@ -55,10 +56,10 @@ class MediaType implements \JsonSerializable
     /**
      * Title.
      *
-     * @var string|MediaTypeL11n
+     * @var string|BaseStringL11n
      * @since 1.0.0
      */
-    protected $title = '';
+    protected string | BaseStringL11n $title = '';
 
     /**
      * Constructor.
@@ -91,28 +92,29 @@ class MediaType implements \JsonSerializable
      */
     public function getL11n() : string
     {
-        return $this->title instanceof MediaTypeL11n ? $this->title->title : $this->title;
+        return $this->title instanceof BaseStringL11n ? $this->title->content : $this->title;
     }
 
     /**
      * Set title
      *
-     * @param string|MediaTypeL11n $title Media article title
-     * @param string               $lang  Language
+     * @param string|BaseStringL11n $title Media article title
+     * @param string                $lang  Language
      *
      * @return void
      *
      * @since 1.0.0
      */
-    public function setL11n(string | MediaTypeL11n $title, string $lang = ISO639x1Enum::_EN) : void
+    public function setL11n(string | BaseStringL11n $title, string $lang = ISO639x1Enum::_EN) : void
     {
-        if ($title instanceof MediaTypeL11n) {
+        if ($title instanceof BaseStringL11n) {
             $this->title = $title;
-        } elseif ($this->title instanceof MediaTypeL11n) {
-            $this->title->title = $title;
+        } elseif ($this->title instanceof BaseStringL11n) {
+            $this->title->content = $title;
         } else {
-            $this->title        = new MediaTypeL11n();
-            $this->title->title = $title;
+            $this->title        = new BaseStringL11n();
+            $this->title->ref = $this->id;
+            $this->title->content = $title;
             $this->title->setLanguage($lang);
         }
     }

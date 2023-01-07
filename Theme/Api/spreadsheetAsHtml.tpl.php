@@ -15,18 +15,10 @@ declare(strict_types=1);
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Writer\Html;
 use phpOMS\Autoloader;
+use phpOMS\Utils\Parser\Spreadsheet\SpreadsheetParser;
 
 Autoloader::addPath(__DIR__ . '/../../../../Resources/');
 
 $media = $this->getData('media');
 
-$reader = IOFactory::createReaderforFile(($media->isAbsolute ? '' : __DIR__ . '/../../../../') . $media->getPath());
-$reader->setReadDataOnly(true);
-$spreadsheet = $reader->load(($media->isAbsolute ? '' : __DIR__ . '/../../../../') . $media->getPath());
-
-$writer = new Html($spreadsheet);
-$writer->writeAllSheets();
-
-$writer->save('php://output');
-
-echo '<style>body { margin: 0; } table { width: 100%; } table .n, table .s { text-align: left; } td { padding: .5rem; }</style>';
+echo SpreadsheetParser::parseSpreadsheet(($media->isAbsolute ? '' : __DIR__ . '/../../../../') . $media->getPath(), 'html');

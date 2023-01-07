@@ -15,6 +15,7 @@ declare(strict_types=1);
 namespace Modules\Media\Models;
 
 use phpOMS\DataStorage\Database\Mapper\DataMapperFactory;
+use phpOMS\Localization\BaseStringL11n;
 
 /**
  * Media type l11n mapper class.
@@ -34,8 +35,8 @@ final class MediaTypeL11nMapper extends DataMapperFactory
      */
     public const COLUMNS = [
         'media_type_l11n_id'       => ['name' => 'media_type_l11n_id',       'type' => 'int',    'internal' => 'id'],
-        'media_type_l11n_title'    => ['name' => 'media_type_l11n_title',    'type' => 'string', 'internal' => 'title', 'autocomplete' => true],
-        'media_type_l11n_type'     => ['name' => 'media_type_l11n_type',     'type' => 'int',    'internal' => 'type'],
+        'media_type_l11n_title'    => ['name' => 'media_type_l11n_title',    'type' => 'string', 'internal' => 'content', 'autocomplete' => true],
+        'media_type_l11n_type'     => ['name' => 'media_type_l11n_type',     'type' => 'int',    'internal' => 'ref'],
         'media_type_l11n_language' => ['name' => 'media_type_l11n_language', 'type' => 'string', 'internal' => 'language'],
     ];
 
@@ -54,4 +55,12 @@ final class MediaTypeL11nMapper extends DataMapperFactory
      * @since 1.0.0
      */
     public const PRIMARYFIELD ='media_type_l11n_id';
+
+    /**
+     * Model to use by the mapper.
+     *
+     * @var string
+     * @since 1.0.0
+     */
+    public const MODEL = BaseStringL11n::class;
 }

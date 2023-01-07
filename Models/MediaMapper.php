@@ -53,6 +53,9 @@ class MediaMapper extends DataMapperFactory
         'media_size'            => ['name' => 'media_size',            'type' => 'int',               'internal' => 'size'],
         'media_source'          => ['name' => 'media_source',      'type' => 'int',              'internal' => 'source'],
         'media_class'           => ['name' => 'media_class',      'type' => 'int',              'internal' => 'class'],
+        'media_language'       => ['name' => 'media_language',       'type' => 'string',            'internal' => 'language'],
+        'media_country'       => ['name' => 'media_country',       'type' => 'string',            'internal' => 'country'],
+        'media_unit'      => ['name' => 'media_unit',      'type' => 'int',               'internal' => 'unit',   'readonly' => true],
         'media_created_by'      => ['name' => 'media_created_by',      'type' => 'int',               'internal' => 'createdBy',   'readonly' => true],
         'media_created_at'      => ['name' => 'media_created_at',      'type' => 'DateTimeImmutable', 'internal' => 'createdAt',   'readonly' => true],
     ];

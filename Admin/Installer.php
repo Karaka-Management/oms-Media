@@ -210,6 +210,11 @@ final class Installer extends InstallerAbstract
         $request->header->account = 1;
         $request->setData('name', $data['name'] ?? '');
 
+        if (!empty($data['l11n'])) {
+            $request->setData('title', \reset($data['l11n'])['title']);
+            $request->setData('lang', \reset($data['l11n'])['lang']);
+        }
+
         $module->apiMediaTypeCreate($request, $response);
 
         $responseData = $response->get('');
@@ -220,7 +225,13 @@ final class Installer extends InstallerAbstract
         $type = $responseData['response'];
         $id   = $type->getId();
 
+        $isFirst = true;
         foreach ($data['l11n'] as $l11n) {
+            if ($isFirst) {
+                $isFirst = false;
+                continue;
+            }
+
             $response = new HttpResponse();
             $request  = new HttpRequest(new HttpUri(''));
 

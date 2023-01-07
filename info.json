@@ -14,10 +14,11 @@
         "name": "Karaka",
         "website": "jingga.app"
     },
-    "description": "The profile module.",
+    "description": "The media module.",
     "directory": "Media",
     "dependencies": {
         "Admin": "1.0.0",
+        "Organization": "1.0.0",
         "Home": "1.0.0",
         "Tag": "1.0.0"
     },

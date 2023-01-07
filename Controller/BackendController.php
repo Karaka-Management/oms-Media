@@ -406,7 +406,7 @@ final class BackendController extends Controller
         $view = new View($this->app->l11nManager, $request, $response);
         $view->setTemplate('/Modules/' . static::NAME . '/Admin/Settings/Theme/Backend/settings-type');
 
-        /** @var \Modules\Media\Models\MediaType $type */
+        /** @var \phpOMS\Localization\BaseStringL11n $type */
         $type = MediaTypeMapper::get()
             ->with('title')
             ->where('title/language', $response->getLanguage())

@@ -182,12 +182,36 @@ class Media implements \JsonSerializable
     public int $class = MediaClass::FILE;
 
     /**
+     * Unit
+     *
+     * @var null|int
+     * @since 1.0.0
+     */
+    public ?int $unit = null;
+
+    /**
      * Tags.
      *
      * @var Tag[]
      * @since 1.0.0
      */
     protected array $tags = [];
+
+    /**
+     * Language.
+     *
+     * @var null|string
+     * @since 1.0.0
+     */
+    protected ?string $language = null;
+
+    /**
+     * Country.
+     *
+     * @var null|string
+     * @since 1.0.0
+     */
+    protected ?string $country = null;
 
     /**
      * Constructor.
