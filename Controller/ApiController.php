@@ -22,7 +22,6 @@ use Modules\Media\Models\Media;
 use Modules\Media\Models\MediaContent;
 use Modules\Media\Models\MediaMapper;
 use Modules\Media\Models\MediaType;
-use phpOMS\Localization\BaseStringL11n;
 use Modules\Media\Models\MediaTypeL11nMapper;
 use Modules\Media\Models\MediaTypeMapper;
 use Modules\Media\Models\NullCollection;
@@ -33,12 +32,11 @@ use Modules\Media\Models\PermissionCategory;
 use Modules\Media\Models\UploadFile;
 use Modules\Media\Models\UploadStatus;
 use Modules\Tag\Models\NullTag;
-use PhpOffice\PhpWord\IOFactory;
-use PhpOffice\PhpWord\Writer\HTML;
 use phpOMS\Account\PermissionType;
 use phpOMS\Application\ApplicationAbstract;
 use phpOMS\Asset\AssetType;
 use phpOMS\Autoloader;
+use phpOMS\Localization\BaseStringL11n;
 use phpOMS\Message\Http\HttpRequest;
 use phpOMS\Message\Http\HttpResponse;
 use phpOMS\Message\Http\RequestStatusCode;
@@ -1045,8 +1043,8 @@ final class ApiController extends Controller
      */
     private function createMediaTypeL11nFromRequest(RequestAbstract $request) : BaseStringL11n
     {
-        $l11nMediaType        = new BaseStringL11n();
-        $l11nMediaType->ref  = (int) ($request->getData('type') ?? 0);
+        $l11nMediaType          = new BaseStringL11n();
+        $l11nMediaType->ref     = (int) ($request->getData('type') ?? 0);
         $l11nMediaType->content = (string) ($request->getData('title') ?? '');
         $l11nMediaType->setLanguage((string) (
             $request->getData('language') ?? $request->getLanguage()

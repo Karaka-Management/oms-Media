@@ -12,8 +12,6 @@
  */
 declare(strict_types=1);
 
-use PhpOffice\PhpSpreadsheet\IOFactory;
-use PhpOffice\PhpSpreadsheet\Writer\Html;
 use phpOMS\Autoloader;
 use phpOMS\Utils\Parser\Spreadsheet\SpreadsheetParser;
 
