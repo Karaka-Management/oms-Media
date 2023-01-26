@@ -14,8 +14,8 @@ declare(strict_types=1);
 
 namespace Modules\Media\Models;
 
-use phpOMS\Localization\ISO639x1Enum;
 use phpOMS\Localization\BaseStringL11n;
+use phpOMS\Localization\ISO639x1Enum;
 
 /**
  * Media type class.
@@ -112,8 +112,8 @@ class MediaType implements \JsonSerializable
         } elseif ($this->title instanceof BaseStringL11n) {
             $this->title->content = $title;
         } else {
-            $this->title        = new BaseStringL11n();
-            $this->title->ref = $this->id;
+            $this->title          = new BaseStringL11n();
+            $this->title->ref     = $this->id;
             $this->title->content = $title;
             $this->title->setLanguage($lang);
         }
