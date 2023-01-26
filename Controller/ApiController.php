@@ -30,11 +30,11 @@ use Modules\Media\Models\NullMedia;
 use Modules\Media\Models\NullMediaType;
 use Modules\Media\Models\PathSettings;
 use Modules\Media\Models\PermissionCategory;
+use Modules\Media\Models\Reference;
+use Modules\Media\Models\ReferenceMapper;
 use Modules\Media\Models\UploadFile;
 use Modules\Media\Models\UploadStatus;
 use Modules\Tag\Models\NullTag;
-use PhpOffice\PhpWord\IOFactory;
-use PhpOffice\PhpWord\Writer\HTML;
 use phpOMS\Account\PermissionType;
 use phpOMS\Application\ApplicationAbstract;
 use phpOMS\Asset\AssetType;
@@ -86,7 +86,6 @@ final class ApiController extends Controller
             account:            $request->header->account,
             basePath:           __DIR__ . '/../../../Modules/Media/Files' . \urldecode((string) ($request->getData('path') ?? '')),
             virtualPath:        \urldecode((string) ($request->getData('virtualpath') ?? '')),
-            type:               $request->getData('type', 'int'),
             password:           (string) ($request->getData('password') ?? ''),
             encryptionKey:      (string) ($request->getData('encrypt') ?? ''),
             pathSettings:       (int) ($request->getData('pathsettings') ?? PathSettings::RANDOM_PATH), // IMPORTANT!!!
@@ -98,6 +97,39 @@ final class ApiController extends Controller
         $ids = [];
         foreach ($uploads as $file) {
             $ids[] = $file->getId();
+
+            // add media types
+            if (!empty($types = $request->getDataJson('types'))) {
+                foreach ($types as $type) {
+                    if (!isset($type['id'])) {
+                        $request->setData('name', $type['name'], true);
+                        $request->setData('title', $type['title'], true);
+                        $request->setData('lang', $type['lang'] ?? null, true);
+
+                        $internalResponse = new HttpResponse();
+                        $this->apiMediaTypeCreate($request, $internalResponse, null);
+
+                        if (!\is_array($data = $internalResponse->get($request->uri->__toString()))) {
+                            continue;
+                        }
+
+                        $file->addMediaType($tId = $data['response']);
+                    } else {
+                        $file->addMediaType(new NullMediaType($tId = (int) $type['id']));
+                    }
+
+                    $this->createModelRelation(
+                        $request->header->account,
+                        $file->getId(),
+                        $tId,
+                        MediaMapper::class,
+                        'types',
+                        '',
+                        $request->getOrigin()
+                    );
+                }
+            }
+
             // add tags
             if (!empty($tags = $request->getDataJson('tags'))) {
                 foreach ($tags as $tag) {
@@ -144,7 +176,6 @@ final class ApiController extends Controller
      * @param int    $account            Uploader
      * @param string $basePath           Base path. The path which is used for the upload.
      * @param string $virtualPath        virtual path The path which is used to visually structure the files, like directories
-     * @param int    $type               Media type (internal/custom media categorization)
      *                                   The file storage on the system can be different
      * @param string $password           File password. The password to protect the file (only database)
      * @param string $encryptionKey      Encryption key. Used to encrypt the file on the local file storage.
@@ -164,7 +195,6 @@ final class ApiController extends Controller
         int $account,
         string $basePath = '/Modules/Media/Files',
         string $virtualPath = '',
-        int $type = null,
         string $password = '',
         string $encryptionKey = '',
         int $pathSettings = PathSettings::RANDOM_PATH,
@@ -211,7 +241,6 @@ final class ApiController extends Controller
                 $stat,
                 $account,
                 $virtualPath,
-                $type,
                 app: $hasAccountRelation ? $this->app : null,
                 readContent: $readContent,
                 unit: $unit
@@ -268,7 +297,6 @@ final class ApiController extends Controller
      * @param array                    $status      Files
      * @param int                      $account     Uploader
      * @param string                   $virtualPath Virtual path (not on the hard-drive)
-     * @param null|int                 $type        Media type (internal categorization)
      * @param string                   $ip          Ip of the origin
      * @param null|ApplicationAbstract $app         Should create relation to uploader
      * @param bool                     $readContent Should the content of the file be stored in the db
@@ -281,7 +309,6 @@ final class ApiController extends Controller
         array $status,
         int $account,
         string $virtualPath = '',
-        int $type = null,
         string $ip = '127.0.0.1',
         ApplicationAbstract $app = null,
         bool $readContent = false,
@@ -299,7 +326,6 @@ final class ApiController extends Controller
         $media->size      = $status['size'];
         $media->createdBy = new NullAccount($account);
         $media->extension = $status['extension'];
-        $media->type      = $type === null ? null : new NullMediaType($type);
         $media->unit      = $unit;
         $media->setVirtualPath($virtualPath);
 
@@ -318,7 +344,7 @@ final class ApiController extends Controller
             $app->moduleManager->get('Admin')->createAccountModelPermission(
                 new AccountPermission(
                     $account,
-                    $app->orgId,
+                    $app->unitId,
                     $app->appName,
                     self::NAME,
                     self::NAME,
@@ -476,6 +502,85 @@ final class ApiController extends Controller
         return $media;
     }
 
+    public function apiReferenceCreate(RequestAbstract $request, ResponseAbstract $response, mixed $data = null) : void
+    {
+        if (!empty($val = $this->validateReferenceCreate($request))) {
+            $response->set('collection_create', new FormValidation($val));
+            $response->header->status = RequestStatusCode::R_400;
+
+            return;
+        }
+
+        $reference = $this->createReferenceFromRequest($request);
+        $this->createModel($request->header->account, $reference, ReferenceMapper::class, 'reference', $request->getOrigin());
+
+        // get parent collection
+        // create relation
+        $parentCollectionId = (int) $request->getData('parent');
+        if ($parentCollectionId === 0) {
+            $parentCollection = CollectionMapper::get()
+                ->where('virtualPath', (string) ($request->getData('virtualpath') ?? ''))
+                ->where('name', (string) ($request->getData('name') ?? ''))
+                ->execute();
+
+            $parentCollectionId = $parentCollection->getId();
+        }
+
+        CollectionMapper::writer()->createRelationTable('sources', [$parentCollectionId], $reference->getId());
+
+        $this->fillJsonResponse($request, $response, NotificationLevel::OK, 'Reference', 'Reference successfully created.', $reference);
+    }
+
+    /**
+     * Method to create collection from request.
+     *
+     * @param RequestAbstract $request Request
+     *
+     * @return Reference Returns the collection from the request
+     *
+     * @since 1.0.0
+     */
+    private function createReferenceFromRequest(RequestAbstract $request) : Reference
+    {
+        $mediaReference = new Reference();
+        $mediaReference->name      = (string) $request->getData('name');
+        $mediaReference->source    = new NullMedia((int) $request->getData('source'));
+        $mediaReference->createdBy = new NullAccount($request->header->account);
+        $mediaReference->setVirtualPath($request->getData('virtualpath'));
+
+        return $mediaReference;
+    }
+
+    /**
+     * Validate collection create request
+     *
+     * @param RequestAbstract $request Request
+     *
+     * @return array<string, bool> Returns the validation array of the request
+     *
+     * @since 1.0.0
+     */
+    private function validateReferenceCreate(RequestAbstract $request) : array
+    {
+        $val = [];
+        if (($val['name'] = empty($request->getData('name')))
+            || ($val['virtualpath'] = empty($request->getData('virtualpath')))
+            || ($val['source'] = empty($request->getData('source')))
+        ) {
+            return $val;
+        }
+
+        return [];
+    }
+
+    // Very similar to create Reference
+    // Reference = it's own media element which points to another element (disadvantage = additional step)
+    // Collection add = directly pointing to other media element (disadvantage = we don't know if we are allowed to modify/delete)
+    public function apiCollectionAdd(RequestAbstract $request, ResponseAbstract $response, mixed $data = null) : void
+    {
+
+    }
+
     /**
      * Api method to create a collection.
      *
@@ -590,7 +695,7 @@ final class ApiController extends Controller
     {
         if (empty($media)
             || !$this->app->accountManager->get($account)->hasPermission(
-                PermissionType::CREATE, $this->app->orgId, null, self::NAME, PermissionCategory::COLLECTION, null)
+                PermissionType::CREATE, $this->app->unitId, null, self::NAME, PermissionCategory::COLLECTION, null)
         ) {
             return new NullCollection();
         }
@@ -731,7 +836,6 @@ final class ApiController extends Controller
                 $stat,
                 $request->header->account,
                 $virtualPath,
-                $request->getData('type', 'int'),
                 $request->getOrigin(),
                 $this->app,
                 unit: $request->getData('unit', 'int')
@@ -773,6 +877,15 @@ final class ApiController extends Controller
                 $media->setVirtualPath(\dirname($path));
                 $media->setPath('/' . \ltrim($path, '\\/'));
             }
+        }
+
+        if ($media->hasPassword()
+            && !$media->comparePassword((string) $request->getData('password'))
+        ) {
+            $view = new View($this->app->l11nManager, $request, $response);
+            $view->setTemplate('/Modules/Media/Theme/Api/invalidPassword');
+
+            return;
         }
 
         $this->setMediaResponseHeader($media, $request, $response);

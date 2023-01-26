@@ -116,7 +116,7 @@ final class Installer extends InstallerAbstract
         };
 
         $apiApp->dbPool         = $app->dbPool;
-        $apiApp->orgId          = $app->orgId;
+        $apiApp->unitId          = $app->unitId;
         $apiApp->accountManager = $app->accountManager;
         $apiApp->appSettings    = $app->appSettings;
         $apiApp->moduleManager  = $app->moduleManager;
@@ -144,11 +144,29 @@ final class Installer extends InstallerAbstract
                 case 'type':
                     $result['type'][] = self::createType($apiApp, $media);
                     break;
+                case 'reference':
+                    $result['reference'][] = self::createReference($apiApp, $media);
+                    break;
                 default:
             }
         }
 
         return $result;
+    }
+
+     /**
+     * Create collection.
+     *
+     * @param ApplicationAbstract                                                            $app  Application
+     * @param array{path?:string, name?:string, virtualPath?:string, create_directory?:bool} $data Media info
+     *
+     * @return array
+     *
+     * @since 1.0.0
+     */
+    private static function createReference(ApplicationAbstract $app, array $data) : array
+    {
+        return [];
     }
 
     /**

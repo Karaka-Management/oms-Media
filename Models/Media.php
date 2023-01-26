@@ -56,10 +56,10 @@ class Media implements \JsonSerializable
     /**
      * Type.
      *
-     * @var null|int|MediaType
+     * @var MediaType[]
      * @since 1.0.0
      */
-    public null | int | MediaType $type = null;
+    public array $types = [];
 
     /**
      * Extension.
@@ -290,6 +290,11 @@ class Media implements \JsonSerializable
         return $this->nonce !== null;
     }
 
+    public function hasPassword() : bool
+    {
+        return !empty($password);
+    }
+
     /**
      * Set encryption password
      *
@@ -393,6 +398,72 @@ class Media implements \JsonSerializable
     }
 
     /**
+     * Adding new type.
+     *
+     * @param MediaType $type MediaType
+     *
+     * @return int
+     *
+     * @since 1.0.0
+     */
+    public function addMediaType(MediaType $type) : int
+    {
+        $this->types[] = $type;
+
+        \end($this->types);
+        $key = (int) \key($this->types);
+        \reset($this->types);
+
+        return $key;
+    }
+
+    /**
+     * Remove MediaType from list.
+     *
+     * @param int $id MediaType
+     *
+     * @return bool
+     *
+     * @since 1.0.0
+     */
+    public function removeMediaType($id) : bool
+    {
+        if (isset($this->types[$id])) {
+            unset($this->types[$id]);
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Get media types.
+     *
+     * @return MediaType[]
+     *
+     * @since 1.0.0
+     */
+    public function getMediaTypes() : array
+    {
+        return $this->types;
+    }
+
+    /**
+     * Get media type.
+     *
+     * @param int $id Element id
+     *
+     * @return MediaType
+     *
+     * @since 1.0.0
+     */
+    public function getMediaType(int $id) : MediaType
+    {
+        return $this->types[$id] ?? new NullMediaType();
+    }
+
+    /**
      * Adding new tag.
      *
      * @param Tag $tag Tag
@@ -433,7 +504,7 @@ class Media implements \JsonSerializable
     }
 
     /**
-     * Get task elements.
+     * Get tags.
      *
      * @return Tag[]
      *
@@ -445,7 +516,7 @@ class Media implements \JsonSerializable
     }
 
     /**
-     * Get task elements.
+     * Get tag.
      *
      * @param int $id Element id
      *

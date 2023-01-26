@@ -49,7 +49,7 @@ final class MediaTypeMapper extends DataMapperFactory
             'mapper'  => MediaTypeL11nMapper::class,
             'table'   => 'media_type_l11n',
             'self'    => 'media_type_l11n_type',
-            'column'  => 'title',
+            'column'  => 'content',
             'external'=> null,
         ],
     ];

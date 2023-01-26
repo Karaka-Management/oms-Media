@@ -81,7 +81,7 @@ final class BackendController extends Controller
         $hasPermission = $this->app->accountManager->get($request->header->account)
             ->hasPermission(
                 PermissionType::READ,
-                $this->app->orgId,
+                $this->app->unitId,
                 $this->app->appName,
                 self::NAME,
                 PermissionCategory::MEDIA,
@@ -93,7 +93,7 @@ final class BackendController extends Controller
             $permWhere = PermissionAbstractMapper::helper($this->app->dbPool->get('select'))
                 ->groups($this->app->accountManager->get($request->header->account)->getGroupIds())
                 ->account($request->header->account)
-                ->units([null, $this->app->orgId])
+                ->units([null, $this->app->unitId])
                 ->apps([null, 'Api', $this->app->appName])
                 ->modules([null, self::NAME])
                 ->categories([null, PermissionCategory::MEDIA])
@@ -112,7 +112,7 @@ final class BackendController extends Controller
             $permWhere = PermissionAbstractMapper::helper($this->app->dbPool->get('select'))
                 ->groups($this->app->accountManager->get($request->header->account)->getGroupIds())
                 ->account($request->header->account)
-                ->units([null, $this->app->orgId])
+                ->units([null, $this->app->unitId])
                 ->apps([null, 'Api', $this->app->appName])
                 ->modules([null, self::NAME])
                 ->categories([null, PermissionCategory::MEDIA])
@@ -236,6 +236,14 @@ final class BackendController extends Controller
                 ->where('tags/title/language', $request->getLanguage())
                 ->execute();
 
+            if ($media->hasPassword()
+                && !$media->comparePassword((string) $request->getData('password'))
+            ) {
+                $view->setTemplate('/Modules/Media/Theme/Backend/Components/Media/invalidPassword');
+
+                return $view;
+            }
+
             if ($media->class === MediaClass::COLLECTION) {
                 /** @var \Modules\Media\Models\Media[] $files */
                 $files = MediaMapper::getByVirtualPath(
@@ -293,6 +301,15 @@ final class BackendController extends Controller
     private function createMediaView(Media $media, RequestAbstract $request, ResponseAbstract $response) : View
     {
         $view = new ElementView($this->app->l11nManager, $request, $response);
+
+        if ($media->hasPassword()
+            && !$media->comparePassword((string) $request->getData('password'))
+        ) {
+            $view->setTemplate('/Modules/Media/Theme/Backend/Components/Media/invalidPassword');
+
+            return $view;
+        }
+
         switch (\strtolower($media->extension)) {
             case 'pdf':
                 $view->setTemplate('/Modules/Media/Theme/Backend/Components/Media/pdf');

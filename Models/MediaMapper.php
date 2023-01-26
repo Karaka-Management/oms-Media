@@ -38,7 +38,6 @@ class MediaMapper extends DataMapperFactory
     public const COLUMNS = [
         'media_id'              => ['name' => 'media_id',              'type' => 'int',               'internal' => 'id'],
         'media_name'            => ['name' => 'media_name',            'type' => 'string',            'internal' => 'name',        'autocomplete' => true],
-        'media_type'            => ['name' => 'media_type',            'type' => 'int',               'internal' => 'type'],
         'media_description'     => ['name' => 'media_description',     'type' => 'string',            'internal' => 'description', 'autocomplete' => true],
         'media_description_raw' => ['name' => 'media_description_raw', 'type' => 'string',            'internal' => 'descriptionRaw'],
         'media_content'         => ['name' => 'media_content', 'type' => 'int',            'internal' => 'content'],
@@ -107,6 +106,12 @@ class MediaMapper extends DataMapperFactory
             'external' => 'media_tag_dst',
             'self'     => 'media_tag_src',
         ],
+        'types'         => [
+            'mapper'   => MediaTypeMapper::class,
+            'table'    => 'media_type_rel',
+            'external' => 'media_type_rel_dst',
+            'self'     => 'media_type_rel_src',
+        ],
     ];
 
     /**
@@ -169,7 +174,7 @@ class MediaMapper extends DataMapperFactory
             ->with('createdBy')
             ->with('source')
             ->with('tags')
-            ->with('tags/title')
+            ->with('tags/content')
             ->where('virtualPath', $virtualPath)
             ->where('status', $status);
     }

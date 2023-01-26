@@ -74,7 +74,8 @@ final class CollectionMapper extends MediaMapper
      */
     public static function getByVirtualPath(string $virtualPath = '/', int $status = MediaStatus::NORMAL) : ReadMapper
     {
-        return self::getAll()->where('virtualPath', $virtualPath)
+        return self::getAll()
+            ->where('virtualPath', $virtualPath)
             ->with('createdBy')
             ->with('tags')
             ->where('status', $status)

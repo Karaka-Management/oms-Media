@@ -179,8 +179,8 @@
                 "type": "INT",
                 "default": null,
                 "null": true,
-                "foreignTable": "organization_unit",
-                "foreignKey": "organization_unit_id"
+                "foreignTable": "unit",
+                "foreignKey": "unit_id"
             },
             "media_language": {
                 "name": "media_language",
@@ -261,6 +261,32 @@
                 "null": false,
                 "foreignTable": "tag",
                 "foreignKey": "tag_id"
+            }
+        }
+    },
+    "media_type_rel": {
+        "name": "media_type_rel",
+        "fields": {
+            "media_type_rel_id": {
+                "name": "media_type_rel_id",
+                "type": "INT",
+                "null": false,
+                "primary": true,
+                "autoincrement": true
+            },
+            "media_type_rel_src": {
+                "name": "media_type_rel_src",
+                "type": "INT",
+                "null": false,
+                "foreignTable": "media",
+                "foreignKey": "media_id"
+            },
+            "media_type_rel_dst": {
+                "name": "media_type_rel_dst",
+                "type": "INT",
+                "null": false,
+                "foreignTable": "type",
+                "foreignKey": "type_id"
             }
         }
     }
