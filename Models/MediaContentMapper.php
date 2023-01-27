@@ -40,7 +40,7 @@ class MediaContentMapper extends DataMapperFactory
     /**
      * Model to use by the mapper.
      *
-     * @var string
+     * @var class-string
      * @since 1.0.0
      */
     public const MODEL = MediaContent::class;

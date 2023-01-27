@@ -378,21 +378,36 @@ final class ApiController extends Controller
                 return \phpOMS\Utils\Parser\Pdf\PdfParser::pdf2text($path/*, __DIR__ . '/../../../Tools/OCRImageOptimizer/bin/OCRImageOptimizerApp'*/);
             case 'doc':
             case 'docx':
-                if (!Autoloader::inPaths($include = \realpath(__DIR__ . '/../../../Resources/'))) {
+                $include = \realpath(__DIR__ . '/../../../Resources/');
+                if ($include === false) {
+                    return '';
+                }
+
+                if (!Autoloader::inPaths($include)) {
                     Autoloader::addPath($include);
                 }
 
                 return \phpOMS\Utils\Parser\Document\DocumentParser::parseDocument($path, $output);
             case 'ppt':
             case 'pptx':
-                if (!Autoloader::inPaths($include = \realpath(__DIR__ . '/../../../Resources/'))) {
+                $include = \realpath(__DIR__ . '/../../../Resources/');
+                if ($include === false) {
+                    return '';
+                }
+
+                if (!Autoloader::inPaths($include)) {
                     Autoloader::addPath($include);
                 }
 
                 return \phpOMS\Utils\Parser\Presentation\PresentationParser::parsePresentation($path, $output);
             case 'xls':
             case 'xlsx':
-                if (!Autoloader::inPaths($include = \realpath(__DIR__ . '/../../../Resources/'))) {
+                $include = \realpath(__DIR__ . '/../../../Resources/');
+                if ($include === false) {
+                    return '';
+                }
+
+                if (!Autoloader::inPaths($include)) {
                     Autoloader::addPath($include);
                 }
 
@@ -502,6 +517,19 @@ final class ApiController extends Controller
         return $media;
     }
 
+    /**
+     * Api method to create a reference.
+     *
+     * @param RequestAbstract  $request  Request
+     * @param ResponseAbstract $response Response
+     * @param mixed            $data     Generic data
+     *
+     * @return void
+     *
+     * @api
+     *
+     * @since 1.0.0
+     */
     public function apiReferenceCreate(RequestAbstract $request, ResponseAbstract $response, mixed $data = null) : void
     {
         if (!empty($val = $this->validateReferenceCreate($request))) {
@@ -518,6 +546,7 @@ final class ApiController extends Controller
         // create relation
         $parentCollectionId = (int) $request->getData('parent');
         if ($parentCollectionId === 0) {
+            /** @var Collection $parentCollection */
             $parentCollection = CollectionMapper::get()
                 ->where('virtualPath', (string) ($request->getData('virtualpath') ?? ''))
                 ->where('name', (string) ($request->getData('name') ?? ''))
@@ -532,7 +561,7 @@ final class ApiController extends Controller
     }
 
     /**
-     * Method to create collection from request.
+     * Method to create a reference from request.
      *
      * @param RequestAbstract $request Request
      *
@@ -542,7 +571,7 @@ final class ApiController extends Controller
      */
     private function createReferenceFromRequest(RequestAbstract $request) : Reference
     {
-        $mediaReference = new Reference();
+        $mediaReference            = new Reference();
         $mediaReference->name      = (string) $request->getData('name');
         $mediaReference->source    = new NullMedia((int) $request->getData('source'));
         $mediaReference->createdBy = new NullAccount($request->header->account);
@@ -552,7 +581,7 @@ final class ApiController extends Controller
     }
 
     /**
-     * Validate collection create request
+     * Validate reference create request
      *
      * @param RequestAbstract $request Request
      *

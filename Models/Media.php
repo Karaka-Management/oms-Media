@@ -290,9 +290,16 @@ class Media implements \JsonSerializable
         return $this->nonce !== null;
     }
 
+    /**
+     * Has password defined
+     *
+     * @return bool
+     *
+     * @since 1.0.0
+     */
     public function hasPassword() : bool
     {
-        return !empty($password);
+        return !empty($this->password);
     }
 
     /**
@@ -461,6 +468,60 @@ class Media implements \JsonSerializable
     public function getMediaType(int $id) : MediaType
     {
         return $this->types[$id] ?? new NullMediaType();
+    }
+
+    /**
+     * Get media type by name
+     *
+     * @param string $name Type name
+     *
+     * @return MediaType
+     *
+     * @since 1.0.0
+     */
+    public function getMediaTypeName(string $name) : MediaType
+    {
+        foreach ($this->types as $type) {
+            if ($type->name === $name) {
+                return $type;
+            }
+        }
+
+        return new NullMediaType();
+    }
+
+    /**
+     * Has media type by id
+     *
+     * @param int $id Media type id
+     *
+     * @return bool
+     *
+     * @since 1.0.0
+     */
+    public function hasMediaTypeId(int $id) : bool
+    {
+        return isset($this->types[$id]);
+    }
+
+    /**
+     * Has media type by name
+     *
+     * @param string $name Media type name
+     *
+     * @return bool
+     *
+     * @since 1.0.0
+     */
+    public function hasMediaTypeName(string $name) : bool
+    {
+        foreach ($this->types as $type) {
+            if ($type->name === $name) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**

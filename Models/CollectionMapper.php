@@ -30,7 +30,7 @@ final class CollectionMapper extends MediaMapper
     /**
      * Has many relation.
      *
-     * @var array<string, array{mapper:string, table:string, self?:?string, external?:?string, column?:string}>
+     * @var array<string, array{mapper:class-string, table:string, self?:?string, external?:?string, column?:string}>
      * @since 1.0.0
      */
     public const HAS_MANY = [
@@ -45,7 +45,7 @@ final class CollectionMapper extends MediaMapper
     /**
      * Model to use by the mapper.
      *
-     * @var string
+     * @var class-string
      * @since 1.0.0
      */
     public const MODEL = Collection::class;

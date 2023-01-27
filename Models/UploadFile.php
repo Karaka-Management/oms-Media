@@ -115,6 +115,10 @@ class UploadFile
 
         $fCounter = -1;
         foreach ($files as $key => $f) {
+            if (!isset($f['name'], $f['tmp_name'], $f['size'])) {
+                return [];
+            }
+
             ++$fCounter;
 
             $path = $this->outputDir;

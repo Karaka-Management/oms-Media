@@ -186,7 +186,13 @@ trait ApiControllerMediaTrait
     {
         self::assertEquals(
             [],
-            $this->module->uploadFiles(['test'], ['test'], ['test'], 1, '/test', '', null, '', '', 99)
+            $this->module->uploadFiles(
+                names: ['test'],
+                fileNames: ['test'],
+                files: ['test'],
+                account: 1,
+                basePath: '/test',
+            )
         );
     }
 
