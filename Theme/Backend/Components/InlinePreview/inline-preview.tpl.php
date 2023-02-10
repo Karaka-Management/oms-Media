@@ -43,7 +43,7 @@
 <div class="box" id="<?= $this->getId(); ?>-tags" data-limit="0" data-active="true">
     <template id="<?= $this->getId(); ?>-tagTemplate">
         <span class="tag red" data-tpl-value="/id" data-value="" data-uuid="" data-name="<?= $this->printHtml($this->name); ?>">
-            <i class="fa fa-times"></i>
+            <i class="fa fa-times close"></i>
             <span style="display: none;" data-name="type_prefix" data-tpl-value="/type_prefix" data-value=""></span>
             <span data-tpl-text="/id" data-name="id" data-tpl-value="/id" data-value=""></span>
             <span data-tpl-text="/name/0" data-tpl-value="/name/0" data-value=""></span>

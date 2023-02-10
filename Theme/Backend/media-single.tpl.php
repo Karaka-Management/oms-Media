@@ -126,8 +126,8 @@ echo $this->getData('nav')->render();
 $media = $media->class === MediaClass::REFERENCE ? $media->source : $media;
 ?>
 
-<div class="row" style="height: calc(100% - 85px);">
-    <div class="col-xs-12">
+<div class="row col-simple">
+    <div class="col-xs-12 col-simple">
         <?= $view->render($media); ?>
     </div>
 </div>

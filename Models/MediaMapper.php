@@ -174,7 +174,7 @@ class MediaMapper extends DataMapperFactory
             ->with('createdBy')
             ->with('source')
             ->with('tags')
-            ->with('tags/content')
+            ->with('tags/title')
             ->where('virtualPath', $virtualPath)
             ->where('status', $status);
     }

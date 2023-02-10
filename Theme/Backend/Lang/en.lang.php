@@ -19,6 +19,7 @@ return ['Media' => [
     'Author'           => 'Author',
     'Back'             => 'Back',
     'Changed'          => 'Changed',
+    'Content'          => 'Content',
     'Changedby'        => 'Changed by',
     'CreateCollection' => 'Create Collection',
     'CreateFile'       => 'Create File',

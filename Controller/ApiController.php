@@ -20,6 +20,7 @@ use Modules\Media\Models\Collection;
 use Modules\Media\Models\CollectionMapper;
 use Modules\Media\Models\Media;
 use Modules\Media\Models\MediaContent;
+use Modules\Media\Models\MediaContentMapper;
 use Modules\Media\Models\MediaMapper;
 use Modules\Media\Models\MediaType;
 use Modules\Media\Models\MediaTypeL11nMapper;
@@ -47,11 +48,13 @@ use phpOMS\Message\RequestAbstract;
 use phpOMS\Message\ResponseAbstract;
 use phpOMS\Model\Html\Head;
 use phpOMS\Model\Message\FormValidation;
+use phpOMS\Security\Guard;
 use phpOMS\System\File\FileUtils;
 use phpOMS\System\File\Local\Directory;
 use phpOMS\System\MimeType;
 use phpOMS\Utils\ImageUtils;
 use phpOMS\Utils\Parser\Markdown\Markdown;
+use phpOMS\Utils\StringUtils;
 use phpOMS\Views\View;
 
 /**
@@ -168,6 +171,79 @@ final class ApiController extends Controller
     }
 
     /**
+     * Upload a media file and replace the existing media file
+     *
+     * @param array $files              Files
+     * @param array $media              Media files to update
+     * @param bool  $sameNameIfPossible Use exact same file name as original file name if the extension is the same.
+     *
+     * @return Media[]
+     *
+     * @since 1.0.0
+     */
+    public function replaceUploadFiles(
+        array $files,
+        array $media,
+        bool $sameNameIfPossible = false
+    ) : array
+    {
+        if (empty($files) || \count($files) !== \count($media)) {
+            return [];
+        }
+
+        $nCounter = -1;
+        foreach ($files as $file) {
+            ++$nCounter;
+
+            // set output dir same as existing media
+            $outputDir = \dirname($media[$nCounter]->getAbsolutePath());
+
+            // set upload name (either same as old file name or new file name)
+            $mediaFilename  = \basename($media[$nCounter]->getAbsolutePath());
+            $uploadFilename = \basename($file['tmp_name']);
+
+            $splitMediaFilename  = \explode('.', $mediaFilename);
+            $splitUploadFilename = \explode('.', $uploadFilename);
+
+            $mediaExtension  =  ($c = \count($splitMediaFilename)) > 1 ? $splitMediaFilename[$c - 1] : '';
+            $uploadExtension =  ($c = \count($splitUploadFilename)) > 1 ? $splitUploadFilename[$c - 1] : '';
+
+            if ($sameNameIfPossible && $mediaExtension === $uploadExtension) {
+                $uploadFilename = $mediaFilename;
+            }
+
+            // remove old file
+            \unlink($media[$nCounter]->getAbsolutePath());
+
+            // upload file
+            $upload                   = new UploadFile();
+            $upload->outputDir        = $outputDir;
+            $upload->preserveFileName = $sameNameIfPossible;
+
+            $status = $upload->upload([$file], [$uploadFilename], true);
+            $stat   = \reset($status);
+
+            // update media data
+            $media[$nCounter]->setPath(self::normalizeDbPath($stat['path']) . '/' . $stat['filename']);
+            $media[$nCounter]->size      = $stat['size'];
+            $media[$nCounter]->extension = $stat['extension'];
+
+            MediaMapper::update()->execute($media[$nCounter]);
+
+            if (!empty($media[$nCounter]?->content->content)) {
+                $media[$nCounter]->content->content = self::loadFileContent(
+                    $media[$nCounter]->getAbsolutePath(),
+                    $media[$nCounter]->extension
+                );
+
+                MediaContentMapper::update()->execute($media[$nCounter]->content);
+            }
+        }
+
+        return $media;
+    }
+
+    /**
      * Upload a media file
      *
      * @param array  $names              Database names
@@ -189,10 +265,10 @@ final class ApiController extends Controller
      * @since 1.0.0
      */
     public function uploadFiles(
-        array $names,
-        array $fileNames,
-        array $files,
-        int $account,
+        array $names = [],
+        array $fileNames = [],
+        array $files = [],
+        int $account = 0,
         string $basePath = '/Modules/Media/Files',
         string $virtualPath = '',
         string $password = '',
@@ -338,25 +414,35 @@ final class ApiController extends Controller
             }
         }
 
+        $app?->eventManager->triggerSimilar('PRE:Module:Media-media-create', '', $media);
         MediaMapper::create()->execute($media);
-
-        if ($app !== null) {
-            $app->moduleManager->get('Admin')->createAccountModelPermission(
-                new AccountPermission(
-                    $account,
-                    $app->unitId,
-                    $app->appName,
-                    self::NAME,
-                    self::NAME,
-                    PermissionCategory::MEDIA,
-                    $media->getId(),
-                    null,
-                    PermissionType::READ | PermissionType::MODIFY | PermissionType::DELETE | PermissionType::PERMISSION
-                ),
+        $app?->eventManager->triggerSimilar('POST:Module:Media-media-create', '',
+            [
                 $account,
+                null, $media,
+                StringUtils::intHash(MediaMapper::class), 'Media-media-create',
+                self::NAME,
+                (string) $media->getId(),
+                '',
                 $ip
-            );
-        }
+            ]
+        );
+
+        $app?->moduleManager->get('Admin')->createAccountModelPermission(
+            new AccountPermission(
+                $account,
+                $app->unitId,
+                $app->appName,
+                self::NAME,
+                self::NAME,
+                PermissionCategory::MEDIA,
+                $media->getId(),
+                null,
+                PermissionType::READ | PermissionType::MODIFY | PermissionType::DELETE | PermissionType::PERMISSION
+            ),
+            $account,
+            $ip
+        );
 
         return $media;
     }
@@ -539,8 +625,8 @@ final class ApiController extends Controller
             return;
         }
 
-        $reference = $this->createReferenceFromRequest($request);
-        $this->createModel($request->header->account, $reference, ReferenceMapper::class, 'reference', $request->getOrigin());
+        $ref = $this->createReferenceFromRequest($request);
+        $this->createModel($request->header->account, $ref, ReferenceMapper::class, 'media_reference', $request->getOrigin());
 
         // get parent collection
         // create relation
@@ -555,9 +641,17 @@ final class ApiController extends Controller
             $parentCollectionId = $parentCollection->getId();
         }
 
-        CollectionMapper::writer()->createRelationTable('sources', [$parentCollectionId], $reference->getId());
+        $this->createModelRelation(
+            $request->header->account,
+            $parentCollectionId,
+            $ref->getId(),
+            CollectionMapper::class,
+            'sources',
+            '',
+            $request->getOrigin()
+        );
 
-        $this->fillJsonResponse($request, $response, NotificationLevel::OK, 'Reference', 'Reference successfully created.', $reference);
+        $this->fillJsonResponse($request, $response, NotificationLevel::OK, 'Reference', 'Reference successfully created.', $ref);
     }
 
     /**
@@ -607,7 +701,20 @@ final class ApiController extends Controller
     // Collection add = directly pointing to other media element (disadvantage = we don't know if we are allowed to modify/delete)
     public function apiCollectionAdd(RequestAbstract $request, ResponseAbstract $response, mixed $data = null) : void
     {
+        $collection = (int) $request->getData('collection');
+        $media = $request->getDataJson('media-list');
 
+        foreach ($media as $file) {
+            $this->createModelRelation(
+                $request->header->account,
+                $collection,
+                $file,
+                CollectionMapper::class,
+                'sources',
+                '',
+                $request->getOrigin()
+            );
+        }
     }
 
     /**
@@ -694,8 +801,6 @@ final class ApiController extends Controller
 
         $mediaCollection->setVirtualPath($virtualPath);
         $mediaCollection->setPath($outputDir);
-
-        CollectionMapper::create()->execute($mediaCollection);
 
         if (((bool) ($request->getData('create_directory') ?? false))
             && !\is_dir($dirPath)
@@ -791,8 +896,16 @@ final class ApiController extends Controller
             $childCollection->setVirtualPath('/'. \ltrim($temp, '/'));
             $childCollection->setPath('/Modules/Media/Files' . $temp);
 
-            CollectionMapper::create()->execute($childCollection);
-            CollectionMapper::writer()->createRelationTable('sources', [$childCollection->getId()], $parentCollection->getId());
+            $this->createModel($account, $childCollection, CollectionMapper::class, 'collection', '127.0.0.1');
+            $this->createModelRelation(
+                $account,
+                $parentCollection->getId(),
+                $childCollection->getId(),
+                CollectionMapper::class,
+                'sources',
+                '',
+                '127.0.0.1'
+            );
 
             $parentCollection = $childCollection;
             $temp            .= '/' . $paths[$i];
@@ -891,13 +1004,18 @@ final class ApiController extends Controller
      */
     public function apiMediaExport(RequestAbstract $request, ResponseAbstract $response, mixed $data = null) : void
     {
-        if (((int) $request->getData('id')) !== 0) {
+        $filePath = '';
+        $media    = null;
+
+        if ($request->hasData('id')) {
             /** @var Media $media */
-            $media = MediaMapper::get()->where('id', (int) $request->getData('id'))->execute();
+            $media    = MediaMapper::get()->where('id', (int) $request->getData('id'))->execute();
+            $filePath = $media->getAbsolutePath();
         } else {
             $path  = \urldecode($request->getData('path'));
             $media = new NullMedia();
-            if (\is_file(__DIR__ . '/../../../' . \ltrim($path, '\\/'))) {
+
+            if (\is_file($filePath = __DIR__ . '/../../../' . \ltrim($path, '\\/'))) {
                 $name = \explode('.', \basename($path));
 
                 $media->name       = $name[0];
@@ -906,6 +1024,43 @@ final class ApiController extends Controller
                 $media->setVirtualPath(\dirname($path));
                 $media->setPath('/' . \ltrim($path, '\\/'));
             }
+        }
+
+        if (!($media instanceof NullMedia)) {
+            if ($request->header->account !== $media->createdBy->getId()
+                && !$this->app->accountManager->get($request->header->account)->hasPermission(
+                    PermissionType::READ,
+                    $this->app->unitId,
+                    $this->app->appName,
+                    self::NAME,
+                    PermissionCategory::MEDIA,
+                    $media->getId()
+                )
+            ) {
+                $this->fillJsonResponse($request, $response, NotificationLevel::HIDDEN, '', '', []);
+                $response->header->status = RequestStatusCode::R_403;
+
+                return;
+            }
+
+            if (!isset($data, $data['guard'])) {
+                if (!isset($data)) {
+                    $data = [];
+                }
+
+                $data['guard'] = __DIR__ . '/../Files';
+            }
+        } else {
+            if (!isset($data, $data['guard'])) {
+                $this->fillJsonResponse($request, $response, NotificationLevel::HIDDEN, '', '', []);
+                $response->header->status = RequestStatusCode::R_403;
+            }
+        }
+
+        if (!Guard::isSafePath($filePath, $data['guard'])) {
+            $response->header->status = RequestStatusCode::R_403;
+
+            return;
         }
 
         if ($media->hasPassword()

@@ -336,6 +336,8 @@ final class Installer extends InstallerAbstract
 
         $module->apiMediaUpload($request, $response);
 
+        $uploadedIds = $response->get('')['response'];
+
         if ($data['create_collection']) {
             $response = new HttpResponse();
             $request  = new HttpRequest(new HttpUri(''));
@@ -344,6 +346,7 @@ final class Installer extends InstallerAbstract
             $request->setData('name', (string) ($data['name'] ?? ''));
             $request->setData('virtualpath', (string) ($data['virtualPath'] ?? '/'));
             $request->setData('path', (string) ($data['path'] ?? '/Modules/Media/Files/' . ((string) ($data['name'] ?? ''))));
+            $request->setData('media-list', \json_encode($uploadedIds));
 
             $module->apiCollectionCreate($request, $response);
 

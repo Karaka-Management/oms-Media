@@ -85,13 +85,6 @@
                 "type": "VARCHAR(255)",
                 "null": false
             },
-            "media_type": {
-                "name": "media_type",
-                "type": "INT",
-                "null": true,
-                "foreignTable": "media_type",
-                "foreignKey": "media_type_id"
-            },
             "media_description": {
                 "name": "media_description",
                 "type": "TEXT",
