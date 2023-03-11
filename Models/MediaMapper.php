@@ -79,10 +79,6 @@ class MediaMapper extends DataMapperFactory
      * @since 1.0.0
      */
     public const OWNS_ONE = [
-        'type' => [
-            'mapper'   => MediaTypeMapper::class,
-            'external' => 'media_type',
-        ],
         'source' => [
             'mapper'   => self::class,
             'external' => 'media_source',
@@ -144,7 +140,7 @@ class MediaMapper extends DataMapperFactory
      * @var string
      * @since 1.0.0
      */
-    public const PRIMARYFIELD ='media_id';
+    public const PRIMARYFIELD = 'media_id';
 
     /**
      * Get media based on virtual path.

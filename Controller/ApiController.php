@@ -634,11 +634,20 @@ final class ApiController extends Controller
         if ($parentCollectionId === 0) {
             /** @var Collection $parentCollection */
             $parentCollection = CollectionMapper::get()
-                ->where('virtualPath', (string) ($request->getData('virtualpath') ?? ''))
-                ->where('name', (string) ($request->getData('name') ?? ''))
+                ->where('virtualPath', \dirname($request->getData('virtualpath') ?? ''))
+                ->where('name', \basename($request->getData('virtualpath') ?? ''))
                 ->execute();
 
             $parentCollectionId = $parentCollection->getId();
+        }
+
+        if (!$request->hasData('source')) {
+            $child = MediaMapper::get()
+                ->where('virtualPath', \dirname($request->getData('child')))
+                ->where('name', \basename($request->getData('child')))
+                ->execute();
+
+            $request->setData('source', $child->getId());
         }
 
         $this->createModelRelation(
@@ -666,10 +675,10 @@ final class ApiController extends Controller
     private function createReferenceFromRequest(RequestAbstract $request) : Reference
     {
         $mediaReference            = new Reference();
-        $mediaReference->name      = (string) $request->getData('name');
+        $mediaReference->name      = \basename($request->getData('virtualpath'));
         $mediaReference->source    = new NullMedia((int) $request->getData('source'));
         $mediaReference->createdBy = new NullAccount($request->header->account);
-        $mediaReference->setVirtualPath($request->getData('virtualpath'));
+        $mediaReference->setVirtualPath(\dirname($request->getData('virtualpath')));
 
         return $mediaReference;
     }
@@ -686,9 +695,8 @@ final class ApiController extends Controller
     private function validateReferenceCreate(RequestAbstract $request) : array
     {
         $val = [];
-        if (($val['name'] = empty($request->getData('name')))
-            || ($val['virtualpath'] = empty($request->getData('virtualpath')))
-            || ($val['source'] = empty($request->getData('source')))
+        if (($val['parent'] = (empty($request->getData('parent')) && empty($request->getData('virtualpath'))))
+            || ($val['source'] = (empty($request->getData('source')) && empty($request->getData('child'))))
         ) {
             return $val;
         }
@@ -1328,7 +1336,7 @@ final class ApiController extends Controller
         $l11nMediaType = $this->createMediaTypeL11nFromRequest($request);
         $this->createModel($request->header->account, $l11nMediaType, MediaTypeL11nMapper::class, 'media_type_l11n', $request->getOrigin());
 
-        $this->fillJsonResponse($request, $response, NotificationLevel::OK, 'Localization', 'Category localization successfully created', $l11nMediaType);
+        $this->fillJsonResponse($request, $response, NotificationLevel::OK, 'Localization', 'Localization successfully created', $l11nMediaType);
     }
 
     /**

@@ -76,5 +76,5 @@ final class MediaTypeMapper extends DataMapperFactory
      * @var string
      * @since 1.0.0
      */
-    public const PRIMARYFIELD ='media_type_id';
+    public const PRIMARYFIELD = 'media_type_id';
 }

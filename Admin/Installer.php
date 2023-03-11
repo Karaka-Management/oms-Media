@@ -166,7 +166,27 @@ final class Installer extends InstallerAbstract
      */
     private static function createReference(ApplicationAbstract $app, array $data) : array
     {
-        return [];
+        /** @var \Modules\Media\Controller\ApiController $module */
+        $module = $app->moduleManager->getModuleInstance('Media');
+
+        $response = new HttpResponse();
+        $request  = new HttpRequest(new HttpUri(''));
+
+        $request->header->account = 1;
+        $request->setData('name', $data['name'] ?? '');
+        $request->setData('virtualpath', $data['from'] ?? '/');
+        $request->setData('child', $data['to'] ?? '/');
+
+        $module->apiReferenceCreate($request, $response);
+
+        $responseData = $response->get('');
+        if (!\is_array($responseData)) {
+            return [];
+        }
+
+        return !\is_array($responseData['response'])
+            ? $responseData['response']->toArray()
+            : $responseData['response'];
     }
 
     /**
@@ -349,15 +369,6 @@ final class Installer extends InstallerAbstract
             $request->setData('media-list', \json_encode($uploadedIds));
 
             $module->apiCollectionCreate($request, $response);
-
-            $responseData = $response->get('');
-            if (!\is_array($responseData)) {
-                return [];
-            }
-
-            return !\is_array($responseData['response'])
-                ? $responseData['response']->toArray()
-                : $responseData['response'];
         }
 
         $responseData = $response->get('');
