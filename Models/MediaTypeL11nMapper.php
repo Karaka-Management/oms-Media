@@ -6,7 +6,7 @@
  *
  * @package   Modules\Media\Models
  * @copyright Dennis Eichhorn
- * @license   OMS License 1.0
+ * @license   OMS License 2.0
  * @version   1.0.0
  * @link      https://jingga.app
  */
@@ -21,7 +21,7 @@ use phpOMS\Localization\BaseStringL11n;
  * Media type l11n mapper class.
  *
  * @package Modules\Media\Models
- * @license OMS License 1.0
+ * @license OMS License 2.0
  * @link    https://jingga.app
  * @since   1.0.0
  */

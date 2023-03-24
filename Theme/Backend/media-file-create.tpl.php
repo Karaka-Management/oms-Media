@@ -6,7 +6,7 @@
 *
 * @package   Modules\Media
 * @copyright Dennis Eichhorn
-* @license   OMS License 1.0
+* @license   OMS License 2.0
 * @version   1.0.0
 * @link      https://jingga.app
  */
@@ -39,7 +39,7 @@ use phpOMS\Uri\UriFactory;
 
     <div class="col-xs-12 col-md-4">
         <div class="box">
-            <a tabindex="0" class="button" href="<?= UriFactory::build('{/lang}/{/app}/media/list?path={?path}'); ?>"><?= $this->getHtml('Back'); ?></a>
+            <a tabindex="0" class="button" href="<?= UriFactory::build('{/base}/media/list?path={?path}'); ?>"><?= $this->getHtml('Back'); ?></a>
         </div>
 
         <div class="portlet">

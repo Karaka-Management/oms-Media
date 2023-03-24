@@ -6,7 +6,7 @@
  *
  * @package   Modules\Media
  * @copyright Dennis Eichhorn
- * @license   OMS License 1.0
+ * @license   OMS License 2.0
  * @version   1.0.0
  * @link      https://jingga.app
  */
@@ -61,7 +61,7 @@ use phpOMS\Views\View;
  * Media class.
  *
  * @package Modules\Media
- * @license OMS License 1.0
+ * @license OMS License 2.0
  * @link    https://jingga.app
  * @since   1.0.0
  */
@@ -87,14 +87,14 @@ final class ApiController extends Controller
             fileNames:          $request->getDataList('filenames'),
             files:              $request->getFiles(),
             account:            $request->header->account,
-            basePath:           __DIR__ . '/../../../Modules/Media/Files' . \urldecode((string) ($request->getData('path') ?? '')),
-            virtualPath:        \urldecode((string) ($request->getData('virtualpath') ?? '')),
-            password:           (string) ($request->getData('password') ?? ''),
-            encryptionKey:      (string) ($request->getData('encrypt') ?? ''),
-            pathSettings:       (int) ($request->getData('pathsettings') ?? PathSettings::RANDOM_PATH), // IMPORTANT!!!
-            hasAccountRelation: (bool) ($request->getData('link_account') ?? false),
-            readContent:        (bool) ($request->getData('parse_content') ?? false),
-            unit:               $request->getData('unit', 'int')
+            basePath:           __DIR__ . '/../../../Modules/Media/Files' . \urldecode($request->getDataString('path') ?? ''),
+            virtualPath:        \urldecode($request->getDataString('virtualpath') ?? ''),
+            password:           $request->getDataString('password') ?? '',
+            encryptionKey:      $request->getDataString('encrypt') ?? '',
+            pathSettings:       $request->getDataInt('pathsettings') ?? PathSettings::RANDOM_PATH, // IMPORTANT!!!
+            hasAccountRelation: $request->getDataBool('link_account') ?? false,
+            readContent:        $request->getDataBool('parse_content') ?? false,
+            unit:               $request->getDataInt('unit')
         );
 
         $ids = [];
@@ -591,7 +591,7 @@ final class ApiController extends Controller
             $media->isAbsolute = false;
         }
 
-        if ($request->getData('content') !== null) {
+        if ($request->hasData('content')) {
             \file_put_contents(
                 $media->isAbsolute ? $media->getPath() : __DIR__ . '/../../../' . \ltrim($media->getPath(), '\\/'),
                 $request->getData('content')
@@ -634,8 +634,8 @@ final class ApiController extends Controller
         if ($parentCollectionId === 0) {
             /** @var Collection $parentCollection */
             $parentCollection = CollectionMapper::get()
-                ->where('virtualPath', \dirname($request->getData('virtualpath') ?? ''))
-                ->where('name', \basename($request->getData('virtualpath') ?? ''))
+                ->where('virtualPath', \dirname($request->getDataString('virtualpath') ?? ''))
+                ->where('name', \basename($request->getDataString('virtualpath') ?? ''))
                 ->execute();
 
             $parentCollectionId = $parentCollection->getId();
@@ -675,10 +675,10 @@ final class ApiController extends Controller
     private function createReferenceFromRequest(RequestAbstract $request) : Reference
     {
         $mediaReference            = new Reference();
-        $mediaReference->name      = \basename($request->getData('virtualpath'));
+        $mediaReference->name      = \basename($request->getDataString('virtualpath') ?? '/');
         $mediaReference->source    = new NullMedia((int) $request->getData('source'));
         $mediaReference->createdBy = new NullAccount($request->header->account);
-        $mediaReference->setVirtualPath(\dirname($request->getData('virtualpath')));
+        $mediaReference->setVirtualPath(\dirname($request->getDataString('virtualpath') ?? '/'));
 
         return $mediaReference;
     }
@@ -704,13 +704,27 @@ final class ApiController extends Controller
         return [];
     }
 
-    // Very similar to create Reference
-    // Reference = it's own media element which points to another element (disadvantage = additional step)
-    // Collection add = directly pointing to other media element (disadvantage = we don't know if we are allowed to modify/delete)
+    /**
+     * Api method to add an element to a collection.
+     *
+     * Very similar to create Reference
+     * Reference = it's own media element which points to another element (disadvantage = additional step)
+     * Collection add = directly pointing to other media element (disadvantage = we don't know if we are allowed to modify/delete)
+     *
+     * @param RequestAbstract  $request  Request
+     * @param ResponseAbstract $response Response
+     * @param mixed            $data     Generic data
+     *
+     * @return void
+     *
+     * @api
+     *
+     * @since 1.0.0
+     */
     public function apiCollectionAdd(RequestAbstract $request, ResponseAbstract $response, mixed $data = null) : void
     {
         $collection = (int) $request->getData('collection');
-        $media = $request->getDataJson('media-list');
+        $media      = $request->getDataJson('media-list');
 
         foreach ($media as $file) {
             $this->createModelRelation(
@@ -784,8 +798,8 @@ final class ApiController extends Controller
     private function createCollectionFromRequest(RequestAbstract $request) : Collection
     {
         $mediaCollection                 = new Collection();
-        $mediaCollection->name           = (string) ($request->getData('name') ?? '');
-        $mediaCollection->description    = ($description = Markdown::parse($request->getData('description') ?? ''));
+        $mediaCollection->name           = $request->getDataString('name') ?? '';
+        $mediaCollection->description    = ($description = Markdown::parse($request->getDataString('description') ?? ''));
         $mediaCollection->descriptionRaw = $description;
         $mediaCollection->createdBy      = new NullAccount($request->header->account);
 
@@ -937,9 +951,9 @@ final class ApiController extends Controller
      */
     public function apiMediaCreate(RequestAbstract $request, ResponseAbstract $response, mixed $data = null) : void
     {
-        $path        = \urldecode((string) ($request->getData('path') ?? ''));
+        $path        = \urldecode($request->getDataString('path') ?? '');
         $virtualPath = \urldecode((string) ($request->getData('virtualpath') ?? '/'));
-        $fileName    = (string) ($request->getData('filename') ?? ($request->getData('name') ?? ''));
+        $fileName    = (string) ($request->getData('filename') ?? ($request->getDataString('name') ?? ''));
         $fileName   .= \strripos($fileName, '.') === false ? '.txt' : '';
 
         $outputDir = '';
@@ -966,7 +980,7 @@ final class ApiController extends Controller
             }
         }
 
-        \file_put_contents($outputDir . '/' . $fileName, (string) ($request->getData('content') ?? ''));
+        \file_put_contents($outputDir . '/' . $fileName, $request->getDataString('content') ?? '');
         $outputDir = \substr($outputDir, \strlen(__DIR__ . '/../../..'));
 
         $status = [
@@ -974,8 +988,8 @@ final class ApiController extends Controller
                 'status'    => UploadStatus::OK,
                 'path'      => $outputDir,
                 'filename'  => $fileName,
-                'name'      => $request->getData('name') ?? '',
-                'size'      => \strlen((string) ($request->getData('content') ?? '')),
+                'name'      => $request->getDataString('name') ?? '',
+                'size'      => \strlen($request->getDataString('content') ?? ''),
                 'extension' => \substr($fileName, \strripos($fileName, '.') + 1),
             ],
         ];
@@ -988,7 +1002,7 @@ final class ApiController extends Controller
                 $virtualPath,
                 $request->getOrigin(),
                 $this->app,
-                unit: $request->getData('unit', 'int')
+                unit: $request->getDataInt('unit')
             );
 
             $ids[] = $created->getId();
@@ -1281,10 +1295,10 @@ final class ApiController extends Controller
     private function createDocTypeFromRequest(RequestAbstract $request) : MediaType
     {
         $type       = new MediaType();
-        $type->name = (string) ($request->getData('name') ?? '');
+        $type->name = $request->getDataString('name') ?? '';
 
         if (!empty($request->getData('title'))) {
-            $type->setL11n($request->getData('title'), $request->getData('lang') ?? $request->getLanguage());
+            $type->setL11n($request->getDataString('title') ?? '', $request->getData('lang') ?? $request->getLanguage());
         }
 
         return $type;
@@ -1351,11 +1365,11 @@ final class ApiController extends Controller
     private function createMediaTypeL11nFromRequest(RequestAbstract $request) : BaseStringL11n
     {
         $l11nMediaType          = new BaseStringL11n();
-        $l11nMediaType->ref     = (int) ($request->getData('type') ?? 0);
-        $l11nMediaType->content = (string) ($request->getData('title') ?? '');
-        $l11nMediaType->setLanguage((string) (
-            $request->getData('language') ?? $request->getLanguage()
-        ));
+        $l11nMediaType->ref     = $request->getDataInt('type') ?? 0;
+        $l11nMediaType->content = $request->getDataString('title') ?? '';
+        $l11nMediaType->setLanguage(
+            $request->getDataString('language') ?? $request->getLanguage()
+        );
 
         return $l11nMediaType;
     }

@@ -6,7 +6,7 @@
  *
  * @package   Modules\Media
  * @copyright Dennis Eichhorn
- * @license   OMS License 1.0
+ * @license   OMS License 2.0
  * @version   1.0.0
  * @link      https://jingga.app
  */
@@ -42,7 +42,7 @@ use phpOMS\Views\View;
  * Media class.
  *
  * @package Modules\Media
- * @license OMS License 1.0
+ * @license OMS License 2.0
  * @link    https://jingga.app
  * @since   1.0.0
  * @codeCoverageIgnore
@@ -210,9 +210,9 @@ final class BackendController extends Controller
         $view->setTemplate('/Modules/Media/Theme/Backend/media-single');
         $view->addData('nav', $this->app->moduleManager->get('Navigation')->createNavigationMid(1000401001, $request, $response));
 
-        $id = $request->getData('id', 'int');
+        $id = $request->getDataInt('id');
         if ($id === 0) {
-            $path  = \urldecode($request->getData('path'));
+            $path  = \urldecode($request->getDataString('path') ?? '');
             $media = new NullMedia();
             if (\is_file(__DIR__ . '/../Files' . $path)) {
                 $name = \explode('.', \basename($path));
@@ -257,7 +257,7 @@ final class BackendController extends Controller
                 $view->addData('path', $collection->getVirtualPath() . '/' . $collection->name);
                 $view->setTemplate('/Modules/Media/Theme/Backend/media-list');
             } else {
-                $sub = $request->getData('sub') ?? '';
+                $sub = $request->getDataString('sub') ?? '';
                 if (\is_dir($media->getPath())
                     && (\is_dir($media->getPath() . $sub))
                 ) {
@@ -391,7 +391,7 @@ final class BackendController extends Controller
         $view = new View($this->app->l11nManager, $request, $response);
         $view->addData('nav', $this->app->moduleManager->get('Navigation')->createNavigationMid(1000105001, $request, $response));
 
-        $id = $request->getData('id') ?? '';
+        $id = $request->getDataString('id') ?? '';
 
         $settings = SettingMapper::getAll()->where('module', $id)->execute();
         if (!($settings instanceof NullSetting)) {
