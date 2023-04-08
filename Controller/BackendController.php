@@ -82,7 +82,7 @@ final class BackendController extends Controller
             ->hasPermission(
                 PermissionType::READ,
                 $this->app->unitId,
-                $this->app->appName,
+                $this->app->appId,
                 self::NAME,
                 PermissionCategory::MEDIA,
             );
@@ -94,7 +94,7 @@ final class BackendController extends Controller
                 ->groups($this->app->accountManager->get($request->header->account)->getGroupIds())
                 ->account($request->header->account)
                 ->units([null, $this->app->unitId])
-                ->apps([null, 'Api', $this->app->appName])
+                ->apps([null, 'Api', $this->app->appId])
                 ->modules([null, self::NAME])
                 ->categories([null, PermissionCategory::MEDIA])
                 ->permission(PermissionType::READ)

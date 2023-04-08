@@ -269,7 +269,7 @@ final class ApiController extends Controller
         array $fileNames = [],
         array $files = [],
         int $account = 0,
-        string $basePath = '/Modules/Media/Files',
+        string $basePath = '',
         string $virtualPath = '',
         string $password = '',
         string $encryptionKey = '',
@@ -286,14 +286,16 @@ final class ApiController extends Controller
         $outputDir = '';
         $absolute  = false;
 
-        // @todo sandatize $basePath, we don't know if it might be relative!
-
         if ($pathSettings === PathSettings::RANDOM_PATH) {
             $outputDir = self::createMediaPath($basePath);
         } elseif ($pathSettings === PathSettings::FILE_PATH) {
             $outputDir = \rtrim($basePath, '/\\');
             $absolute  = true;
         } else {
+            return [];
+        }
+
+        if (!Guard::isSafePath($outputDir, __DIR__ . '/../../../')) {
             return [];
         }
 
@@ -428,11 +430,11 @@ final class ApiController extends Controller
             ]
         );
 
-        $app?->moduleManager->get('Admin')->createAccountModelPermission(
+        $app?->moduleManager->get('Admin', 'Api')->createAccountModelPermission(
             new AccountPermission(
                 $account,
                 $app->unitId,
-                $app->appName,
+                $app->appId,
                 self::NAME,
                 self::NAME,
                 PermissionCategory::MEDIA,
@@ -576,19 +578,17 @@ final class ApiController extends Controller
         $media->setPath((string) ($request->getData('path') ?? $media->getPath()));
         $media->setVirtualPath(\urldecode((string) ($request->getData('virtualpath') ?? $media->getVirtualPath())));
 
-        // @todo: implement a security check to ensure the user is allowed to write to the file. Right now you could overwrite ANY file with a malicious $path
-        if ($id === 0
-            && $media instanceof NullMedia
-            && \is_file($fullPath = __DIR__ . '/../Files' . ($path = \urldecode($request->getData('path'))))
-            && \stripos(FileUtils::absolute(__DIR__ . '/../Files/'), FileUtils::absolute($fullPath)) === 0
+        if ($media instanceof NullMedia
+            || !$this->app->accountManager->get($request->header->account)->hasPermission(
+                PermissionType::MODIFY,
+                $this->app->unitId,
+                $this->app->appId,
+                self::NAME,
+                PermissionCategory::MEDIA,
+                $request->header->account
+            )
         ) {
-            $name = \explode('.', \basename($path));
-
-            $media->name      = $name[0];
-            $media->extension = $name[\count($name) - 1] ?? '';
-            $media->setVirtualPath(\dirname($path));
-            $media->setPath('/Modules/Media/Files/' . \ltrim($path, '\\/'));
-            $media->isAbsolute = false;
+            return $media;
         }
 
         if ($request->hasData('content')) {
@@ -695,8 +695,8 @@ final class ApiController extends Controller
     private function validateReferenceCreate(RequestAbstract $request) : array
     {
         $val = [];
-        if (($val['parent'] = (empty($request->getData('parent')) && empty($request->getData('virtualpath'))))
-            || ($val['source'] = (empty($request->getData('source')) && empty($request->getData('child'))))
+        if (($val['parent'] = (!$request->hasData('parent') && !$request->hasData('virtualpath')))
+            || ($val['source'] = (!$request->hasData('source') && !$request->hasData('child')))
         ) {
             return $val;
         }
@@ -779,7 +779,7 @@ final class ApiController extends Controller
     private function validateCollectionCreate(RequestAbstract $request) : array
     {
         $val = [];
-        if (($val['name'] = empty($request->getData('name')))) {
+        if (($val['name'] = !$request->hasData('name'))) {
             return $val;
         }
 
@@ -812,7 +812,7 @@ final class ApiController extends Controller
 
         $outputDir = '';
         $basePath  = __DIR__ . '/../../../Modules/Media/Files';
-        if (empty($request->getData('path'))) {
+        if (!$request->hasData('path')) {
             $outputDir = self::createMediaPath($basePath);
         } else {
             $outputDir = $basePath . '/' . \ltrim($request->getData('path'), '\\/');
@@ -958,7 +958,7 @@ final class ApiController extends Controller
 
         $outputDir = '';
         $basePath  = __DIR__ . '/../../../Modules/Media/Files';
-        if (empty($request->getData('path'))) {
+        if (!$request->hasData('path')) {
             $outputDir = self::createMediaPath($basePath);
         } else {
             if (\stripos(
@@ -1053,7 +1053,7 @@ final class ApiController extends Controller
                 && !$this->app->accountManager->get($request->header->account)->hasPermission(
                     PermissionType::READ,
                     $this->app->unitId,
-                    $this->app->appName,
+                    $this->app->appId,
                     self::NAME,
                     PermissionCategory::MEDIA,
                     $media->getId()
@@ -1247,7 +1247,7 @@ final class ApiController extends Controller
     private function validateMediaTypeCreate(RequestAbstract $request) : array
     {
         $val = [];
-        if (($val['name'] = empty($request->getData('name')))
+        if (($val['name'] = !$request->hasData('name'))
         ) {
             return $val;
         }
@@ -1297,7 +1297,7 @@ final class ApiController extends Controller
         $type       = new MediaType();
         $type->name = $request->getDataString('name') ?? '';
 
-        if (!empty($request->getData('title'))) {
+        if ($request->hasData('title')) {
             $type->setL11n($request->getDataString('title') ?? '', $request->getData('lang') ?? $request->getLanguage());
         }
 
@@ -1316,8 +1316,8 @@ final class ApiController extends Controller
     private function validateMediaTypeL11nCreate(RequestAbstract $request) : array
     {
         $val = [];
-        if (($val['title'] = empty($request->getData('title')))
-            || ($val['type'] = empty($request->getData('type')))
+        if (($val['title'] = !$request->hasData('title'))
+            || ($val['type'] = !$request->hasData('type'))
         ) {
             return $val;
         }
