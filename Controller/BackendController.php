@@ -266,6 +266,7 @@ final class BackendController extends Controller
                     $view->addData('view', $listView);
                 } else {
                     if ($media->class === MediaClass::REFERENCE) {
+                        /** @var \Modules\Media\Models\Media $media */
                         $media->source = MediaMapper::get()
                             ->with('createdBy')
                             ->with('tags')

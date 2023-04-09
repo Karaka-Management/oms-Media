@@ -416,9 +416,15 @@ final class ApiController extends Controller
             }
         }
 
-        $app?->eventManager->triggerSimilar('PRE:Module:Media-media-create', '', $media);
+        if ($app === null) {
+            MediaMapper::create()->execute($media);
+
+            return $media;
+        }
+
+        $app->eventManager->triggerSimilar('PRE:Module:Media-media-create', '', $media);
         MediaMapper::create()->execute($media);
-        $app?->eventManager->triggerSimilar('POST:Module:Media-media-create', '',
+        $app->eventManager->triggerSimilar('POST:Module:Media-media-create', '',
             [
                 $account,
                 null, $media,
@@ -430,7 +436,7 @@ final class ApiController extends Controller
             ]
         );
 
-        $app?->moduleManager->get('Admin', 'Api')->createAccountModelPermission(
+        $app->moduleManager->get('Admin', 'Api')->createAccountModelPermission(
             new AccountPermission(
                 $account,
                 $app->unitId,
@@ -573,10 +579,10 @@ final class ApiController extends Controller
 
         /** @var Media $media */
         $media              = MediaMapper::get()->where('id', $id)->execute();
-        $media->name        = (string) ($request->getData('name') ?? $media->name);
-        $media->description = (string) ($request->getData('description') ?? $media->description);
-        $media->setPath((string) ($request->getData('path') ?? $media->getPath()));
-        $media->setVirtualPath(\urldecode((string) ($request->getData('virtualpath') ?? $media->getVirtualPath())));
+        $media->name        = $request->getDataString('name') ?? $media->name;
+        $media->description = $request->getDataString('description') ?? $media->description;
+        $media->setPath($request->getDataString('path') ?? $media->getPath());
+        $media->setVirtualPath(\urldecode($request->getDataString('virtualpath') ?? $media->getVirtualPath()));
 
         if ($media instanceof NullMedia
             || !$this->app->accountManager->get($request->header->account)->hasPermission(
@@ -593,11 +599,13 @@ final class ApiController extends Controller
 
         if ($request->hasData('content')) {
             \file_put_contents(
-                $media->isAbsolute ? $media->getPath() : __DIR__ . '/../../../' . \ltrim($media->getPath(), '\\/'),
-                $request->getData('content')
+                $media->isAbsolute
+                    ? $media->getPath()
+                    : __DIR__ . '/../../../' . \ltrim($media->getPath(), '\\/'),
+                $request->getDataString('content') ?? ''
             );
 
-            $media->size = \strlen($request->getData('content'));
+            $media->size = \strlen($request->getDataString('content') ?? '');
         }
 
         return $media;
@@ -642,9 +650,10 @@ final class ApiController extends Controller
         }
 
         if (!$request->hasData('source')) {
+            /** @var \Modules\Media\Models\Media $child */
             $child = MediaMapper::get()
-                ->where('virtualPath', \dirname($request->getData('child')))
-                ->where('name', \basename($request->getData('child')))
+                ->where('virtualPath', \dirname($request->getDataString('child') ?? ''))
+                ->where('name', \basename($request->getDataString('child') ?? ''))
                 ->execute();
 
             $request->setData('source', $child->getId());
@@ -808,23 +817,23 @@ final class ApiController extends Controller
             $mediaCollection->addSource(new NullMedia((int) $file));
         }
 
-        $virtualPath = \urldecode((string) ($request->getData('virtualpath') ?? '/'));
+        $virtualPath = \urldecode($request->getDataString('virtualpath') ?? '/');
 
         $outputDir = '';
         $basePath  = __DIR__ . '/../../../Modules/Media/Files';
         if (!$request->hasData('path')) {
             $outputDir = self::createMediaPath($basePath);
         } else {
-            $outputDir = $basePath . '/' . \ltrim($request->getData('path'), '\\/');
+            $outputDir = $basePath . '/' . \ltrim($request->getDataString('path') ?? '', '\\/');
         }
 
-        $dirPath   = $outputDir . '/' . $request->getData('name');
+        $dirPath   = $outputDir . '/' . ($request->getDataString('name') ?? '');
         $outputDir = \substr($outputDir, \strlen(__DIR__ . '/../../..'));
 
         $mediaCollection->setVirtualPath($virtualPath);
         $mediaCollection->setPath($outputDir);
 
-        if (((bool) ($request->getData('create_directory') ?? false))
+        if (($request->getDataBool('create_directory') ?? false)
             && !\is_dir($dirPath)
         ) {
             \mkdir($dirPath, 0755, true);
@@ -952,8 +961,8 @@ final class ApiController extends Controller
     public function apiMediaCreate(RequestAbstract $request, ResponseAbstract $response, mixed $data = null) : void
     {
         $path        = \urldecode($request->getDataString('path') ?? '');
-        $virtualPath = \urldecode((string) ($request->getData('virtualpath') ?? '/'));
-        $fileName    = (string) ($request->getData('filename') ?? ($request->getDataString('name') ?? ''));
+        $virtualPath = \urldecode($request->getDataString('virtualpath') ?? '/');
+        $fileName    = $request->getDataString('filename') ?? ($request->getDataString('name') ?? '');
         $fileName   .= \strripos($fileName, '.') === false ? '.txt' : '';
 
         $outputDir = '';
@@ -1034,7 +1043,7 @@ final class ApiController extends Controller
             $media    = MediaMapper::get()->where('id', (int) $request->getData('id'))->execute();
             $filePath = $media->getAbsolutePath();
         } else {
-            $path  = \urldecode($request->getData('path'));
+            $path  = \urldecode($request->getDataString('path') ?? '');
             $media = new NullMedia();
 
             if (\is_file($filePath = __DIR__ . '/../../../' . \ltrim($path, '\\/'))) {
@@ -1079,7 +1088,7 @@ final class ApiController extends Controller
             }
         }
 
-        if (!Guard::isSafePath($filePath, $data['guard'])) {
+        if (!Guard::isSafePath($filePath, $data['guard'] ?? '')) {
             $response->header->status = RequestStatusCode::R_403;
 
             return;
@@ -1121,7 +1130,7 @@ final class ApiController extends Controller
             $response->endAllOutputBuffering(); // for large files
         }
 
-        if (($type = $request->getData('type')) === null) {
+        if (($type = $request->getDataString('type')) === null) {
             $view->setTemplate('/Modules/Media/Theme/Api/render');
         } elseif ($type === 'html') {
             $head = new Head();
@@ -1164,7 +1173,7 @@ final class ApiController extends Controller
      */
     private function setMediaResponseHeader(Media $media, RequestAbstract $request, ResponseAbstract $response) : void
     {
-        switch ($request->getData('type') ?? \strtolower($media->extension)) {
+        switch ($request->getDataString('type') ?? \strtolower($media->extension)) {
             case 'htm':
             case 'html':
                 $response->header->set('Content-Type', MimeType::M_HTML, true);
@@ -1298,7 +1307,10 @@ final class ApiController extends Controller
         $type->name = $request->getDataString('name') ?? '';
 
         if ($request->hasData('title')) {
-            $type->setL11n($request->getDataString('title') ?? '', $request->getData('lang') ?? $request->getLanguage());
+            $type->setL11n(
+                $request->getDataString('title') ?? '',
+                $request->getDataString('lang') ?? $request->getLanguage()
+            );
         }
 
         return $type;
