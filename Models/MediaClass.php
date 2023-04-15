@@ -36,13 +36,13 @@ use phpOMS\Stdlib\Base\Enum;
  */
 abstract class MediaClass extends Enum
 {
-    public const FILE = 0;
+    public const FILE = 1;
 
-    public const COLLECTION = 1;
+    public const COLLECTION = 2;
 
-    public const REFERENCE = 2;
+    public const REFERENCE = 3;
 
-    public const SYSTEM_FILE = 3;
+    public const SYSTEM_FILE = 4;
 
-    public const SYSTEM_DIRECTORY = 4;
+    public const SYSTEM_DIRECTORY = 5;
 }
