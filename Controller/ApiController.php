@@ -1241,6 +1241,8 @@ final class ApiController extends Controller
                 break;
             default:
                 $response->header->set('Content-Type', MimeType::M_BIN, true);
+                $response->header->set('Content-Disposition', 'attachment; filename="' . \addslashes($media->name) . '"', true);
+                $response->header->set('Content-Transfer-Encoding', 'binary', true);
         }
     }
 

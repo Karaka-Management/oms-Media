@@ -24,6 +24,9 @@ use phpOMS\DataStorage\Database\Mapper\ReadMapper;
  * @license OMS License 2.0
  * @link    https://jingga.app
  * @since   1.0.0
+ *
+ * @template T of Collection
+ * @extends MediaMapper<T>
  */
 final class CollectionMapper extends MediaMapper
 {
