@@ -40,8 +40,8 @@ final class MediaTest extends \PHPUnit\Framework\TestCase
      */
     public function testDefault() : void
     {
-        self::assertEquals(0, $this->media->getId());
-        self::assertEquals(0, $this->media->createdBy->getId());
+        self::assertEquals(0, $this->media->id);
+        self::assertEquals(0, $this->media->createdBy->id);
         self::assertEquals((new \DateTime('now'))->format('Y-m-d'), $this->media->createdAt->format('Y-m-d'));
         self::assertEquals('', $this->media->extension);
         self::assertEquals('', $this->media->getPath());
@@ -52,7 +52,6 @@ final class MediaTest extends \PHPUnit\Framework\TestCase
         self::assertEquals('/', $this->media->getVirtualPath());
         self::assertEquals(0, $this->media->size);
         self::assertFalse($this->media->isVersioned);
-        self::assertFalse($this->media->compareNonce('something'));
         self::assertFalse($this->media->isEncrypted());
     }
 
@@ -63,7 +62,7 @@ final class MediaTest extends \PHPUnit\Framework\TestCase
     public function testCreatedByInputOutput() : void
     {
         $this->media->createdBy = new NullAccount(1);
-        self::assertEquals(1, $this->media->createdBy->getId());
+        self::assertEquals(1, $this->media->createdBy->id);
     }
 
     /**
@@ -167,18 +166,6 @@ final class MediaTest extends \PHPUnit\Framework\TestCase
     {
         $this->media->status = MediaStatus::HIDDEN;
         self::assertEquals(MediaStatus::HIDDEN, $this->media->status);
-    }
-
-    /**
-     * @covers Modules\Media\Models\Media
-     * @group module
-     */
-    public function testNonceInputOutput() : void
-    {
-        $this->media->setNonce('test');
-        self::assertTrue($this->media->compareNonce('test'));
-        self::assertFalse($this->media->compareNonce('test2'));
-        self::assertTrue($this->media->isEncrypted());
     }
 
     /**

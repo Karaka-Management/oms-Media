@@ -18,8 +18,8 @@ use phpOMS\Uri\UriFactory;
 <section id="mediaFile" class="portlet">
     <div class="portlet-body">
         <div class="h-overflow centerText">
-            <img alt="<?= $this->printHtml($this->media->name); ?>" style="max-width: 100%" src="<?= $this->media->getId() !== 0
-                    ? UriFactory::build('{/api}media/export?id=' . $this->media->getId())
+            <img alt="<?= $this->printHtml($this->media->name); ?>" style="max-width: 100%" src="<?= $this->media->id !== 0
+                    ? UriFactory::build('{/api}media/export?id=' . $this->media->id)
                     : UriFactory::build('{/api}media/export?path=' . \urlencode($this->media->getPath()));
                 ?>">
         </div>

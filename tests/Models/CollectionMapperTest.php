@@ -39,12 +39,12 @@ final class CollectionMapperTest extends \PHPUnit\Framework\TestCase
         $media->name = 'Collection';
         $id          = CollectionMapper::create()->execute($media);
 
-        self::assertGreaterThan(0, $media->getId());
-        self::assertEquals($id, $media->getId());
+        self::assertGreaterThan(0, $media->id);
+        self::assertEquals($id, $media->id);
 
-        $mediaR = CollectionMapper::get()->where('id', $media->getId())->execute();
+        $mediaR = CollectionMapper::get()->where('id', $media->id)->execute();
         self::assertEquals($media->createdAt->format('Y-m-d'), $mediaR->createdAt->format('Y-m-d'));
-        self::assertEquals($media->createdBy->getId(), $mediaR->createdBy->getId());
+        self::assertEquals($media->createdBy->id, $mediaR->createdBy->id);
         self::assertEquals($media->description, $mediaR->description);
         self::assertEquals($media->descriptionRaw, $mediaR->descriptionRaw);
         self::assertEquals($media->getPath(), $mediaR->getPath());

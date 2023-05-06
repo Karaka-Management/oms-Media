@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace Modules\Media\Models;
 
 use phpOMS\Log\FileLogger;
+use phpOMS\Security\EncryptionHelper;
 use phpOMS\System\File\Local\Directory;
 use phpOMS\System\File\Local\File;
 
@@ -202,29 +203,13 @@ class UploadFile
             }
 
             if ($encryptionKey !== '') {
-                $nonce = \sodium_randombytes_buf(24);
+                $isEncrypted = EncryptionHelper::encryptFile($dest, $dest, $encryptionKey);
 
-                $fpSource  = \fopen($dest, 'r+');
-                $fpEncoded = \fopen($dest . '.tmp', 'w');
-
-                if ($fpSource === false || $fpEncoded === false) {
+                if (!$isEncrypted) {
                     $result[$key]['status'] = UploadStatus::NOT_ENCRYPTABLE;
 
                     return $result;
                 }
-
-                while (($buffer = \fgets($fpSource, 4096)) !== false) {
-                    $encrypted = \sodium_crypto_secretbox($buffer, $nonce, $encryptionKey);
-
-                    \fwrite($fpEncoded, $encrypted);
-                }
-
-                \fclose($fpSource);
-                \fclose($fpEncoded);
-
-                \unlink($dest);
-                \rename($dest . '.tmp', $dest);
-                $result[$key]['nonce'] = $nonce;
             }
 
             /*

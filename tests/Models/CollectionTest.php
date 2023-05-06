@@ -39,8 +39,8 @@ final class CollectionTest extends \PHPUnit\Framework\TestCase
      */
     public function testDefault() : void
     {
-        self::assertEquals(0, $this->media->getId());
-        self::assertEquals(0, $this->media->createdBy->getId());
+        self::assertEquals(0, $this->media->id);
+        self::assertEquals(0, $this->media->createdBy->id);
         self::assertEquals((new \DateTime('now'))->format('Y-m-d'), $this->media->createdAt->format('Y-m-d'));
         self::assertEquals('collection', $this->media->extension);
         self::assertEquals('', $this->media->getPath());
@@ -59,7 +59,7 @@ final class CollectionTest extends \PHPUnit\Framework\TestCase
     public function testCreatedByInputOutput() : void
     {
         $this->media->createdBy = new NullAccount(1);
-        self::assertEquals(1, $this->media->createdBy->getId());
+        self::assertEquals(1, $this->media->createdBy->id);
     }
 
     /**
@@ -148,8 +148,8 @@ final class CollectionTest extends \PHPUnit\Framework\TestCase
         $this->media->setSources([$a = new NullMedia(1), $b = new NullMedia(2), $c = new NullMedia(3)]);
 
         foreach ($this->media as $key => $media) {
-            if ($media->getId() !== $key + 1) {
-                self::assertEquals($key + 1, $media->getId());
+            if ($media->id !== $key + 1) {
+                self::assertEquals($key + 1, $media->id);
             }
         }
 

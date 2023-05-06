@@ -19,10 +19,10 @@ include __DIR__ . '/../../template-functions.php';
 
 $previous = empty($this->media)
     ? '{%}'
-    : '{%}?{?}&mpivot=' . \reset($this->media)->getId() . '&mptype=p';
+    : '{%}?{?}&mpivot=' . \reset($this->media)->id . '&mptype=p';
 $next     = empty($this->media)
     ? '{%}'
-    : '{%}?{?}&mpivot=' . \end($this->media)->getId() . '&mptype=n';
+    : '{%}?{?}&mpivot=' . \end($this->media)->id . '&mptype=n';
 ?>
 <div class="portlet">
     <div class="portlet-head"><?= $this->getHtml('Media', 'Media'); ?><i class="fa fa-download floatRight download btn"></i></div>
@@ -38,7 +38,7 @@ $next     = empty($this->media)
             <td><?= $this->getHtml('Created', 'Media'); ?>
         <tbody>
             <?php $count = 0; foreach ($this->media as $key => $value) : ++$count;
-                $url     = UriFactory::build('{/base}/media/single?{?}&id=' . $value->getId());
+                $url     = UriFactory::build('{/base}/media/single?{?}&id=' . $value->id);
 
                 $icon          = '';
                 $extensionType = FileUtils::getExtensionType($value->extension);

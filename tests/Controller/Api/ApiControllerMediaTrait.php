@@ -67,8 +67,8 @@ trait ApiControllerMediaTrait
                 1
             );
 
-            if ($created->getId() > 0) {
-                $ids[] = $created->getId();
+            if ($created->id > 0) {
+                $ids[] = $created->id;
             }
         }
 

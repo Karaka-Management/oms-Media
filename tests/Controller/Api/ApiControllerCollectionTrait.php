@@ -145,8 +145,8 @@ trait ApiControllerCollectionTrait
         $media->name      = 'Media for collection';
         $id               = MediaMapper::create()->execute($media);
 
-        self::assertGreaterThan(0, $media->getId());
-        self::assertEquals($id, $media->getId());
+        self::assertGreaterThan(0, $media->id);
+        self::assertEquals($id, $media->id);
 
         $collection = $this->module->createMediaCollectionFromMedia('Collection With Media', '', [$media], 1);
 

@@ -122,9 +122,9 @@
                 "type": "TINYINT",
                 "null": false
             },
-            "media_nonce": {
-                "name": "media_nonce",
-                "type": "VARCHAR(255)",
+            "media_encrypted": {
+                "name": "media_encrypted",
+                "type": "TINYINT(1)",
                 "null": true,
                 "default": null
             },

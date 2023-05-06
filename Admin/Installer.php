@@ -57,6 +57,10 @@ final class Installer extends InstallerAbstract
             \mkdir(__DIR__ . '/../Files');
         }
 
+        if (!\is_dir(__DIR__ . '/../../../Temp')) {
+            \mkdir(__DIR__ . '/../../../Temp');
+        }
+
         parent::install($app, $info, $cfgHandler);
 
         // Create directory for admin account
@@ -69,9 +73,9 @@ final class Installer extends InstallerAbstract
 
         foreach ($accounts as $account) {
             $collection       = new Collection();
-            $collection->name = ((string) $account->getId()) . ' ' . $account->login;
+            $collection->name = ((string) $account->id) . ' ' . $account->login;
             $collection->setVirtualPath('/Accounts');
-            $collection->setPath('/Modules/Media/Files/Accounts/' . ((string) $account->getId()));
+            $collection->setPath('/Modules/Media/Files/Accounts/' . ((string) $account->id));
             // The installation is always run by the admin account since the module is a "base" module which is always installed during the application setup
             $collection->createdBy = new NullAccount(1);
 
@@ -261,7 +265,7 @@ final class Installer extends InstallerAbstract
         }
 
         $type = $responseData['response'];
-        $id   = $type->getId();
+        $id   = $type->id;
 
         $isFirst = true;
         foreach ($data['l11n'] as $l11n) {

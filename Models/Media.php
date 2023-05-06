@@ -18,6 +18,7 @@ use Modules\Admin\Models\Account;
 use Modules\Admin\Models\NullAccount;
 use Modules\Tag\Models\NullTag;
 use Modules\Tag\Models\Tag;
+use phpOMS\Security\EncryptionHelper;
 
 /**
  * Media class.
@@ -35,7 +36,7 @@ class Media implements \JsonSerializable
      * @var int
      * @since 1.0.0
      */
-    protected int $id = 0;
+    public int $id = 0;
 
     /**
      * Name.
@@ -99,7 +100,7 @@ class Media implements \JsonSerializable
      * @var string
      * @since 1.0.0
      */
-    protected string $path = '';
+    public string $path = '';
 
     /**
      * Virtual path.
@@ -107,7 +108,7 @@ class Media implements \JsonSerializable
      * @var string
      * @since 1.0.0
      */
-    protected string $virtualPath = '/';
+    public string $virtualPath = '/';
 
     /**
      * Is path absolute?
@@ -150,12 +151,12 @@ class Media implements \JsonSerializable
     public ?Media $source = null;
 
     /**
-     * Media encryption nonce.
+     * Is encrypted.
      *
-     * @var null|string
+     * @var bool
      * @since 1.0.0
      */
-    protected ?string $nonce = null;
+    public bool $isEncrypted = false;
 
     /**
      * Media password hash.
@@ -163,7 +164,7 @@ class Media implements \JsonSerializable
      * @var null|string
      * @since 1.0.0
      */
-    protected ?string $password = null;
+    public ?string $password = null;
 
     /**
      * Media is hidden.
@@ -195,7 +196,7 @@ class Media implements \JsonSerializable
      * @var Tag[]
      * @since 1.0.0
      */
-    protected array $tags = [];
+    public array $tags = [];
 
     /**
      * Language.
@@ -203,7 +204,7 @@ class Media implements \JsonSerializable
      * @var null|string
      * @since 1.0.0
      */
-    protected ?string $language = null;
+    public ?string $language = null;
 
     /**
      * Country.
@@ -211,7 +212,7 @@ class Media implements \JsonSerializable
      * @var null|string
      * @since 1.0.0
      */
-    protected ?string $country = null;
+    public ?string $country = null;
 
     /**
      * Constructor.
@@ -237,57 +238,31 @@ class Media implements \JsonSerializable
     /**
      * Encrypt the media file
      *
-     * @param string      $password   Password to encrypt the file with
+     * @param string      $key   Password to encrypt the file with
      * @param null|string $outputPath Output path of the encryption (null = replace file)
-     *
-     * @return string
-     *
-     * @since 1.0.0
-     */
-    public function encrypt(string $password, string $outputPath = null) : string
-    {
-        return '';
-    }
-
-    /**
-     * Decrypt the media file
-     *
-     * @param string      $password   Password to encrypt the file with
-     * @param null|string $outputPath Output path of the encryption (null = replace file)
-     *
-     * @return string
-     *
-     * @since 1.0.0
-     */
-    public function decrypt(string $password, string $outputPath = null) : string
-    {
-        return '';
-    }
-
-    /**
-     * Set encryption nonce
-     *
-     * @param null|string $nonce Nonce from encryption password
-     *
-     * @return void
-     *
-     * @since 1.0.0
-     */
-    public function setNonce(?string $nonce) : void
-    {
-        $this->nonce = $nonce;
-    }
-
-    /**
-     * Is media file encrypted?
      *
      * @return bool
      *
      * @since 1.0.0
      */
-    public function isEncrypted() : bool
+    public function encrypt(string $key, string $outputPath = null) : bool
     {
-        return $this->nonce !== null;
+        return EncryptionHelper::encryptFile($this->getAbsolutePath(), $outputPath, $key);
+    }
+
+    /**
+     * Decrypt the media file
+     *
+     * @param string      $key   Password to encrypt the file with
+     * @param null|string $outputPath Output path of the encryption (null = replace file)
+     *
+     * @return bool
+     *
+     * @since 1.0.0
+     */
+    public function decrypt(string $key, string $outputPath = null) : bool
+    {
+        return EncryptionHelper::decryptFile($this->getAbsolutePath(), $outputPath, $key);
     }
 
     /**
@@ -333,20 +308,6 @@ class Media implements \JsonSerializable
     }
 
     /**
-     * Compare nonce with encryption nonce of the media file
-     *
-     * @param string $nonce User nonce
-     *
-     * @return bool
-     *
-     * @since 1.0.0
-     */
-    public function compareNonce(string $nonce) : bool
-    {
-        return $this->nonce === null ? false : \hash_equals($this->nonce, $nonce);
-    }
-
-    /**
      * Get the media path
      *
      * @return string
@@ -356,6 +317,22 @@ class Media implements \JsonSerializable
     public function getPath() : string
     {
         return $this->isAbsolute ? $this->path : \ltrim($this->path, '\\/');
+    }
+
+    public function getFileName() : string
+    {
+        return \basename($this->path);
+    }
+
+    public function getExtension() : string
+    {
+        $pos = \strrpos('.', $this->path);
+
+        if ($pos === false) {
+            return '';
+        }
+
+        return \substr($this->path, $pos + 1);
     }
 
     /**

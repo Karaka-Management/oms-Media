@@ -90,7 +90,7 @@ final class ApiController extends Controller
             basePath:           __DIR__ . '/../../../Modules/Media/Files' . \urldecode($request->getDataString('path') ?? ''),
             virtualPath:        \urldecode($request->getDataString('virtualpath') ?? ''),
             password:           $request->getDataString('password') ?? '',
-            encryptionKey:      $request->getDataString('encrypt') ?? '',
+            encryptionKey:      $request->getDataString('encryption') ?? ($request->getDataBool('isencrypted') === true && !empty($_SERVER['OMS_PRIVATE_KEY_I'] ?? '') ? $_SERVER['OMS_PRIVATE_KEY_I'] : ''),
             pathSettings:       $request->getDataInt('pathsettings') ?? PathSettings::RANDOM_PATH, // IMPORTANT!!!
             hasAccountRelation: $request->getDataBool('link_account') ?? false,
             readContent:        $request->getDataBool('parse_content') ?? false,
@@ -99,7 +99,7 @@ final class ApiController extends Controller
 
         $ids = [];
         foreach ($uploads as $file) {
-            $ids[] = $file->getId();
+            $ids[] = $file->id;
 
             // add media types
             if (!empty($types = $request->getDataJson('types'))) {
@@ -123,7 +123,7 @@ final class ApiController extends Controller
 
                     $this->createModelRelation(
                         $request->header->account,
-                        $file->getId(),
+                        $file->id,
                         $tId,
                         MediaMapper::class,
                         'types',
@@ -156,7 +156,7 @@ final class ApiController extends Controller
 
                     $this->createModelRelation(
                         $request->header->account,
-                        $file->getId(),
+                        $file->id,
                         $tId,
                         MediaMapper::class,
                         'tags',
@@ -321,7 +321,9 @@ final class ApiController extends Controller
                 $virtualPath,
                 app: $hasAccountRelation ? $this->app : null,
                 readContent: $readContent,
-                unit: $unit
+                unit: $unit,
+                password: $password,
+                isEncrypted: !empty($encryptionKey)
             );
         }
 
@@ -390,7 +392,9 @@ final class ApiController extends Controller
         string $ip = '127.0.0.1',
         ApplicationAbstract $app = null,
         bool $readContent = false,
-        int $unit = null
+        int $unit = null,
+        string $password = '',
+        bool $isEncrypted = false
     ) : Media
     {
         if (!isset($status['status']) || $status['status'] !== UploadStatus::OK) {
@@ -406,6 +410,8 @@ final class ApiController extends Controller
         $media->extension = $status['extension'];
         $media->unit      = $unit;
         $media->setVirtualPath($virtualPath);
+        $media->setPassword($password);
+        $media->isEncrypted = $isEncrypted;
 
         if ($readContent && \is_file($media->getAbsolutePath())) {
             $content = self::loadFileContent($media->getAbsolutePath(), $media->extension);
@@ -430,7 +436,7 @@ final class ApiController extends Controller
                 null, $media,
                 StringUtils::intHash(MediaMapper::class), 'Media-media-create',
                 self::NAME,
-                (string) $media->getId(),
+                (string) $media->id,
                 '',
                 $ip
             ]
@@ -444,7 +450,7 @@ final class ApiController extends Controller
                 self::NAME,
                 self::NAME,
                 PermissionCategory::MEDIA,
-                $media->getId(),
+                $media->id,
                 null,
                 PermissionType::READ | PermissionType::MODIFY | PermissionType::DELETE | PermissionType::PERMISSION
             ),
@@ -584,7 +590,7 @@ final class ApiController extends Controller
         $media->setPath($request->getDataString('path') ?? $media->getPath());
         $media->setVirtualPath(\urldecode($request->getDataString('virtualpath') ?? $media->getVirtualPath()));
 
-        if ($media instanceof NullMedia
+        if ($media->id === 0
             || !$this->app->accountManager->get($request->header->account)->hasPermission(
                 PermissionType::MODIFY,
                 $this->app->unitId,
@@ -646,7 +652,7 @@ final class ApiController extends Controller
                 ->where('name', \basename($request->getDataString('virtualpath') ?? ''))
                 ->execute();
 
-            $parentCollectionId = $parentCollection->getId();
+            $parentCollectionId = $parentCollection->id;
         }
 
         if (!$request->hasData('source')) {
@@ -656,13 +662,13 @@ final class ApiController extends Controller
                 ->where('name', \basename($request->getDataString('child') ?? ''))
                 ->execute();
 
-            $request->setData('source', $child->getId());
+            $request->setData('source', $child->id);
         }
 
         $this->createModelRelation(
             $request->header->account,
             $parentCollectionId,
-            $ref->getId(),
+            $ref->id,
             CollectionMapper::class,
             'sources',
             '',
@@ -912,7 +918,7 @@ final class ApiController extends Controller
 
             /** @var Collection $parentCollection */
             $parentCollection = CollectionMapper::getParentCollection($temp)->execute();
-            if ($parentCollection->getId() > 0) {
+            if ($parentCollection->id > 0) {
                 break;
             }
 
@@ -930,8 +936,8 @@ final class ApiController extends Controller
             $this->createModel($account, $childCollection, CollectionMapper::class, 'collection', '127.0.0.1');
             $this->createModelRelation(
                 $account,
-                $parentCollection->getId(),
-                $childCollection->getId(),
+                $parentCollection->id,
+                $childCollection->id,
                 CollectionMapper::class,
                 'sources',
                 '',
@@ -1011,10 +1017,12 @@ final class ApiController extends Controller
                 $virtualPath,
                 $request->getOrigin(),
                 $this->app,
-                unit: $request->getDataInt('unit')
+                unit: $request->getDataInt('unit'),
+                password: $request->getDataString('password') ?? '',
+                isEncrypted: $request->getDataBool('isencrypted') ?? $request->hasData('encryption')
             );
 
-            $ids[] = $created->getId();
+            $ids[] = $created->id;
         }
 
         $this->fillJsonResponse($request, $response, NotificationLevel::OK, 'Media', 'Media successfully created.', $ids);
@@ -1057,15 +1065,16 @@ final class ApiController extends Controller
             }
         }
 
-        if (!($media instanceof NullMedia)) {
-            if ($request->header->account !== $media->createdBy->getId()
+        if ($media->id > 0) {
+            if (!($data['ignorePermission'] ?? false)
+                && $request->header->account !== $media->createdBy->id
                 && !$this->app->accountManager->get($request->header->account)->hasPermission(
                     PermissionType::READ,
                     $this->app->unitId,
                     $this->app->appId,
                     self::NAME,
                     PermissionCategory::MEDIA,
-                    $media->getId()
+                    $media->id
                 )
             ) {
                 $this->fillJsonResponse($request, $response, NotificationLevel::HIDDEN, '', '', []);
@@ -1095,7 +1104,7 @@ final class ApiController extends Controller
         }
 
         if ($media->hasPassword()
-            && !$media->comparePassword((string) $request->getData('password'))
+            && !$media->comparePassword($request->getDataString('password'))
         ) {
             $view = new View($this->app->l11nManager, $request, $response);
             $view->setTemplate('/Modules/Media/Theme/Api/invalidPassword');
@@ -1103,11 +1112,54 @@ final class ApiController extends Controller
             return;
         }
 
+        if ($media->isEncrypted) {
+            $media = $this->prepareEncryptedMedia($media, $request);
+
+            if ($media->id === 0) {
+                $this->fillJsonResponse($request, $response, NotificationLevel::ERROR, 'Media', 'Media could not be exported. Please try again.', []);
+                $response->header->status = RequestStatusCode::R_500;
+
+                return;
+            }
+        }
+
         $this->setMediaResponseHeader($media, $request, $response);
         $view = $this->createView($media, $request, $response);
         $view->setData('path', __DIR__ . '/../../../');
 
         $response->set('export', $view);
+    }
+
+    private function prepareEncryptedMedia(Media $media, RequestAbstract $request) : Media
+    {
+        $path = '';
+        $absolutePath = '';
+
+        $counter = 0;
+        do {
+            $randomName = \sha1(\random_bytes(32));
+
+            $path =  '../../../Temp/' . $randomName . '.' . $media->getExtension();
+            $absolutePath = __DIR__ . '/' . $path;
+        } while(!\is_file($absolutePath) && $counter < 1000);
+
+        if ($counter >= 1000) {
+            return new NullMedia();
+        }
+
+        $encryptionKey = $request->getDataBool('isencrypted') === true && !empty($_SESSION['OMS_PRIVATE_KEY_I'] ?? '')
+            ? $_SESSION['OMS_PRIVATE_KEY_I']
+            : $request->getDataString('encrpkey') ?? '';
+
+        $decrypted = $media->decrypt($encryptionKey, $absolutePath);
+
+        if (!$decrypted) {
+            return new NullMedia();
+        }
+
+        $media->path = $media->isAbsolute ? $absolutePath : $path;
+
+        return $media;
     }
 
     /**

@@ -49,7 +49,7 @@ class MediaMapper extends DataMapperFactory
         'media_file'            => ['name' => 'media_file',            'type' => 'string',            'internal' => 'path',        'autocomplete' => true],
         'media_virtual'         => ['name' => 'media_virtual',         'type' => 'string',            'internal' => 'virtualPath', 'autocomplete' => true],
         'media_absolute'        => ['name' => 'media_absolute',        'type' => 'bool',              'internal' => 'isAbsolute'],
-        'media_nonce'           => ['name' => 'media_nonce',           'type' => 'string',            'internal' => 'nonce'],
+        'media_encrypted'           => ['name' => 'media_encrypted',           'type' => 'bool',            'internal' => 'isEncrypted'],
         'media_password'        => ['name' => 'media_password',        'type' => 'string',            'internal' => 'password'],
         'media_extension'       => ['name' => 'media_extension',       'type' => 'string',            'internal' => 'extension'],
         'media_size'            => ['name' => 'media_size',            'type' => 'int',               'internal' => 'size'],

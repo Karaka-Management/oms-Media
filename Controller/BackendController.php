@@ -124,7 +124,7 @@ final class BackendController extends Controller
 
         $collection = $collectionMapper->execute();
 
-        if ((\is_array($collection) || $collection instanceof NullCollection) && \is_dir(__DIR__ . '/../Files' . $path)) {
+        if ((\is_array($collection) || $collection->id === 0) && \is_dir(__DIR__ . '/../Files' . $path)) {
             $collection       = new Collection();
             $collection->name = \basename($path);
             $collection->setVirtualPath(\dirname($path));
@@ -132,11 +132,11 @@ final class BackendController extends Controller
             $collection->isAbsolute = false;
         }
 
-        if ($collection instanceof Collection && !($collection instanceof NullCollection)) {
+        if ($collection instanceof Collection && $collection->id > 0) {
             $collectionSources = $collection->getSources();
             foreach ($collectionSources as $source) {
                 foreach ($media as $obj) {
-                    if ($obj->getId() === $source->getId()) {
+                    if ($obj->id === $source->id) {
                         continue 2;
                     }
                 }
@@ -214,6 +214,7 @@ final class BackendController extends Controller
         if ($id === 0) {
             $path  = \urldecode($request->getDataString('path') ?? '');
             $media = new NullMedia();
+
             if (\is_file(__DIR__ . '/../Files' . $path)) {
                 $name = \explode('.', \basename($path));
 
@@ -235,14 +236,6 @@ final class BackendController extends Controller
                 ->where('id', $id)
                 ->where('tags/title/language', $request->getLanguage())
                 ->execute();
-
-            if ($media->hasPassword()
-                && !$media->comparePassword((string) $request->getData('password'))
-            ) {
-                $view->setTemplate('/Modules/Media/Theme/Backend/Components/Media/invalidPassword');
-
-                return $view;
-            }
 
             if ($media->class === MediaClass::COLLECTION) {
                 /** @var \Modules\Media\Models\Media[] $files */
@@ -272,7 +265,7 @@ final class BackendController extends Controller
                             ->with('tags')
                             ->with('tags/title')
                             ->with('content')
-                            ->where('id', $media->source?->getId() ?? 0)
+                            ->where('id', $media->source?->id ?? 0)
                             ->where('tags/title/language', $request->getLanguage())
                             ->execute();
 
@@ -309,6 +302,16 @@ final class BackendController extends Controller
             $view->setTemplate('/Modules/Media/Theme/Backend/Components/Media/invalidPassword');
 
             return $view;
+        }
+
+        if ($media->isEncrypted) {
+            $media = $this->app->moduleManager->get('Media', 'Api')->prepareEncryptedMedia($media, $request);
+
+            if ($media->id === 0) {
+                $view->setTemplate('/Modules/Media/Theme/Backend/Components/Media/invalidPassword');
+
+                return $view;
+            }
         }
 
         switch (\strtolower($media->extension)) {
@@ -395,9 +398,7 @@ final class BackendController extends Controller
         $id = $request->getDataString('id') ?? '';
 
         $settings = SettingMapper::getAll()->where('module', $id)->execute();
-        if (!($settings instanceof NullSetting)) {
-            $view->setData('settings', !\is_array($settings) ? [$settings] : $settings);
-        }
+        $view->setData('settings', $settings);
 
         $types = MediaTypeMapper::getAll()->with('title')->where('title/language', $response->getLanguage())->execute();
         $view->setData('types', $types);
@@ -434,7 +435,7 @@ final class BackendController extends Controller
         $view->addData('nav', $this->app->moduleManager->get('Navigation')->createNavigationMid(1007501001, $request, $response));
         $view->addData('type', $type);
 
-        $l11n = MediaTypeL11nMapper::getAll()->where('type', $type->getId())->execute();
+        $l11n = MediaTypeL11nMapper::getAll()->where('type', $type->id)->execute();
         $view->addData('l11n', $l11n);
 
         return $view;

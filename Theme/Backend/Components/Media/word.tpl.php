@@ -17,6 +17,6 @@ use phpOMS\Uri\UriFactory;
 ?>
 <section id="mediaFile" class="portlet col-simple">
     <div class="portlet-body col-simple">
-        <iframe class="col-simple" src="<?= UriFactory::build('{/api}media/export?id=' . $this->media->getId()); ?>&type=html"></iframe>
+        <iframe class="col-simple" src="<?= UriFactory::build('{/api}media/export?id=' . $this->media->id); ?>&type=html"></iframe>
     </div>
 </section>
