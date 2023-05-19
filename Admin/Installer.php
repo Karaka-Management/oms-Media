@@ -57,8 +57,8 @@ final class Installer extends InstallerAbstract
             \mkdir(__DIR__ . '/../Files');
         }
 
-        if (!\is_dir(__DIR__ . '/../../../Temp')) {
-            \mkdir(__DIR__ . '/../../../Temp');
+        if (!\is_dir(__DIR__ . '/../../../temp')) {
+            \mkdir(__DIR__ . '/../../../temp');
         }
 
         parent::install($app, $info, $cfgHandler);

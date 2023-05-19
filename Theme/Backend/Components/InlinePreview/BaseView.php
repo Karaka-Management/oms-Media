@@ -36,7 +36,7 @@ class BaseView extends View
      * @var string
      * @since 1.0.0
      */
-    protected string $id = '';
+    public string $id = '';
 
     /**
      * Form id

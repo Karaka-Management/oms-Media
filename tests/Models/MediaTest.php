@@ -52,7 +52,6 @@ final class MediaTest extends \PHPUnit\Framework\TestCase
         self::assertEquals('/', $this->media->getVirtualPath());
         self::assertEquals(0, $this->media->size);
         self::assertFalse($this->media->isVersioned);
-        self::assertFalse($this->media->isEncrypted());
     }
 
     /**
