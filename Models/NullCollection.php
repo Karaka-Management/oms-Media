@@ -15,7 +15,7 @@ declare(strict_types=1);
 namespace Modules\Media\Models;
 
 /**
- * Media class.
+ * NullCollection class.
  *
  * @package Modules\Media\Models
  * @license OMS License 2.0

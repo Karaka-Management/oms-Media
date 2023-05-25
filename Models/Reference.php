@@ -17,6 +17,8 @@ namespace Modules\Media\Models;
 /**
  * Reference class.
  *
+ * This class represents a reference to a media file. It extends the Media class.
+ *
  * @package Modules\Media\Models
  * @license OMS License 2.0
  * @link    https://jingga.app
@@ -24,19 +26,19 @@ namespace Modules\Media\Models;
  */
 class Reference extends Media
 {
-    /**
-     * Extension name.
-     *
-     * @var string
-     * @since 1.0.0
-     */
-    public string $extension = 'reference';
+	/**
+	 * The file extension of the reference file.
+	 *
+	 * @var string
+	 * @since 1.0.0
+	 */
+	public string $extension = 'reference';
 
-    /**
-     * Is reference.
-     *
-     * @var int
-     * @since 1.0.0
-     */
-    public int $class = MediaClass::REFERENCE;
+	/**
+	 * The media class of the reference.
+	 *
+	 * @var int
+	 * @since 1.0.0
+	 */
+	public int $class = MediaClass::REFERENCE;
 }

@@ -15,7 +15,7 @@ declare(strict_types=1);
 namespace Modules\Media\Models;
 
 /**
- * Media class.
+ * Media content class.
  *
  * @package Modules\Media\Models
  * @license OMS License 2.0
@@ -32,17 +32,13 @@ class MediaContent implements \JsonSerializable
      */
     public int $id = 0;
 
-    public string $content = '';
-
     /**
-     * @return int
+     * Content of the media.
      *
+     * @var string
      * @since 1.0.0
      */
-    public function getId() : int
-    {
-        return $this->id;
-    }
+    public string $content = '';
 
     /**
      * {@inheritdoc}
@@ -50,8 +46,8 @@ class MediaContent implements \JsonSerializable
     public function toArray() : array
     {
         return [
-            'id'                => $this->id,
-            'content'           => $this->content,
+            'id'      => $this->id,
+            'content' => $this->content,
         ];
     }
 
