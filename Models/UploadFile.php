@@ -245,9 +245,8 @@ class UploadFile
      */
     private function createFileName(string $path, string $tempName, string $extension) : string
     {
-        $rnd      = '';
-        $limit    = -1;
-        $fileName = '';
+        $rnd   = '';
+        $limit = -1;
 
         $nameWithoutExtension = empty($tempName)
             ? ''
@@ -256,19 +255,23 @@ class UploadFile
                 : \substr($tempName, 0, -\strlen($extension) - 1)
             );
 
-        do {
+        $fileName = $tempName;
+
+        while (\is_file($path . '/' . $fileName)) {
+            if ($limit >= self::PATH_GENERATION_LIMIT) {
+                throw new \Exception('No file path could be found. Potential attack!');
+            }
+
             ++$limit;
             $tempName = empty($nameWithoutExtension)
                 ? \sha1($tempName . $rnd)
-                : $nameWithoutExtension . (empty($rnd) ? '' : '_' . $rnd);
+                : $nameWithoutExtension . ($limit === 1 ? '' : '_' . $rnd);
 
-            $tempName .= !empty($extension) ? '.' . $extension : '';
-            $fileName = $tempName;
-            $rnd      = (string) \mt_rand();
-        } while (\is_file($path . '/' . $fileName) && $limit < self::PATH_GENERATION_LIMIT);
+            $fileName = empty($extension)
+                ? $tempName
+                : $tempName . '.' . $extension;
 
-        if ($limit >= self::PATH_GENERATION_LIMIT) {
-            throw new \Exception('No file path could be found. Potential attack!');
+            $rnd = \bin2hex(\random_bytes(3));
         }
 
         return $fileName;
