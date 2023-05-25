@@ -249,18 +249,21 @@ class UploadFile
         $limit    = -1;
         $fileName = '';
 
-        $nameWithoutExtension = empty($tempName) ? '' : \substr($tempName, 0, -\strlen($extension) - 1);
+        $nameWithoutExtension = empty($tempName)
+            ? ''
+            : (empty($extension)
+                ? $tempName
+                : \substr($tempName, 0, -\strlen($extension) - 1)
+            );
 
         do {
             ++$limit;
-            $sha = empty($nameWithoutExtension) ? \sha1($tempName . $rnd) : $nameWithoutExtension . (empty($rnd) ? '' : '_' . $rnd);
+            $tempName = empty($nameWithoutExtension)
+                ? \sha1($tempName . $rnd)
+                : $nameWithoutExtension . (empty($rnd) ? '' : '_' . $rnd);
 
-            if ($sha === false) {
-                throw new \Exception('No file path could be found. Potential attack!');
-            }
-
-            $sha     .= '.' . $extension;
-            $fileName = $sha;
+            $tempName .= !empty($extension) ? '.' . $extension : '';
+            $fileName = $tempName;
             $rnd      = (string) \mt_rand();
         } while (\is_file($path . '/' . $fileName) && $limit < self::PATH_GENERATION_LIMIT);
 
