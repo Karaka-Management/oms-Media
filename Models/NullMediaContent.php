@@ -25,23 +25,23 @@ namespace Modules\Media\Models;
  */
 final class NullMediaContent extends MediaContent
 {
-	/**
+    /**
      * Constructor
-	 *
+     *
      * @param int $id Model id
-	 *
-	 * @since 1.0.0
-	 */
-	public function __construct(int $id = 0)
-	{
-		$this->id = $id;
-	}
+     *
+     * @since 1.0.0
+     */
+    public function __construct(int $id = 0)
+    {
+        $this->id = $id;
+    }
 
-	/**
+    /**
      * {@inheritdoc}
-	 */
-	public function jsonSerialize() : mixed
-	{
-		return ['id' => $this->id];
-	}
+     */
+    public function jsonSerialize() : mixed
+    {
+        return ['id' => $this->id];
+    }
 }

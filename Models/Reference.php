@@ -26,19 +26,19 @@ namespace Modules\Media\Models;
  */
 class Reference extends Media
 {
-	/**
-	 * The file extension of the reference file.
-	 *
-	 * @var string
-	 * @since 1.0.0
-	 */
-	public string $extension = 'reference';
+    /**
+     * The file extension of the reference file.
+     *
+     * @var string
+     * @since 1.0.0
+     */
+    public string $extension = 'reference';
 
-	/**
-	 * The media class of the reference.
-	 *
-	 * @var int
-	 * @since 1.0.0
-	 */
-	public int $class = MediaClass::REFERENCE;
+    /**
+     * The media class of the reference.
+     *
+     * @var int
+     * @since 1.0.0
+     */
+    public int $class = MediaClass::REFERENCE;
 }

@@ -28,21 +28,21 @@ use phpOMS\Message\ResponseAbstract;
  */
 trait FileUploaderTrait
 {
-	/**
+    /**
      * Setup file uploader.
-	 *
-	 * @param RequestAbstract  $request  Request
-	 * @param ResponseAbstract $response Response
-	 * @param mixed            $data     Misc. data
-	 *
-	 * @return void
-	 *
-	 * @since 1.0.0
+     *
+     * @param RequestAbstract  $request  Request
+     * @param ResponseAbstract $response Response
+     * @param mixed            $data     Misc. data
+     *
+     * @return void
+     *
+     * @since 1.0.0
      * @codeCoverageIgnore
-	 */
-	public static function setUpFileUploaderTrait(RequestAbstract $request, ResponseAbstract $response, $data = null) : void
-	{
-		$head = $response->get('Content')->getData('head');
-		$head->addAsset(AssetType::JS, '/Modules/Media/Controller.js', ['type' => 'module']);
-	}
+     */
+    public static function setUpFileUploaderTrait(RequestAbstract $request, ResponseAbstract $response, $data = null) : void
+    {
+        $head = $response->get('Content')->getData('head');
+        $head->addAsset(AssetType::JS, '/Modules/Media/Controller.js', ['type' => 'module']);
+    }
 }

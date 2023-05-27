@@ -182,7 +182,7 @@ class UploadFile
                         $this->preserveFileName ? $result[$key]['filename'] : '',
                         $result[$key]['extension']
                     );
-                } catch (\Exception $e) {
+                } catch (\Throwable $_) {
                     $result[$key]['filename'] = $f['name'];
                     $result[$key]['status']   = UploadStatus::FAILED_HASHING;
 

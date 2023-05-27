@@ -24,24 +24,24 @@ namespace Modules\Media\Models;
  */
 final class NullMedia extends Media
 {
-	/**
-	 * Constructor.
-	 *
-	 * @param int $id Model id
-	 *
-	 * @since 1.0.0
-	 */
-	public function __construct(int $id = 0)
-	{
-		$this->id = $id;
-		parent::__construct();
-	}
+    /**
+     * Constructor.
+     *
+     * @param int $id Model id
+     *
+     * @since 1.0.0
+     */
+    public function __construct(int $id = 0)
+    {
+        $this->id = $id;
+        parent::__construct();
+    }
 
-	/**
-	 * {@inheritdoc}
-	 */
+    /**
+     * {@inheritdoc}
+     */
     public function jsonSerialize() : mixed
-	{
-		return ['id' => $this->id];
-	}
+    {
+        return ['id' => $this->id];
+    }
 }
