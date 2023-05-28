@@ -13,8 +13,5 @@
 declare(strict_types=1);
 
 use phpOMS\Autoloader;
-use phpOMS\Uri\UriFactory;
-use phpOMS\Utils\Parser\Presentation\PresentationParser;
 
 Autoloader::addPath(__DIR__ . '/../../../../../../Resources/');
-?>

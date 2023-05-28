@@ -175,7 +175,7 @@ final class ApiController extends Controller
      *
      * @param array $files              Files
      * @param array $media              Media files to update
-     * @param bool  $sameNameIfPossible Use exact same file name as original file name if the extension is the same.
+     * @param bool  $sameNameIfPossible use exact same file name as original file name if the extension is the same
      *
      * @return Media[]
      *
@@ -438,7 +438,7 @@ final class ApiController extends Controller
                 self::NAME,
                 (string) $media->id,
                 '',
-                $ip
+                $ip,
             ]
         );
 
@@ -1139,14 +1139,14 @@ final class ApiController extends Controller
 
     private function prepareEncryptedMedia(Media $media, RequestAbstract $request) : Media
     {
-        $path = '';
+        $path         = '';
         $absolutePath = '';
 
         $counter = 0;
         do {
             $randomName = \sha1(\random_bytes(32));
 
-            $path =  '../../../Temp/' . $randomName . '.' . $media->getExtension();
+            $path         =  '../../../Temp/' . $randomName . '.' . $media->getExtension();
             $absolutePath = __DIR__ . '/' . $path;
         } while(!\is_file($absolutePath) && $counter < 1000);
 

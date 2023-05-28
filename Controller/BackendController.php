@@ -14,7 +14,6 @@ declare(strict_types=1);
 
 namespace Modules\Media\Controller;
 
-use Model\NullSetting;
 use Model\SettingMapper;
 use Modules\Admin\Models\Account;
 use Modules\Admin\Models\PermissionAbstractMapper;
@@ -25,7 +24,6 @@ use Modules\Media\Models\MediaClass;
 use Modules\Media\Models\MediaMapper;
 use Modules\Media\Models\MediaTypeL11nMapper;
 use Modules\Media\Models\MediaTypeMapper;
-use Modules\Media\Models\NullCollection;
 use Modules\Media\Models\NullMedia;
 use Modules\Media\Models\PermissionCategory;
 use Modules\Media\Theme\Backend\Components\Media\ElementView;

@@ -158,7 +158,7 @@ final class Installer extends InstallerAbstract
         return $result;
     }
 
-     /**
+    /**
      * Create collection.
      *
      * @param ApplicationAbstract                                                            $app  Application

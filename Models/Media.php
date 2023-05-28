@@ -238,7 +238,7 @@ class Media implements \JsonSerializable
     /**
      * Encrypt the media file
      *
-     * @param string      $key   Password to encrypt the file with
+     * @param string      $key        Password to encrypt the file with
      * @param null|string $outputPath Output path of the encryption (null = replace file)
      *
      * @return bool
@@ -253,7 +253,7 @@ class Media implements \JsonSerializable
     /**
      * Decrypt the media file
      *
-     * @param string      $key   Password to encrypt the file with
+     * @param string      $key        Password to encrypt the file with
      * @param null|string $outputPath Output path of the encryption (null = replace file)
      *
      * @return bool
