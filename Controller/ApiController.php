@@ -1123,6 +1123,13 @@ final class ApiController extends Controller
             }
         }
 
+        if (!\is_file($media->getAbsolutePath())) {
+            $this->fillJsonResponse($request, $response, NotificationLevel::ERROR, 'Media', 'Media could not be exported. Please try again.', []);
+            $response->header->status = RequestStatusCode::R_500;
+
+            return;
+        }
+
         $this->setMediaResponseHeader($media, $request, $response);
         $view = $this->createView($media, $request, $response);
         $view->setData('path', __DIR__ . '/../../../');

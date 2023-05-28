@@ -25,7 +25,7 @@ $next     = empty($this->media)
     : '{%}?{?}&mpivot=' . \end($this->media)->id . '&mptype=n';
 ?>
 <div class="portlet">
-    <div class="portlet-head"><?= $this->getHtml('Media', 'Media'); ?><i class="fa fa-download floatRight download btn"></i></div>
+    <div class="portlet-head"><?= $this->getHtml('Media', 'Media'); ?><i class="lni lni-download download btn end-xs"></i></div>
     <div class="slider">
     <table class="default">
         <thead>
