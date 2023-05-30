@@ -1370,7 +1370,7 @@ final class ApiController extends Controller
         if ($request->hasData('title')) {
             $type->setL11n(
                 $request->getDataString('title') ?? '',
-                $request->getDataString('lang') ?? $request->getLanguage()
+                $request->getDataString('lang') ?? $request->header->l11n->language
             );
         }
 
@@ -1441,7 +1441,7 @@ final class ApiController extends Controller
         $l11nMediaType->ref     = $request->getDataInt('type') ?? 0;
         $l11nMediaType->content = $request->getDataString('title') ?? '';
         $l11nMediaType->setLanguage(
-            $request->getDataString('language') ?? $request->getLanguage()
+            $request->getDataString('language') ?? $request->header->l11n->language
         );
 
         return $l11nMediaType;

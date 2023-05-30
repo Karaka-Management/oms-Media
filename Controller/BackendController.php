@@ -85,7 +85,7 @@ final class BackendController extends Controller
                 PermissionCategory::MEDIA,
             );
 
-        $mediaMapper = MediaMapper::getByVirtualPath($path)->where('tags/title/language', $request->getLanguage());
+        $mediaMapper = MediaMapper::getByVirtualPath($path)->where('tags/title/language', $request->header->l11n->language);
 
         if (!$hasPermission) {
             $permWhere = PermissionAbstractMapper::helper($this->app->dbPool->get('select'))
@@ -104,7 +104,7 @@ final class BackendController extends Controller
         /** @var Media[] $media */
         $media = $mediaMapper->execute();
 
-        $collectionMapper = CollectionMapper::getParentCollection($path)->where('tags/title/language', $request->getLanguage());
+        $collectionMapper = CollectionMapper::getParentCollection($path)->where('tags/title/language', $request->header->l11n->language);
 
         if (!$hasPermission) {
             $permWhere = PermissionAbstractMapper::helper($this->app->dbPool->get('select'))
@@ -232,14 +232,14 @@ final class BackendController extends Controller
                 ->with('tags/title')
                 ->with('content')
                 ->where('id', $id)
-                ->where('tags/title/language', $request->getLanguage())
+                ->where('tags/title/language', $request->header->l11n->language)
                 ->execute();
 
             if ($media->class === MediaClass::COLLECTION) {
                 /** @var \Modules\Media\Models\Media[] $files */
                 $files = MediaMapper::getByVirtualPath(
                     $media->getVirtualPath() . ($media->getVirtualPath() !== '/' ? '/' : '') . $media->name
-                )->where('tags/title/language', $request->getLanguage())->execute();
+                )->where('tags/title/language', $request->header->l11n->language)->execute();
 
                 /** @var \Modules\Media\Models\Collection $collection */
                 $collection = CollectionMapper::get()->where('id', $id)->execute();
@@ -264,7 +264,7 @@ final class BackendController extends Controller
                             ->with('tags/title')
                             ->with('content')
                             ->where('id', $media->source?->id ?? 0)
-                            ->where('tags/title/language', $request->getLanguage())
+                            ->where('tags/title/language', $request->header->l11n->language)
                             ->execute();
 
                         $view->addData('view', $this->createMediaView($media->source, $request, $response));
@@ -398,7 +398,7 @@ final class BackendController extends Controller
         $settings = SettingMapper::getAll()->where('module', $id)->execute();
         $view->setData('settings', $settings);
 
-        $types = MediaTypeMapper::getAll()->with('title')->where('title/language', $response->getLanguage())->execute();
+        $types = MediaTypeMapper::getAll()->with('title')->where('title/language', $response->header->l11n->language)->execute();
         $view->setData('types', $types);
 
         $view->setTemplate('/Modules/' . static::NAME . '/Admin/Settings/Theme/Backend/settings');
@@ -426,7 +426,7 @@ final class BackendController extends Controller
         /** @var \phpOMS\Localization\BaseStringL11n $type */
         $type = MediaTypeMapper::get()
             ->with('title')
-            ->where('title/language', $response->getLanguage())
+            ->where('title/language', $response->header->l11n->language)
             ->where('id', (int) $request->getData('id'))
             ->execute();
 
