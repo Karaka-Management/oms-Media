@@ -85,7 +85,7 @@ final class BackendController extends Controller
                 PermissionCategory::MEDIA,
             );
 
-        $mediaMapper = MediaMapper::getByVirtualPath($path)->where('tags/title/language', $request->getLanguage());
+        $mediaMapper = MediaMapper::getByVirtualPath($path)->where('tags/title/language', $request->header->l11n->language);
 
         if (!$hasPermission) {
             $permWhere = PermissionAbstractMapper::helper($this->app->dbPool->get('select'))
@@ -104,7 +104,7 @@ final class BackendController extends Controller
         /** @var Media[] $media */
         $media = $mediaMapper->execute();
 
-        $collectionMapper = CollectionMapper::getParentCollection($path)->where('tags/title/language', $request->getLanguage());
+        $collectionMapper = CollectionMapper::getParentCollection($path)->where('tags/title/language', $request->header->l11n->language);
 
         if (!$hasPermission) {
             $permWhere = PermissionAbstractMapper::helper($this->app->dbPool->get('select'))
@@ -183,9 +183,9 @@ final class BackendController extends Controller
             $media = \array_merge($media, $unIndexedFiles);
         }
 
-        $view->addData('media', $media);
-        $view->addData('path', $path);
-        $view->addData('account', $this->app->accountManager->get($request->header->account));
+        $view->data['media'] = $media;
+        $view->data['path'] = $path;
+        $view->data['account'] = $this->app->accountManager->get($request->header->account);
 
         return $view;
     }
@@ -206,7 +206,7 @@ final class BackendController extends Controller
     {
         $view = new MediaView($this->app->l11nManager, $request, $response);
         $view->setTemplate('/Modules/Media/Theme/Backend/media-single');
-        $view->addData('nav', $this->app->moduleManager->get('Navigation')->createNavigationMid(1000401001, $request, $response));
+        $view->data['nav'] = $this->app->moduleManager->get('Navigation')->createNavigationMid(1000401001, $request, $response);
 
         $id = $request->getDataInt('id');
         if ($id === 0) {
@@ -222,7 +222,7 @@ final class BackendController extends Controller
                 $media->setPath('/Modules/Media/Files/' . \ltrim($path, '\\/'));
                 $media->isAbsolute = false;
 
-                $view->addData('view', $this->createMediaView($media, $request, $response));
+                $view->data['view'] = $this->createMediaView($media, $request, $response);
             }
         } else {
             /** @var \Modules\Media\Models\Media $media */
@@ -232,20 +232,20 @@ final class BackendController extends Controller
                 ->with('tags/title')
                 ->with('content')
                 ->where('id', $id)
-                ->where('tags/title/language', $request->getLanguage())
+                ->where('tags/title/language', $request->header->l11n->language)
                 ->execute();
 
             if ($media->class === MediaClass::COLLECTION) {
                 /** @var \Modules\Media\Models\Media[] $files */
                 $files = MediaMapper::getByVirtualPath(
                     $media->getVirtualPath() . ($media->getVirtualPath() !== '/' ? '/' : '') . $media->name
-                )->where('tags/title/language', $request->getLanguage())->execute();
+                )->where('tags/title/language', $request->header->l11n->language)->execute();
 
                 /** @var \Modules\Media\Models\Collection $collection */
                 $collection = CollectionMapper::get()->where('id', $id)->execute();
                 $media      = \array_merge($files, $collection->getSources());
 
-                $view->addData('path', $collection->getVirtualPath() . '/' . $collection->name);
+                $view->data['path'] = $collection->getVirtualPath() . '/' . $collection->name;
                 $view->setTemplate('/Modules/Media/Theme/Backend/media-list');
             } else {
                 $sub = $request->getDataString('sub') ?? '';
@@ -254,7 +254,7 @@ final class BackendController extends Controller
                 ) {
                     $listView = new ListView($this->app->l11nManager, $request, $response);
                     $listView->setTemplate('/modules/Media/Theme/Backend/Components/Media/list');
-                    $view->addData('view', $listView);
+                    $view->data['view'] = $listView;
                 } else {
                     if ($media->class === MediaClass::REFERENCE) {
                         /** @var \Modules\Media\Models\Media $media */
@@ -264,19 +264,19 @@ final class BackendController extends Controller
                             ->with('tags/title')
                             ->with('content')
                             ->where('id', $media->source?->id ?? 0)
-                            ->where('tags/title/language', $request->getLanguage())
+                            ->where('tags/title/language', $request->header->l11n->language)
                             ->execute();
 
-                        $view->addData('view', $this->createMediaView($media->source, $request, $response));
+                        $view->data['view'] = $this->createMediaView($media->source, $request, $response);
                     } else {
-                        $view->addData('view', $this->createMediaView($media, $request, $response));
+                        $view->data['view'] = $this->createMediaView($media, $request, $response);
                     }
                 }
             }
         }
 
-        $view->addData('account', $this->app->accountManager->get($request->header->account));
-        $view->addData('media', $media);
+        $view->data['account'] = $this->app->accountManager->get($request->header->account);
+        $view->data['media'] = $media;
 
         return $view;
     }
@@ -391,15 +391,15 @@ final class BackendController extends Controller
     public function viewModuleSettings(RequestAbstract $request, ResponseAbstract $response, mixed $data = null) : RenderableInterface
     {
         $view = new View($this->app->l11nManager, $request, $response);
-        $view->addData('nav', $this->app->moduleManager->get('Navigation')->createNavigationMid(1000105001, $request, $response));
+        $view->data['nav'] = $this->app->moduleManager->get('Navigation')->createNavigationMid(1000105001, $request, $response);
 
         $id = $request->getDataString('id') ?? '';
 
         $settings = SettingMapper::getAll()->where('module', $id)->execute();
-        $view->setData('settings', $settings);
+        $view->data['settings'] = $settings;
 
-        $types = MediaTypeMapper::getAll()->with('title')->where('title/language', $response->getLanguage())->execute();
-        $view->setData('types', $types);
+        $types = MediaTypeMapper::getAll()->with('title')->where('title/language', $response->header->l11n->language)->execute();
+        $view->data['types'] = $types;
 
         $view->setTemplate('/Modules/' . static::NAME . '/Admin/Settings/Theme/Backend/settings');
 
@@ -426,15 +426,15 @@ final class BackendController extends Controller
         /** @var \phpOMS\Localization\BaseStringL11n $type */
         $type = MediaTypeMapper::get()
             ->with('title')
-            ->where('title/language', $response->getLanguage())
+            ->where('title/language', $response->header->l11n->language)
             ->where('id', (int) $request->getData('id'))
             ->execute();
 
-        $view->addData('nav', $this->app->moduleManager->get('Navigation')->createNavigationMid(1007501001, $request, $response));
-        $view->addData('type', $type);
+        $view->data['nav'] = $this->app->moduleManager->get('Navigation')->createNavigationMid(1007501001, $request, $response);
+        $view->data['type'] = $type;
 
         $l11n = MediaTypeL11nMapper::getAll()->where('type', $type->id)->execute();
-        $view->addData('l11n', $l11n);
+        $view->data['l11n'] = $l11n;
 
         return $view;
     }
@@ -477,7 +477,7 @@ final class BackendController extends Controller
         $view->setTemplate('/Modules/Media/Theme/Backend/media-file-create');
 
         $editor = new \Modules\Editor\Theme\Backend\Components\Editor\BaseView($this->app->l11nManager, $request, $response);
-        $view->addData('editor', $editor);
+        $view->data['editor'] = $editor;
 
         return $view;
     }

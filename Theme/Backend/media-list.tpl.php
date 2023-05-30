@@ -24,10 +24,10 @@ include __DIR__ . '/template-functions.php';
 $mediaPath = \urldecode($this->getData('path') ?? '/');
 
 /** @var \Modules\Media\Models\Media[] $media */
-$media = $this->getData('media') ?? [];
+$media = $this->data['media'] ?? [];
 
 /** @var \Modules\Admin\Models\Account $account */
-$account    = $this->getData('account');
+$account    = $this->data['account'];
 $accountDir = $account->id . ' ' . $account->login;
 
 $previous = empty($media) ? '{/base}/media/list' : '{/base}/media/list?{?}&id=' . \reset($media)->id . '&ptype=p';

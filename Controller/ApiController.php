@@ -85,7 +85,7 @@ final class ApiController extends Controller
         $uploads = $this->uploadFiles(
             names:              $request->getDataList('names'),
             fileNames:          $request->getDataList('filenames'),
-            files:              $request->getFiles(),
+            files:              $request->files,
             account:            $request->header->account,
             basePath:           __DIR__ . '/../../../Modules/Media/Files' . \urldecode($request->getDataString('path') ?? ''),
             virtualPath:        \urldecode($request->getDataString('virtualpath') ?? ''),
@@ -633,7 +633,7 @@ final class ApiController extends Controller
     public function apiReferenceCreate(RequestAbstract $request, ResponseAbstract $response, mixed $data = null) : void
     {
         if (!empty($val = $this->validateReferenceCreate($request))) {
-            $response->set('collection_create', new FormValidation($val));
+            $response->data['collection_create'] = new FormValidation($val);
             $response->header->status = RequestStatusCode::R_400;
 
             return;
@@ -770,7 +770,7 @@ final class ApiController extends Controller
     public function apiCollectionCreate(RequestAbstract $request, ResponseAbstract $response, mixed $data = null) : void
     {
         if (!empty($val = $this->validateCollectionCreate($request))) {
-            $response->set('collection_create', new FormValidation($val));
+            $response->data['collection_create'] = new FormValidation($val);
             $response->header->status = RequestStatusCode::R_400;
 
             return;
@@ -1132,7 +1132,7 @@ final class ApiController extends Controller
 
         $this->setMediaResponseHeader($media, $request, $response);
         $view = $this->createView($media, $request, $response);
-        $view->setData('path', __DIR__ . '/../../../');
+        $view->data['path'] = __DIR__ . '/../../../';
 
         $response->set('export', $view);
     }
@@ -1183,7 +1183,7 @@ final class ApiController extends Controller
     public function createView(Media $media, RequestAbstract $request, ResponseAbstract $response) : View
     {
         $view = new View($this->app->l11nManager, $request, $response);
-        $view->setData('media', $media);
+        $view->data['media'] = $media;
 
         if (!\headers_sent()) {
             $response->endAllOutputBuffering(); // for large files
@@ -1202,7 +1202,7 @@ final class ApiController extends Controller
             $head->setStyle('core', $css ?? '');
 
             $head->addAsset(AssetType::CSS, 'cssOMS/styles.css?v=1.0.0');
-            $view->setData('head', $head);
+            $view->data['head'] = $head;
 
             switch (\strtolower($media->extension)) {
                 case 'xls':
@@ -1341,7 +1341,7 @@ final class ApiController extends Controller
     public function apiMediaTypeCreate(RequestAbstract $request, ResponseAbstract $response, mixed $data = null) : void
     {
         if (!empty($val = $this->validateMediaTypeCreate($request))) {
-            $response->set('media_type_create', new FormValidation($val));
+            $response->data['media_type_create'] = new FormValidation($val);
             $response->header->status = RequestStatusCode::R_400;
 
             return;
@@ -1370,7 +1370,7 @@ final class ApiController extends Controller
         if ($request->hasData('title')) {
             $type->setL11n(
                 $request->getDataString('title') ?? '',
-                $request->getDataString('lang') ?? $request->getLanguage()
+                $request->getDataString('lang') ?? $request->header->l11n->language
             );
         }
 
@@ -1414,7 +1414,7 @@ final class ApiController extends Controller
     public function apiMediaTypeL11nCreate(RequestAbstract $request, ResponseAbstract $response, mixed $data = null) : void
     {
         if (!empty($val = $this->validateMediaTypeL11nCreate($request))) {
-            $response->set('media_type_l11n_create', new FormValidation($val));
+            $response->data['media_type_l11n_create'] = new FormValidation($val);
             $response->header->status = RequestStatusCode::R_400;
 
             return;
@@ -1441,7 +1441,7 @@ final class ApiController extends Controller
         $l11nMediaType->ref     = $request->getDataInt('type') ?? 0;
         $l11nMediaType->content = $request->getDataString('title') ?? '';
         $l11nMediaType->setLanguage(
-            $request->getDataString('language') ?? $request->getLanguage()
+            $request->getDataString('language') ?? $request->header->l11n->language
         );
 
         return $l11nMediaType;

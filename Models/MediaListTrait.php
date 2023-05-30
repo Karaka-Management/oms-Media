@@ -32,7 +32,7 @@ trait MediaListTrait
      * @var Media[]
      * @since 1.0.0
      */
-    private array $files = [];
+    public array $files = [];
 
     /**
      * Get files
