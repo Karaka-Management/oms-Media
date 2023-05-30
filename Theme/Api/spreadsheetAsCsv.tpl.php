@@ -18,7 +18,7 @@ use phpOMS\Autoloader;
 
 Autoloader::addPath(__DIR__ . '/../../../../Resources/');
 
-$media = $this->getData('media');
+$media = $this->data['media'];
 
 $reader = IOFactory::createReaderforFile(($media->isAbsolute ? '' : __DIR__ . '/../../../../') . $media->getPath());
 $reader->setReadDataOnly(true);

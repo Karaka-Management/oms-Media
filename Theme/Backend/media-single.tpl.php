@@ -20,21 +20,21 @@ include __DIR__ . '/template-functions.php';
 
 /** @var \Modules\Media\Views\MediaView $this */
 /** @var \Modules\Media\Models\Media $media */
-$media = $this->getData('media');
-$view  = $this->getData('view');
+$media = $this->data['media'];
+$view  = $this->data['view'];
 
 /** @var \Modules\Tag\Models\Tag[] $tag */
 $tags = $media->getTags();
 
 /** @var \Modules\Admin\Models\Account $account */
-$account    = $this->getData('account');
+$account    = $this->data['account'];
 $accountDir = $account->id . ' ' . $account->login;
 
 $mediaPath = \urldecode($media->getVirtualPath() ?? '/');
 
 /** @var \phpOMS\Message\Http\HttpRequest $this->request */
 
-echo $this->getData('nav')->render();
+echo $this->data['nav']->render();
 ?>
 <div class="row">
     <div class="col-xs-12">

@@ -1132,7 +1132,7 @@ final class ApiController extends Controller
 
         $this->setMediaResponseHeader($media, $request, $response);
         $view = $this->createView($media, $request, $response);
-        $view->setData('path', __DIR__ . '/../../../');
+        $view->data['path'] = __DIR__ . '/../../../';
 
         $response->set('export', $view);
     }
@@ -1183,7 +1183,7 @@ final class ApiController extends Controller
     public function createView(Media $media, RequestAbstract $request, ResponseAbstract $response) : View
     {
         $view = new View($this->app->l11nManager, $request, $response);
-        $view->setData('media', $media);
+        $view->data['media'] = $media;
 
         if (!\headers_sent()) {
             $response->endAllOutputBuffering(); // for large files
@@ -1202,7 +1202,7 @@ final class ApiController extends Controller
             $head->setStyle('core', $css ?? '');
 
             $head->addAsset(AssetType::CSS, 'cssOMS/styles.css?v=1.0.0');
-            $view->setData('head', $head);
+            $view->data['head'] = $head;
 
             switch (\strtolower($media->extension)) {
                 case 'xls':
