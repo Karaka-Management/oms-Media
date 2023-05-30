@@ -85,7 +85,7 @@ final class ApiController extends Controller
         $uploads = $this->uploadFiles(
             names:              $request->getDataList('names'),
             fileNames:          $request->getDataList('filenames'),
-            files:              $request->getFiles(),
+            files:              $request->files,
             account:            $request->header->account,
             basePath:           __DIR__ . '/../../../Modules/Media/Files' . \urldecode($request->getDataString('path') ?? ''),
             virtualPath:        \urldecode($request->getDataString('virtualpath') ?? ''),
@@ -633,7 +633,7 @@ final class ApiController extends Controller
     public function apiReferenceCreate(RequestAbstract $request, ResponseAbstract $response, mixed $data = null) : void
     {
         if (!empty($val = $this->validateReferenceCreate($request))) {
-            $response->set('collection_create', new FormValidation($val));
+            $response->data['collection_create'] = new FormValidation($val);
             $response->header->status = RequestStatusCode::R_400;
 
             return;
@@ -770,7 +770,7 @@ final class ApiController extends Controller
     public function apiCollectionCreate(RequestAbstract $request, ResponseAbstract $response, mixed $data = null) : void
     {
         if (!empty($val = $this->validateCollectionCreate($request))) {
-            $response->set('collection_create', new FormValidation($val));
+            $response->data['collection_create'] = new FormValidation($val);
             $response->header->status = RequestStatusCode::R_400;
 
             return;
@@ -1341,7 +1341,7 @@ final class ApiController extends Controller
     public function apiMediaTypeCreate(RequestAbstract $request, ResponseAbstract $response, mixed $data = null) : void
     {
         if (!empty($val = $this->validateMediaTypeCreate($request))) {
-            $response->set('media_type_create', new FormValidation($val));
+            $response->data['media_type_create'] = new FormValidation($val);
             $response->header->status = RequestStatusCode::R_400;
 
             return;
@@ -1414,7 +1414,7 @@ final class ApiController extends Controller
     public function apiMediaTypeL11nCreate(RequestAbstract $request, ResponseAbstract $response, mixed $data = null) : void
     {
         if (!empty($val = $this->validateMediaTypeL11nCreate($request))) {
-            $response->set('media_type_l11n_create', new FormValidation($val));
+            $response->data['media_type_l11n_create'] = new FormValidation($val);
             $response->header->status = RequestStatusCode::R_400;
 
             return;
