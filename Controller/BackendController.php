@@ -47,14 +47,6 @@ use phpOMS\Views\View;
  */
 final class BackendController extends Controller
 {
-    /**
-     * Dependencies.
-     *
-     * @var string[]
-     * @since 1.0.0
-     */
-    protected static array $dependencies = [];
-
     use FileUploaderTrait;
 
     /**
