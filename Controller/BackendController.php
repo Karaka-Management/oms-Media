@@ -175,8 +175,8 @@ final class BackendController extends Controller
             $media = \array_merge($media, $unIndexedFiles);
         }
 
-        $view->data['media'] = $media;
-        $view->data['path'] = $path;
+        $view->data['media']   = $media;
+        $view->data['path']    = $path;
         $view->data['account'] = $this->app->accountManager->get($request->header->account);
 
         return $view;
@@ -268,7 +268,7 @@ final class BackendController extends Controller
         }
 
         $view->data['account'] = $this->app->accountManager->get($request->header->account);
-        $view->data['media'] = $media;
+        $view->data['media']   = $media;
 
         return $view;
     }
@@ -382,15 +382,15 @@ final class BackendController extends Controller
      */
     public function viewModuleSettings(RequestAbstract $request, ResponseAbstract $response, mixed $data = null) : RenderableInterface
     {
-        $view = new View($this->app->l11nManager, $request, $response);
+        $view              = new View($this->app->l11nManager, $request, $response);
         $view->data['nav'] = $this->app->moduleManager->get('Navigation')->createNavigationMid(1000105001, $request, $response);
 
         $id = $request->getDataString('id') ?? '';
 
-        $settings = SettingMapper::getAll()->where('module', $id)->execute();
+        $settings               = SettingMapper::getAll()->where('module', $id)->execute();
         $view->data['settings'] = $settings;
 
-        $types = MediaTypeMapper::getAll()->with('title')->where('title/language', $response->header->l11n->language)->execute();
+        $types               = MediaTypeMapper::getAll()->with('title')->where('title/language', $response->header->l11n->language)->execute();
         $view->data['types'] = $types;
 
         $view->setTemplate('/Modules/' . static::NAME . '/Admin/Settings/Theme/Backend/settings');
@@ -422,10 +422,10 @@ final class BackendController extends Controller
             ->where('id', (int) $request->getData('id'))
             ->execute();
 
-        $view->data['nav'] = $this->app->moduleManager->get('Navigation')->createNavigationMid(1007501001, $request, $response);
+        $view->data['nav']  = $this->app->moduleManager->get('Navigation')->createNavigationMid(1007501001, $request, $response);
         $view->data['type'] = $type;
 
-        $l11n = MediaTypeL11nMapper::getAll()->where('type', $type->id)->execute();
+        $l11n               = MediaTypeL11nMapper::getAll()->where('type', $type->id)->execute();
         $view->data['l11n'] = $l11n;
 
         return $view;
@@ -468,7 +468,7 @@ final class BackendController extends Controller
         $view = new View($this->app->l11nManager, $request, $response);
         $view->setTemplate('/Modules/Media/Theme/Backend/media-file-create');
 
-        $editor = new \Modules\Editor\Theme\Backend\Components\Editor\BaseView($this->app->l11nManager, $request, $response);
+        $editor               = new \Modules\Editor\Theme\Backend\Components\Editor\BaseView($this->app->l11nManager, $request, $response);
         $view->data['editor'] = $editor;
 
         return $view;

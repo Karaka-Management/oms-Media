@@ -634,7 +634,7 @@ final class ApiController extends Controller
     {
         if (!empty($val = $this->validateReferenceCreate($request))) {
             $response->data['collection_create'] = new FormValidation($val);
-            $response->header->status = RequestStatusCode::R_400;
+            $response->header->status            = RequestStatusCode::R_400;
 
             return;
         }
@@ -771,7 +771,7 @@ final class ApiController extends Controller
     {
         if (!empty($val = $this->validateCollectionCreate($request))) {
             $response->data['collection_create'] = new FormValidation($val);
-            $response->header->status = RequestStatusCode::R_400;
+            $response->header->status            = RequestStatusCode::R_400;
 
             return;
         }
@@ -1131,7 +1131,7 @@ final class ApiController extends Controller
         }
 
         $this->setMediaResponseHeader($media, $request, $response);
-        $view = $this->createView($media, $request, $response);
+        $view               = $this->createView($media, $request, $response);
         $view->data['path'] = __DIR__ . '/../../../';
 
         $response->set('export', $view);
@@ -1148,7 +1148,7 @@ final class ApiController extends Controller
 
             $path         =  '../../../Temp/' . $randomName . '.' . $media->getExtension();
             $absolutePath = __DIR__ . '/' . $path;
-        } while(!\is_file($absolutePath) && $counter < 1000);
+        } while (!\is_file($absolutePath) && $counter < 1000);
 
         if ($counter >= 1000) {
             return new NullMedia();
@@ -1182,7 +1182,7 @@ final class ApiController extends Controller
      */
     public function createView(Media $media, RequestAbstract $request, ResponseAbstract $response) : View
     {
-        $view = new View($this->app->l11nManager, $request, $response);
+        $view                = new View($this->app->l11nManager, $request, $response);
         $view->data['media'] = $media;
 
         if (!\headers_sent()) {
@@ -1342,7 +1342,7 @@ final class ApiController extends Controller
     {
         if (!empty($val = $this->validateMediaTypeCreate($request))) {
             $response->data['media_type_create'] = new FormValidation($val);
-            $response->header->status = RequestStatusCode::R_400;
+            $response->header->status            = RequestStatusCode::R_400;
 
             return;
         }
@@ -1415,7 +1415,7 @@ final class ApiController extends Controller
     {
         if (!empty($val = $this->validateMediaTypeL11nCreate($request))) {
             $response->data['media_type_l11n_create'] = new FormValidation($val);
-            $response->header->status = RequestStatusCode::R_400;
+            $response->header->status                 = RequestStatusCode::R_400;
 
             return;
         }

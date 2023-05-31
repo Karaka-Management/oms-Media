@@ -319,11 +319,25 @@ class Media implements \JsonSerializable
         return $this->isAbsolute ? $this->path : \ltrim($this->path, '\\/');
     }
 
+    /**
+     * Get the media path
+     *
+     * @return string
+     *
+     * @since 1.0.0
+     */
     public function getFileName() : string
     {
         return \basename($this->path);
     }
 
+    /**
+     * Get the media path
+     *
+     * @return string
+     *
+     * @since 1.0.0
+     */
     public function getExtension() : string
     {
         $pos = \strrpos('.', $this->path);
