@@ -35,18 +35,6 @@ trait MediaListTrait
     public array $files = [];
 
     /**
-     * Get files
-     *
-     * @return Media[]
-     *
-     * @since 1.0.0
-     */
-    public function getFiles() : array
-    {
-        return $this->files;
-    }
-
-    /**
      * Get media file by type
      *
      * @param int $type Media type
@@ -125,19 +113,5 @@ trait MediaListTrait
         }
 
         return false;
-    }
-
-    /**
-     * Add media to item
-     *
-     * @param Media $media Media
-     *
-     * @return void
-     *
-     * @since 1.0.0
-     */
-    public function addFile(Media $media) : void
-    {
-        $this->files[] = $media;
     }
 }
