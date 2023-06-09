@@ -89,7 +89,7 @@ $next     = empty($media) ? '{/base}/media/list' : '{/base}/media/list?{?}&id=' 
     <div class="col-xs-12">
         <div class="portlet">
             <div class="portlet-head">
-                <?= $this->getHtml('Media'); ?><i class="fa fa-download floatRight download btn"></i>
+                <?= $this->getHtml('Media'); ?><i class="fa fa-download end-xs download btn"></i>
             </div>
             <div class="slider">
             <table id="iMediaList" class="default sticky">

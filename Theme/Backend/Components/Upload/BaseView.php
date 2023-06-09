@@ -36,7 +36,7 @@ class BaseView extends View
      * @var string
      * @since 1.0.0
      */
-    protected string $form = '';
+    public string $form = '';
 
     /**
      * Virtual path of the media file
@@ -44,7 +44,7 @@ class BaseView extends View
      * @var string
      * @since 1.0.0
      */
-    protected string $virtualPath = '';
+    public string $virtualPath = '';
 
     /**
      * Name of the image preview
@@ -52,7 +52,9 @@ class BaseView extends View
      * @var string
      * @since 1.0.0
      */
-    protected string $name = '';
+    public string $name = '';
+
+    public array $files = [];
 
     /**
      * {@inheritdoc}
@@ -60,7 +62,7 @@ class BaseView extends View
     public function __construct(L11nManager $l11n = null, RequestAbstract $request, ResponseAbstract $response)
     {
         parent::__construct($l11n, $request, $response);
-        $this->setTemplate('/Modules/Media/Theme/Backend/Components/Upload/upload');
+        $this->setTemplate('/Modules/Media/Theme/Backend/Components/Upload/upload-list');
     }
 
     /**
@@ -71,7 +73,8 @@ class BaseView extends View
         /** @var array{0:string, 1?:string, 2?:string} $data */
         $this->form        = $data[0];
         $this->name        = $data[1] ?? 'UNDEFINED';
-        $this->virtualPath = $data[2] ?? '';
+        $this->virtualPath = $data[2] ?? $this->virtualPath;
+        $this->files = $data[3] ?? $this->files;
         return parent::render();
     }
 }

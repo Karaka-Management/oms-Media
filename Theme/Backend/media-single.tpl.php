@@ -40,9 +40,9 @@ echo $this->data['nav']->render();
     <div class="col-xs-12">
         <div class="box">
             <?php if ($this->request->getData('path') !== null) : ?>
-                <a tabindex="0" class="button" href="<?= UriFactory::build('{/base}/media/list?path=' . ($media->id === 0 ? $media->getVirtualPath() : '{?path}')); ?>"><?= $this->getHtml('Back'); ?></a>
+                <a tabindex="0" class="button" href="<?= UriFactory::build('{/app}/media/list?path=' . ($media->id === 0 ? $media->getVirtualPath() : '{?path}')); ?>"><?= $this->getHtml('Back'); ?></a>
             <?php else: ?>
-                <a tabindex="0" class="button" href="<?= $this->request->getReferer() !== '' ? $this->request->getReferer() : UriFactory::build('{/base}/media/list'); ?>"><?= $this->getHtml('Back'); ?></a>
+                <a tabindex="0" class="button" href="<?= $this->request->getReferer() !== '' ? $this->request->getReferer() : UriFactory::build('{/app}/media/list'); ?>"><?= $this->getHtml('Back'); ?></a>
             <?php endif; ?>
         </div>
     </div>
@@ -52,8 +52,8 @@ echo $this->data['nav']->render();
     <div class="col-xs-12">
         <div class="box">
             <ul class="crumbs-2">
-                <li data-href="<?= UriFactory::build('{/base}/media/list?path=/Accounts/' . $accountDir); ?>"><a href="<?= UriFactory::build('{/base}/media/list?path=/Accounts/' . $accountDir); ?>"><i class="fa fa-home"></i></a>
-                <li data-href="<?= UriFactory::build('{/base}/media/list?path=/'); ?>"><a href="<?= UriFactory::build('{/base}/media/list?path=/'); ?>">/</a></li>
+                <li data-href="<?= UriFactory::build('{/app}/media/list?path=/Accounts/' . $accountDir); ?>"><a href="<?= UriFactory::build('{/app}/media/list?path=/Accounts/' . $accountDir); ?>"><i class="fa fa-home"></i></a>
+                <li data-href="<?= UriFactory::build('{/app}/media/list?path=/'); ?>"><a href="<?= UriFactory::build('{/app}/media/list?path=/'); ?>">/</a></li>
                 <?php
                     $subPath    = '';
                     $paths      = \explode('/', \ltrim($mediaPath, '/'));
@@ -71,7 +71,7 @@ echo $this->data['nav']->render();
 
                         $subPath .= '/' . $paths[$i];
 
-                        $url = UriFactory::build('{/base}/media/list?path=' . $subPath);
+                        $url = UriFactory::build('{/app}/media/list?path=' . $subPath);
                 ?>
                     <li data-href="<?= $url; ?>"<?= $i === $length - 1 ? 'class="active"' : ''; ?>><a href="<?= $url; ?>"><?= $this->printHtml($paths[$i]); ?></a></li>
                 <?php endfor; ?>
@@ -92,7 +92,7 @@ echo $this->data['nav']->render();
                             $size = FileSizeType::autoFormat($media->size);
                             echo $this->printHtml(\number_format($size[0], 1, '.', ',') . $size[1]); ?>
                         <tr><td><?= $this->getHtml('Created'); ?><td><?= $this->printHtml($media->createdAt->format('Y-m-d')); ?>
-                        <tr><td><?= $this->getHtml('Creator'); ?><td><a href="<?= UriFactory::build('{/base}/profile/single?for=' . $media->createdBy->id); ?>"><?= $this->printHtml(
+                        <tr><td><?= $this->getHtml('Creator'); ?><td><a href="<?= UriFactory::build('{/app}/profile/single?for=' . $media->createdBy->id); ?>"><?= $this->printHtml(
                             \ltrim($media->createdBy->name2 . ', ' . $media->createdBy->name1, ', ')
                         ); ?></a>
                         <tr><td><?= $this->getHtml('Tags'); ?><td>
