@@ -34,6 +34,8 @@ use Modules\Media\Models\Reference;
 use Modules\Media\Models\ReferenceMapper;
 use Modules\Media\Models\UploadFile;
 use Modules\Media\Models\UploadStatus;
+use Modules\Media\Theme\Backend\Components\Media\ElementView;
+use Modules\Media\Views\MediaView;
 use Modules\Tag\Models\NullTag;
 use phpOMS\Account\PermissionType;
 use phpOMS\Application\ApplicationAbstract;
@@ -1137,6 +1139,16 @@ final class ApiController extends Controller
         $response->set('export', $view);
     }
 
+    /**
+     * Decrypt an encrypted media element
+     *
+     * @param Media           $media   Media model
+     * @param RequestAbstract $request Request model
+     *
+     * @return Media
+     *
+     * @since 1.0.0
+     */
     private function prepareEncryptedMedia(Media $media, RequestAbstract $request) : Media
     {
         $path         = '';
@@ -1148,6 +1160,8 @@ final class ApiController extends Controller
 
             $path         =  '../../../Temp/' . $randomName . '.' . $media->getExtension();
             $absolutePath = __DIR__ . '/' . $path;
+
+            ++$counter;
         } while (!\is_file($absolutePath) && $counter < 1000);
 
         if ($counter >= 1000) {
@@ -1182,8 +1196,8 @@ final class ApiController extends Controller
      */
     public function createView(Media $media, RequestAbstract $request, ResponseAbstract $response) : View
     {
-        $view                = new View($this->app->l11nManager, $request, $response);
-        $view->data['media'] = $media;
+        $view        = new ElementView($this->app->l11nManager, $request, $response);
+        $view->media = $media;
 
         if (!\headers_sent()) {
             $response->endAllOutputBuffering(); // for large files
@@ -1205,6 +1219,34 @@ final class ApiController extends Controller
             $view->data['head'] = $head;
 
             switch (\strtolower($media->extension)) {
+                case 'jpg':
+                case 'jpeg':
+                case 'gif':
+                case 'png':
+                    $view->setTemplate('/Modules/Media/Theme/Backend/Components/Media/image_raw');
+                    break;
+                case 'pdf':
+                    $view->setTemplate('/Modules/Media/Theme/Backend/Components/Media/pdf_raw');
+                    break;
+                case 'c':
+                case 'cpp':
+                case 'h':
+                case 'php':
+                case 'js':
+                case 'css':
+                case 'rs':
+                case 'py':
+                case 'r':
+                    $view->setTemplate('/Modules/Media/Theme/Backend/Components/Media/text_raw');
+                    break;
+                case 'txt':
+                case 'cfg':
+                case 'log':
+                    $view->setTemplate('/Modules/Media/Theme/Backend/Components/Media/text_raw');
+                    break;
+                case 'md':
+                    $view->setTemplate('/Modules/Media/Theme/Backend/Components/Media/markdown_raw');
+                    break;
                 case 'xls':
                 case 'xlsx':
                     $view->setTemplate('/Modules/Media/Theme/Api/spreadsheetAsHtml');
@@ -1213,6 +1255,15 @@ final class ApiController extends Controller
                 case 'docx':
                     $view->setTemplate('/Modules/Media/Theme/Api/wordAsHtml');
                     break;
+                case 'mp3':
+                    $view->setTemplate('/Modules/Media/Theme/Backend/Components/Media/audio_raw');
+                    break;
+                case 'mp4':
+                case 'mpeg':
+                    $view->setTemplate('/Modules/Media/Theme/Backend/Components/Media/video_raw');
+                    break;
+                default:
+                    $view->setTemplate('/Modules/Media/Theme/Backend/Components/Media/default');
             }
         }
 

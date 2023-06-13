@@ -74,7 +74,7 @@ class BaseView extends View
         $this->form        = $data[0];
         $this->name        = $data[1] ?? 'UNDEFINED';
         $this->virtualPath = $data[2] ?? $this->virtualPath;
-        $this->files = $data[3] ?? $this->files;
+        $this->files       = $data[3] ?? $this->files;
         return parent::render();
     }
 }

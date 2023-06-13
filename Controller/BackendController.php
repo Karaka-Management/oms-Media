@@ -96,7 +96,8 @@ final class BackendController extends Controller
         /** @var Media[] $media */
         $media = $mediaMapper->execute();
 
-        $collectionMapper = CollectionMapper::getParentCollection($path)->where('tags/title/language', $request->header->l11n->language);
+        $collectionMapper = CollectionMapper::getParentCollection($path)
+            ->where('tags/title/language', $request->header->l11n->language);
 
         if (!$hasPermission) {
             $permWhere = PermissionAbstractMapper::helper($this->app->dbPool->get('select'))
@@ -112,9 +113,10 @@ final class BackendController extends Controller
                 $collectionMapper->where('', $permWhere);
         }
 
+        /** @var \Modules\Media\Models\Collection $collection */
         $collection = $collectionMapper->execute();
 
-        if ((\is_array($collection) || $collection->id === 0) && \is_dir(__DIR__ . '/../Files' . $path)) {
+        if ((empty($collection) || $collection->id === 0) && \is_dir(__DIR__ . '/../Files' . $path)) {
             $collection       = new Collection();
             $collection->name = \basename($path);
             $collection->setVirtualPath(\dirname($path));

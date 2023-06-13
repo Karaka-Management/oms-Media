@@ -15,7 +15,7 @@ declare(strict_types=1);
 use Modules\Media\Models\NullMedia;
 
 /** @var \Modules\Media\Models\Media $media */
-$media = $this->getData('media') ?? new NullMedia();
+$media = $this->media ?? new NullMedia();
 
 $fp = \fopen(($media->isAbsolute ? '' : __DIR__ . '/../../../../') . $media->getPath(), 'r');
 \fpassthru($fp);

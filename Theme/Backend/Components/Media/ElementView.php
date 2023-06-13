@@ -31,10 +31,10 @@ class ElementView extends MediaView
     /**
      * Media files
      *
-     * @var \Modules\Media\Models\Media
+     * @var null|\Modules\Media\Models\Media
      * @since 1.0.0
      */
-    protected Media $media;
+    public ?Media $media = null;
 
     /**
      * {@inheritdoc}
@@ -42,7 +42,7 @@ class ElementView extends MediaView
     public function render(mixed ...$data) : string
     {
         /** @var array{0:\Modules\Media\Models\Media} $data */
-        $this->media = $data[0];
+        $this->media = $data[0] ?? $this->media;
 
         return parent::render();
     }

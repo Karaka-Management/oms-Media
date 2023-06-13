@@ -63,7 +63,7 @@ use phpOMS\Uri\UriFactory;
         <section class="portlet">
             <div class="portlet-head"><?= $this->getHtml('Files', 'Media', 'Backend'); ?><i class="lni lni-download download btn end-xs"></i></div>
                 <div class="slider">
-                <table class="default">
+                <table id="iFiles" class="default">
                     <thead>
                         <tr>
                             <td>
@@ -82,7 +82,7 @@ use phpOMS\Uri\UriFactory;
                         <?php foreach ($this->files as $file) : ?>
                             <tr data-tpl-value="/id" data-value="" data-uuid="" data-name="media-list">
                                 <td><label class="radio" for="iFile-<?= $file->id; ?>">
-                                        <input id="iFile-<?= $file->id; ?>" type="radio" name="media_file" value="1"<?= \end($this->files)->id === $file->id ? ' checked' : ''; ?>>
+                                        <input id="iFile-<?= $file->id; ?>" type="radio" name="media_file" value="<?= $file->id; ?>"<?= \end($this->files)->id === $file->id ? ' checked' : ''; ?>>
                                         <span class="checkmark"></span>
                                     </label>
                                 <td data-tpl-text="/id" data-tpl-value="/id" data-value=""><?= $this->printHtml((string) $file->id); ?></td>
@@ -101,7 +101,7 @@ use phpOMS\Uri\UriFactory;
         <section id="mediaFile" class="portlet col-simple">
             <div class="portlet-body col-simple">
                 <?php if (!empty($this->files)) : ?>
-                    <iframe class="col-simple" id="iMediaFile" src="Resources/mozilla/Pdf/web/viewer.html?file=<?= \urlencode(UriFactory::build('{/api}media/export?id=' . \end($this->files)->id)); ?>" loading="lazy" allowfullscreen></iframe>
+                    <iframe class="col-simple" id="iMediaFile" data-src="<?= UriFactory::build('{/api}media/export') . '?id={!#iFiles [name=media_file]:checked}&type=html'; ?>" allowfullscreen></iframe>
                 <?php else : ?>
                     <img width="100%" src="Web/Backend/img/logo_grey.png">
                 <?php endif; ?>
