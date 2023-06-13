@@ -15,5 +15,5 @@ declare(strict_types=1);
 use \phpOMS\Uri\UriFactory;
 
 ?>
-
-<iframe class="col-simple" id="iHelperFrame" src="<?= UriFactory::build('Resources/mozilla/Pdf/web/viewer.html?file=' . \urlencode(UriFactory::build('{/api}media/export?id=' . $this->media->id))); ?>" allowfullscreen></iframe>
+<style>html, body, iframe { margin: 0; padding: 0; border: 0; }</style>
+<iframe class="col-simple" id="iMediaFrame" width="100%" height="100%" src="<?= UriFactory::build('/Resources/mozilla/Pdf/web/viewer.html?file=' . \urlencode(UriFactory::build('{/api}media/export?id=' . $this->media->id))); ?>" allowfullscreen></iframe>

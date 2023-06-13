@@ -35,7 +35,6 @@ use Modules\Media\Models\ReferenceMapper;
 use Modules\Media\Models\UploadFile;
 use Modules\Media\Models\UploadStatus;
 use Modules\Media\Theme\Backend\Components\Media\ElementView;
-use Modules\Media\Views\MediaView;
 use Modules\Tag\Models\NullTag;
 use phpOMS\Account\PermissionType;
 use phpOMS\Application\ApplicationAbstract;
