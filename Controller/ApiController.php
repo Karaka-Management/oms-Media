@@ -1092,7 +1092,7 @@ final class ApiController extends Controller
                 $data['guard'] = __DIR__ . '/../Files';
             }
         } else {
-            if (!isset($data, $data['guard'])) {
+            if (empty($data) || !isset($data['guard'])) {
                 $this->fillJsonResponse($request, $response, NotificationLevel::HIDDEN, '', '', []);
                 $response->header->status = RequestStatusCode::R_403;
             }
