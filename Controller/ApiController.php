@@ -414,6 +414,7 @@ final class ApiController extends Controller
         $media->setPassword($password);
         $media->isEncrypted = $isEncrypted;
 
+        // Store text from document in DB for later use e.g. full text search (uses OCR, text extraction etc. if necessary)
         if ($readContent && \is_file($media->getAbsolutePath())) {
             $content = self::loadFileContent($media->getAbsolutePath(), $media->extension);
 

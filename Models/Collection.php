@@ -32,7 +32,7 @@ class Collection extends Media implements \Iterator
      * @var array<int, Media>
      * @since 1.0.0
      */
-    private array $sources = [];
+    public array $sources = [];
 
     /**
      * Extension name.
