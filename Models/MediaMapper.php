@@ -18,6 +18,7 @@ use Modules\Admin\Models\AccountMapper;
 use Modules\Tag\Models\TagMapper;
 use phpOMS\DataStorage\Database\Mapper\DataMapperFactory;
 use phpOMS\DataStorage\Database\Mapper\ReadMapper;
+use phpOMS\DataStorage\Database\Query\Builder;
 
 /**
  * Media mapper class.
@@ -198,5 +199,20 @@ class MediaMapper extends DataMapperFactory
             ->where('virtualPath', $virtualPath)
             ->where('class', MediaClass::COLLECTION)
             ->where('name', $name);
+    }
+
+    public static function countInternalReferences(int $id) : int
+    {
+        $references = self::count()
+            ->where('source', $id)
+            ->execute();
+
+        $query  = new Builder(self::$db);
+        $result = $query->count(self::TABLE)
+            ->where('media_relation_src', '=', $id)
+            ->execute()
+            ?->fetch();
+
+        return $references + ((int) $result[0] ?? 0);
     }
 }
