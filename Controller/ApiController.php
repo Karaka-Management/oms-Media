@@ -168,7 +168,7 @@ final class ApiController extends Controller
             }
         }
 
-        $this->fillJsonResponse($request, $response, NotificationLevel::OK, 'Media', 'Media successfully created.', $ids);
+        $this->createStandardAddResponse($request, $response, $ids);
     }
 
     /**
@@ -564,12 +564,10 @@ final class ApiController extends Controller
     {
         /** @var Media $old */
         $old = MediaMapper::get()->where('id', (int) $request->getData('id'))->execute();
-
-        /** @var Media $new */
-        $new = $this->updateMediaFromRequest($request);
+        $new = $this->updateMediaFromRequest($request, clone $old);
 
         $this->updateModel($request->header->account, $old, $new, MediaMapper::class, 'media', $request->getOrigin());
-        $this->fillJsonResponse($request, $response, NotificationLevel::OK, 'Media', 'Media successfully updated', $new);
+        $this->createStandardUpdateResponse($request, $response, $new);
     }
 
     /**
@@ -581,18 +579,14 @@ final class ApiController extends Controller
      *
      * @since 1.0.0
      */
-    private function updateMediaFromRequest(RequestAbstract $request) : Media
+    private function updateMediaFromRequest(RequestAbstract $request, Media $new) : Media
     {
-        $id = (int) $request->getData('id');
+        $new->name        = $request->getDataString('name') ?? $new->name;
+        $new->description = $request->getDataString('description') ?? $new->description;
+        $new->setPath($request->getDataString('path') ?? $new->getPath());
+        $new->setVirtualPath(\urldecode($request->getDataString('virtualpath') ?? $new->getVirtualPath()));
 
-        /** @var Media $media */
-        $media              = MediaMapper::get()->where('id', $id)->execute();
-        $media->name        = $request->getDataString('name') ?? $media->name;
-        $media->description = $request->getDataString('description') ?? $media->description;
-        $media->setPath($request->getDataString('path') ?? $media->getPath());
-        $media->setVirtualPath(\urldecode($request->getDataString('virtualpath') ?? $media->getVirtualPath()));
-
-        if ($media->id === 0
+        if ($new->id === 0
             || !$this->app->accountManager->get($request->header->account)->hasPermission(
                 PermissionType::MODIFY,
                 $this->app->unitId,
@@ -602,21 +596,21 @@ final class ApiController extends Controller
                 $request->header->account
             )
         ) {
-            return $media;
+            return $new;
         }
 
         if ($request->hasData('content')) {
             \file_put_contents(
-                $media->isAbsolute
-                    ? $media->getPath()
-                    : __DIR__ . '/../../../' . \ltrim($media->getPath(), '\\/'),
+                $new->isAbsolute
+                    ? $new->getPath()
+                    : __DIR__ . '/../../../' . \ltrim($new->getPath(), '\\/'),
                 $request->getDataString('content') ?? ''
             );
 
-            $media->size = \strlen($request->getDataString('content') ?? '');
+            $new->size = \strlen($request->getDataString('content') ?? '');
         }
 
-        return $media;
+        return $new;
     }
 
     /**
@@ -635,8 +629,8 @@ final class ApiController extends Controller
     public function apiReferenceCreate(RequestAbstract $request, ResponseAbstract $response, mixed $data = null) : void
     {
         if (!empty($val = $this->validateReferenceCreate($request))) {
-            $response->data['collection_create'] = new FormValidation($val);
-            $response->header->status            = RequestStatusCode::R_400;
+            $response->header->status = RequestStatusCode::R_400;
+            $this->createInvalidCreateResponse($request, $response, $val);
 
             return;
         }
@@ -677,7 +671,7 @@ final class ApiController extends Controller
             $request->getOrigin()
         );
 
-        $this->fillJsonResponse($request, $response, NotificationLevel::OK, 'Reference', 'Reference successfully created.', $ref);
+        $this->createStandardCreateResponse($request, $response, $ref);
     }
 
     /**
@@ -772,16 +766,15 @@ final class ApiController extends Controller
     public function apiCollectionCreate(RequestAbstract $request, ResponseAbstract $response, mixed $data = null) : void
     {
         if (!empty($val = $this->validateCollectionCreate($request))) {
-            $response->data['collection_create'] = new FormValidation($val);
-            $response->header->status            = RequestStatusCode::R_400;
+            $response->header->status = RequestStatusCode::R_400;
+            $this->createInvalidCreateResponse($request, $response, $val);
 
             return;
         }
 
         $collection = $this->createCollectionFromRequest($request);
         $this->createModel($request->header->account, $collection, CollectionMapper::class, 'collection', $request->getOrigin());
-
-        $this->fillJsonResponse($request, $response, NotificationLevel::OK, 'Collection', 'Collection successfully created.', $collection);
+        $this->createStandardCreateResponse($request, $response, $collection);
     }
 
     /**
@@ -1027,7 +1020,7 @@ final class ApiController extends Controller
             $ids[] = $created->id;
         }
 
-        $this->fillJsonResponse($request, $response, NotificationLevel::OK, 'Media', 'Media successfully created.', $ids);
+        $this->createStandardAddResponse($request, $response, $ids);
     }
 
     /**
@@ -1392,16 +1385,15 @@ final class ApiController extends Controller
     public function apiMediaTypeCreate(RequestAbstract $request, ResponseAbstract $response, mixed $data = null) : void
     {
         if (!empty($val = $this->validateMediaTypeCreate($request))) {
-            $response->data['media_type_create'] = new FormValidation($val);
-            $response->header->status            = RequestStatusCode::R_400;
+            $response->header->status = RequestStatusCode::R_400;
+            $this->createInvalidCreateResponse($request, $response, $val);
 
             return;
         }
 
         $type = $this->createDocTypeFromRequest($request);
         $this->createModel($request->header->account, $type, MediaTypeMapper::class, 'doc_type', $request->getOrigin());
-
-        $this->fillJsonResponse($request, $response, NotificationLevel::OK, 'Media', 'Media type successfully created', $type);
+        $this->createStandardCreateResponse($request, $response, $type);
     }
 
     /**
@@ -1465,16 +1457,15 @@ final class ApiController extends Controller
     public function apiMediaTypeL11nCreate(RequestAbstract $request, ResponseAbstract $response, mixed $data = null) : void
     {
         if (!empty($val = $this->validateMediaTypeL11nCreate($request))) {
-            $response->data['media_type_l11n_create'] = new FormValidation($val);
-            $response->header->status                 = RequestStatusCode::R_400;
+            $response->header->status = RequestStatusCode::R_400;
+            $this->createInvalidCreateResponse($request, $response, $val);
 
             return;
         }
 
         $l11nMediaType = $this->createMediaTypeL11nFromRequest($request);
         $this->createModel($request->header->account, $l11nMediaType, MediaTypeL11nMapper::class, 'media_type_l11n', $request->getOrigin());
-
-        $this->fillJsonResponse($request, $response, NotificationLevel::OK, 'Localization', 'Localization successfully created', $l11nMediaType);
+        $this->createStandardCreateResponse($request, $response, $l11nMediaType);
     }
 
     /**
