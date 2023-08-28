@@ -69,7 +69,14 @@ use phpOMS\Uri\UriFactory;
                             <td>
                             <td><?= $this->getHtml('ID', '0', '0'); ?><i class="sort-asc fa fa-chevron-up"></i><i class="sort-desc fa fa-chevron-down"></i>
                             <td class="wf-100"><?= $this->getHtml('Name', 'Media', 'Backend'); ?><i class="sort-asc fa fa-chevron-up"></i><i class="sort-desc fa fa-chevron-down"></i>
-                    <tbody id="iMediaInput-tags" class="tags" data-limit="0" data-active="true" data-form="<?= $this->form; ?>">
+                    <tbody
+                        id="iMediaInput-tags"
+                        class="tags"
+                        data-action='[{"listener": "change", "action": [{"key": 1, "type": "dom.set", "selector": "#iMediaFile", "value": "<?= UriFactory::build('{/api}media/export') . '?id={!#iFiles [name=media_file]:checked}&type=html'; ?>"}]}]'
+                        data-limit="0"
+                        data-active="true"
+                        data-form="<?= $this->form; ?>"
+                    >
                         <template id="iMediaInput-tagTemplate">
                             <tr data-tpl-value="/id" data-value="" data-uuid="" data-name="media-list">
                                 <td><label class="radio" for="iFile-0">

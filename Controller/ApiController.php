@@ -44,11 +44,9 @@ use phpOMS\Localization\BaseStringL11n;
 use phpOMS\Message\Http\HttpRequest;
 use phpOMS\Message\Http\HttpResponse;
 use phpOMS\Message\Http\RequestStatusCode;
-use phpOMS\Message\NotificationLevel;
 use phpOMS\Message\RequestAbstract;
 use phpOMS\Message\ResponseAbstract;
 use phpOMS\Model\Html\Head;
-use phpOMS\Model\Message\FormValidation;
 use phpOMS\Security\Guard;
 use phpOMS\System\File\FileUtils;
 use phpOMS\System\File\Local\Directory;
@@ -531,6 +529,8 @@ final class ApiController extends Controller
      *
      * @return string
      *
+     * @throws \Exception
+     *
      * @since 1.0.0
      */
     public static function normalizeDbPath(string $path) : string
@@ -957,6 +957,8 @@ final class ApiController extends Controller
      *
      * @api
      *
+     * @throws \Exception
+     *
      * @since 1.0.0
      */
     public function apiMediaCreate(RequestAbstract $request, ResponseAbstract $response, mixed $data = null) : void
@@ -1072,8 +1074,8 @@ final class ApiController extends Controller
                     $media->id
                 )
             ) {
-                $this->fillJsonResponse($request, $response, NotificationLevel::HIDDEN, '', '', []);
                 $response->header->status = RequestStatusCode::R_403;
+                $this->createInvalidReturnResponse($request, $response, $media);
 
                 return;
             }
@@ -1087,8 +1089,8 @@ final class ApiController extends Controller
             }
         } else {
             if (empty($data) || !isset($data['guard'])) {
-                $this->fillJsonResponse($request, $response, NotificationLevel::HIDDEN, '', '', []);
                 $response->header->status = RequestStatusCode::R_403;
+                $this->createInvalidReturnResponse($request, $response, $media);
             }
         }
 
@@ -1111,16 +1113,16 @@ final class ApiController extends Controller
             $media = $this->prepareEncryptedMedia($media, $request);
 
             if ($media->id === 0) {
-                $this->fillJsonResponse($request, $response, NotificationLevel::ERROR, 'Media', 'Media could not be exported. Please try again.', []);
                 $response->header->status = RequestStatusCode::R_500;
+                $this->createInvalidReturnResponse($request, $response, $media);
 
                 return;
             }
         }
 
-        if (!\is_file($media->getAbsolutePath())) {
-            $this->fillJsonResponse($request, $response, NotificationLevel::ERROR, 'Media', 'Media could not be exported. Please try again.', []);
+        if ($media->extension !== 'collection' && !\is_file($media->getAbsolutePath())) {
             $response->header->status = RequestStatusCode::R_500;
+            $this->createInvalidReturnResponse($request, $response, $media);
 
             return;
         }
@@ -1227,10 +1229,14 @@ final class ApiController extends Controller
                 case 'php':
                 case 'js':
                 case 'css':
+                case 'csv':
                 case 'rs':
                 case 'py':
                 case 'r':
                     $view->setTemplate('/Modules/Media/Theme/Backend/Components/Media/text_raw');
+                    break;
+                case 'json':
+                    $view->setTemplate('/Modules/Media/Theme/Backend/Components/Media/json_raw');
                     break;
                 case 'txt':
                 case 'cfg':
@@ -1254,6 +1260,9 @@ final class ApiController extends Controller
                 case 'mp4':
                 case 'mpeg':
                     $view->setTemplate('/Modules/Media/Theme/Backend/Components/Media/video_raw');
+                    break;
+                case 'collection':
+                    $view->setTemplate('/Modules/Media/Theme/Backend/Components/Media/collection_raw');
                     break;
                 default:
                     $view->setTemplate('/Modules/Media/Theme/Backend/Components/Media/default');

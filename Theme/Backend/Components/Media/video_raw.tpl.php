@@ -15,6 +15,7 @@ declare(strict_types=1);
 use phpOMS\Uri\UriFactory;
 
 ?>
+<!DOCTYPE html>
 <style>html, body, iframe { margin: 0; padding: 0; border: 0; }</style>
 <video width="100%" controls>
     <source src="<?= UriFactory::build('{/api}media/export?id=' . $this->media->id); ?>" type="video/<?= $this->media->extension; ?>">

@@ -66,7 +66,7 @@ final class BackendController extends Controller
         $view = new View($this->app->l11nManager, $request, $response);
         $view->setTemplate('/Modules/Media/Theme/Backend/media-list');
 
-        $path = \str_replace('+', ' ', (string) ($request->getData('path') ?? '/'));
+        $path = \str_replace('+', ' ', $request->getDataString('path') ?? '/');
 
         $hasPermission = $this->app->accountManager->get($request->header->account)
             ->hasPermission(

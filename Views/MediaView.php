@@ -45,7 +45,7 @@ class MediaView extends View
     {
         if (\is_file($media->getPath() . $sub)
             && ($path = \realpath($media->getPath() . $sub)) !== false
-            && ($path = \str_replace('\\', '/', $path)) !== false
+            && ($path = \strtr($path, '\\', '/')) !== false
             && StringUtils::startsWith($path, $media->getPath())
         ) {
             return $media->getPath() . $sub;
@@ -68,7 +68,7 @@ class MediaView extends View
     {
         if (\is_dir($media->getPath() . $sub)
             && ($path = \realpath($media->getPath() . $sub)) !== false
-            && ($path = \str_replace('\\', '/', $path)) !== false
+            && ($path = \strtr($path, '\\', '/')) !== false
             && StringUtils::startsWith($path, $media->getPath())
         ) {
             return $media->getPath() . $sub;

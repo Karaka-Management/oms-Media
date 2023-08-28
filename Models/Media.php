@@ -380,7 +380,7 @@ class Media implements \JsonSerializable
      */
     public function setPath(string $path) : void
     {
-        $this->path = \str_replace('\\', '/', $path);
+        $this->path = \strtr($path, '\\', '/');
     }
 
     /**
@@ -392,7 +392,7 @@ class Media implements \JsonSerializable
      */
     public function setVirtualPath(string $path) : void
     {
-        $this->virtualPath = \str_replace('\\', '/', $path);
+        $this->virtualPath = \strtr($path, '\\', '/');
     }
 
     /**
