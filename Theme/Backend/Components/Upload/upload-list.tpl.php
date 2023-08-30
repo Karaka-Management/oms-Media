@@ -13,6 +13,7 @@
 declare(strict_types=1);
 
 use phpOMS\Uri\UriFactory;
+
 ?>
 <div class="row">
     <div class="col-xs-12 col-md-6">
