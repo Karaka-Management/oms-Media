@@ -201,6 +201,17 @@ class MediaMapper extends DataMapperFactory
             ->where('name', $name);
     }
 
+    /**
+     * Check how many references exist to a certain media id.
+     *
+     * This can be helpful to check if a media element can be deleted without damaging other references.
+     *
+     * @param int $id Media id to check references to
+     *
+     * @return int
+     *
+     * @since 1.0.0
+     */
     public static function countInternalReferences(int $id) : int
     {
         $references = self::count()
