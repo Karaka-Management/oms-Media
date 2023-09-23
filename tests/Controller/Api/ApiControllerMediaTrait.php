@@ -245,12 +245,16 @@ trait ApiControllerMediaTrait
         $request->header->account = 1;
         $request->setData('id', $id);
         $request->setData('name', 'Test Changed');
-        $request->setData('content', 'Test Content');
+        $request->setData('content', 'Test Changed');
         $this->module->apiMediaUpdate($request, $response);
 
-        $media = MediaMapper::get()->where('id', $id)->execute();
+        $media = MediaMapper::get()
+            ->with('content')
+            ->where('id', $id)
+            ->execute();
+
         self::assertEquals('Test Changed', $media->name);
-        self::assertEquals('Test Content', \file_get_contents(__DIR__ . '/../test/path/testFile1.txt'));
+        self::assertEquals('Test Changed', $media->content?->content);
 
         Directory::delete(__DIR__ . '/../test');
     }
