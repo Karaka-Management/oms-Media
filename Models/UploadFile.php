@@ -165,7 +165,7 @@ class UploadFile
                 return $result;
             }
 
-            if (!empty($this->allowedTypes) && !in_array($f['type'], $this->allowedTypes, true)) {
+            if (!empty($this->allowedTypes) && !\in_array($f['type'], $this->allowedTypes, true)) {
                 $result[$key]['status'] = UploadStatus::WRONG_EXTENSION;
 
                 return $result;
