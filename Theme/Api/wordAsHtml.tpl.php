@@ -24,5 +24,4 @@ $reader = IOFactory::createReader('Word2007');
 $doc    = $reader->load(($media->isAbsolute ? '' : __DIR__ . '/../../../../') . $media->getPath());
 
 $writer = new HTML($doc);
-
 $writer->save('php://output');
