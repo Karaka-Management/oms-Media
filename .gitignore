@@ -1,4 +1,16 @@
 /Files/
-vendor
 Build
+*.cache
 .directory
+Vagrantfile
+vendor
+bower_components
+node_modules
+*.log
+.vagrant
+.vscode
+.sass-cache
+cache
+Cache
+Libraries
+.idea.directory
