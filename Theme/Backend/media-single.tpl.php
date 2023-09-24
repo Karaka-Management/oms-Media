@@ -97,7 +97,7 @@ echo $this->data['nav']->render();
                         ); ?></a>
                         <tr><td><?= $this->getHtml('Tags'); ?><td>
                             <?php foreach ($tags as $tag) : ?>
-                                <span class="tag" style="background: <?= $this->printHtml($tag->color); ?>"><?= !empty($tag->icon) ? '<i class="' . $this->printHtml($tag->icon) . '"></i>' : ''; ?><?= $this->printHtml($tag->getL11n()); ?></span>
+                                <span class="tag" style="background: <?= $this->printHtml($tag->color); ?>"><?= empty($tag->icon) ? '' : '<i class="' . $this->printHtml($tag->icon) . '"></i>'; ?><?= $this->printHtml($tag->getL11n()); ?></span>
                             <?php endforeach; ?>
                         <tr><td colspan="2"><?= $this->getHtml('Description'); ?>
                         <tr><td colspan="2"><?= $media->description; ?>

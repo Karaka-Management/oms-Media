@@ -819,14 +819,10 @@ final class ApiController extends Controller
         }
 
         $virtualPath = \urldecode($request->getDataString('virtualpath') ?? '/');
-
-        $outputDir = '';
-        $basePath  = __DIR__ . '/../../../Modules/Media/Files';
-        if (!$request->hasData('path')) {
-            $outputDir = self::createMediaPath($basePath);
-        } else {
-            $outputDir = $basePath . '/' . \ltrim($request->getDataString('path') ?? '', '\\/');
-        }
+        $basePath    = __DIR__ . '/../../../Modules/Media/Files';
+        $outputDir   = $request->hasData('path')
+            ? $basePath . '/' . \ltrim($request->getDataString('path') ?? '', '\\/')
+            : self::createMediaPath($basePath);
 
         $dirPath   = $outputDir . '/' . ($request->getDataString('name') ?? '');
         $outputDir = \substr($outputDir, \strlen(__DIR__ . '/../../..'));
@@ -896,7 +892,7 @@ final class ApiController extends Controller
     {
         $status = false;
         if (!empty($physicalPath)) {
-            $status = !\is_dir($physicalPath) ? \mkdir($physicalPath, 0755, true) : true;
+            $status = \is_dir($physicalPath) ? true : \mkdir($physicalPath, 0755, true);
         }
 
         $path      = \trim($path, '/');
@@ -972,16 +968,13 @@ final class ApiController extends Controller
         $basePath  = __DIR__ . '/../../../Modules/Media/Files';
         if (!$request->hasData('path')) {
             $outputDir = self::createMediaPath($basePath);
+        } elseif (\stripos(
+                FileUtils::absolute($basePath . '/' . \ltrim($path, '\\/')),
+                FileUtils::absolute(__DIR__ . '/../../../')
+            ) !== 0) {
+            $outputDir = self::createMediaPath($basePath);
         } else {
-            if (\stripos(
-                    FileUtils::absolute($basePath . '/' . \ltrim($path, '\\/')),
-                    FileUtils::absolute(__DIR__ . '/../../../')
-                ) !== 0
-            ) {
-                $outputDir = self::createMediaPath($basePath);
-            } else {
-                $outputDir = $basePath . '/' . \ltrim($path, '\\/');
-            }
+            $outputDir = $basePath . '/' . \ltrim($path, '\\/');
         }
 
         if (!\is_dir($outputDir)) {
@@ -1079,7 +1072,6 @@ final class ApiController extends Controller
 
                 return;
             }
-
             if (!isset($data, $data['guard'])) {
                 if (!isset($data)) {
                     $data = [];
@@ -1087,11 +1079,9 @@ final class ApiController extends Controller
 
                 $data['guard'] = __DIR__ . '/../Files';
             }
-        } else {
-            if (empty($data) || !isset($data['guard'])) {
-                $response->header->status = RequestStatusCode::R_403;
-                $this->createInvalidReturnResponse($request, $response, $media);
-            }
+        } elseif (empty($data) || !isset($data['guard'])) {
+            $response->header->status = RequestStatusCode::R_403;
+            $this->createInvalidReturnResponse($request, $response, $media);
         }
 
         if (!Guard::isSafePath($filePath, $data['guard'] ?? '')) {

@@ -208,7 +208,7 @@ final class Installer extends InstallerAbstract
         /** @var \Modules\Media\Controller\ApiController $module */
         $module = $app->moduleManager->getModuleInstance('Media');
 
-        $path = !isset($data['path']) ? ($data['virtualPath'] ?? '') : $data['path'];
+        $path = isset($data['path']) ? ($data['path']) : $data['virtualPath'] ?? '';
 
         $response = new HttpResponse();
         $request  = new HttpRequest(new HttpUri(''));
@@ -285,9 +285,9 @@ final class Installer extends InstallerAbstract
             $module->apiMediaTypeL11nCreate($request, $response);
         }
 
-        return !\is_array($type)
-            ? $type->toArray()
-            : $type;
+        return \is_array($type)
+            ? $type
+            : $type->toArray();
     }
 
     /**

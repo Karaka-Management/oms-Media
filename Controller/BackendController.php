@@ -243,28 +243,24 @@ final class BackendController extends Controller
                 $view->setTemplate('/Modules/Media/Theme/Backend/media-list');
             } else {
                 $sub = $request->getDataString('sub') ?? '';
-                if (\is_dir($media->getPath())
-                    && (\is_dir($media->getPath() . $sub))
-                ) {
+                if (\is_dir($media->getPath() . $sub)) {
                     $listView = new ListView($this->app->l11nManager, $request, $response);
                     $listView->setTemplate('/modules/Media/Theme/Backend/Components/Media/list');
                     $view->data['view'] = $listView;
-                } else {
-                    if ($media->class === MediaClass::REFERENCE) {
-                        /** @var \Modules\Media\Models\Media $media */
-                        $media->source = MediaMapper::get()
-                            ->with('createdBy')
-                            ->with('tags')
-                            ->with('tags/title')
-                            ->with('content')
-                            ->where('id', $media->source?->id ?? 0)
-                            ->where('tags/title/language', $request->header->l11n->language)
-                            ->execute();
+                } elseif ($media->class === MediaClass::REFERENCE) {
+                    /** @var \Modules\Media\Models\Media $media */
+                    $media->source = MediaMapper::get()
+                        ->with('createdBy')
+                        ->with('tags')
+                        ->with('tags/title')
+                        ->with('content')
+                        ->where('id', $media->source?->id ?? 0)
+                        ->where('tags/title/language', $request->header->l11n->language)
+                        ->execute();
 
-                        $view->data['view'] = $this->createMediaView($media->source, $request, $response);
-                    } else {
-                        $view->data['view'] = $this->createMediaView($media, $request, $response);
-                    }
+                    $view->data['view'] = $this->createMediaView($media->source, $request, $response);
+                } else {
+                    $view->data['view'] = $this->createMediaView($media, $request, $response);
                 }
             }
         }

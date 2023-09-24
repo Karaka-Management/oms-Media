@@ -165,14 +165,14 @@ class UploadFile
                 return $result;
             }
 
-            if (!empty($this->allowedTypes) && \array_search($f['type'], $this->allowedTypes, true) === false) {
+            if (!empty($this->allowedTypes) && !in_array($f['type'], $this->allowedTypes, true)) {
                 $result[$key]['status'] = UploadStatus::WRONG_EXTENSION;
 
                 return $result;
             }
 
             $split                     = \explode('.', $f['name']);
-            $result[$key]['filename']  = !empty($fileNames) ? $fileNames[$fCounter] : $f['name'];
+            $result[$key]['filename']  = empty($fileNames) ? $f['name'] : $fileNames[$fCounter];
             $result[$key]['extension'] = ($c = \count($split)) > 1 ? $split[$c - 1] : '';
 
             if (!$this->preserveFileName || \is_file($path . '/' . $result[$key]['filename'])) {
@@ -190,10 +190,8 @@ class UploadFile
                 }
             }
 
-            if (!\is_dir($path)) {
-                if (!Directory::create($path, 0755, true)) {
-                    FileLogger::getInstance()->error('Couldn\t upload media file. There maybe is a problem with your permission or uploaded file.');
-                }
+            if (!\is_dir($path) && !Directory::create($path, 0755, true)) {
+                FileLogger::getInstance()->error('Couldn\t upload media file. There maybe is a problem with your permission or uploaded file.');
             }
 
             if (!\rename($f['tmp_name'], $dest = $path . '/' . $result[$key]['filename'])) {
