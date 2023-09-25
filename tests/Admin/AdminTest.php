@@ -26,7 +26,7 @@ final class AdminTest extends \PHPUnit\Framework\TestCase
 
     protected const URI_LOAD = 'http://127.0.0.1/en/backend/media';
 
-    use \Build\Helper\ModuleTestTrait;
+    use \tests\Modules\ModuleTestTrait;
 
     public function testInvalidMediaInstallPath() : void
     {
