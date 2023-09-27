@@ -1196,7 +1196,7 @@ final class ApiController extends Controller
                 $css = '';
             }
 
-            $css  = \file_get_contents(__DIR__ . '/../../../Web/Backend/css/backend-small.css');
+            $css = \file_get_contents(__DIR__ . '/../../../Web/Backend/css/backend-small.css');
             if ($css === false) {
                 $css = ''; // @codeCoverageIgnore
             }
