@@ -1192,13 +1192,14 @@ final class ApiController extends Controller
             $view->setTemplate('/Modules/Media/Theme/Api/render');
         } elseif ($type === 'html') {
             $head = new Head();
-            if (!\is_file(__DIR__ . '/../../../Web/Backend/css/backend-small.css')) {
-                $css = '';
-            }
 
-            $css = \file_get_contents(__DIR__ . '/../../../Web/Backend/css/backend-small.css');
-            if ($css === false) {
-                $css = ''; // @codeCoverageIgnore
+            $css = '';
+            if (\is_file(__DIR__ . '/../../../Web/Backend/css/backend-small.css')) {
+                $css = \file_get_contents(__DIR__ . '/../../../Web/Backend/css/backend-small.css');
+
+                if ($css === false) {
+                    $css = ''; // @codeCoverageIgnore
+                }
             }
 
             $css = \preg_replace('!\s+!', ' ', $css);
