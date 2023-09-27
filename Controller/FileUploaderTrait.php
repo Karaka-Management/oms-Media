@@ -33,14 +33,14 @@ trait FileUploaderTrait
      *
      * @param RequestAbstract  $request  Request
      * @param ResponseAbstract $response Response
-     * @param mixed            $data     Misc. data
+     * @param array            $data     Misc. data
      *
      * @return void
      *
      * @since 1.0.0
      * @codeCoverageIgnore
      */
-    public function setUpFileUploaderTrait(RequestAbstract $request, ResponseAbstract $response, $data = null) : void
+    public function setUpFileUploaderTrait(RequestAbstract $request, ResponseAbstract $response, array $data = []) : void
     {
         $head  = $response->data['Content']->head;
         $nonce = $this->app->appSettings->getOption('script-nonce');

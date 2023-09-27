@@ -71,7 +71,7 @@ final class ApiController extends Controller
      *
      * @param RequestAbstract  $request  Request
      * @param ResponseAbstract $response Response
-     * @param mixed            $data     Generic data
+     * @param array            $data     Generic data
      *
      * @return void
      *
@@ -79,7 +79,7 @@ final class ApiController extends Controller
      *
      * @since 1.0.0
      */
-    public function apiMediaUpload(RequestAbstract $request, ResponseAbstract $response, mixed $data = null) : void
+    public function apiMediaUpload(RequestAbstract $request, ResponseAbstract $response, array $data = []) : void
     {
         $uploads = $this->uploadFiles(
             names:              $request->getDataList('names'),
@@ -552,7 +552,7 @@ final class ApiController extends Controller
      *
      * @param RequestAbstract  $request  Request
      * @param ResponseAbstract $response Response
-     * @param mixed            $data     Generic data
+     * @param array            $data     Generic data
      *
      * @return void
      *
@@ -560,7 +560,7 @@ final class ApiController extends Controller
      *
      * @since 1.0.0
      */
-    public function apiMediaUpdate(RequestAbstract $request, ResponseAbstract $response, mixed $data = null) : void
+    public function apiMediaUpdate(RequestAbstract $request, ResponseAbstract $response, array $data = []) : void
     {
         /** @var Media $old */
         $old = MediaMapper::get()->where('id', (int) $request->getData('id'))->execute();
@@ -618,7 +618,7 @@ final class ApiController extends Controller
      *
      * @param RequestAbstract  $request  Request
      * @param ResponseAbstract $response Response
-     * @param mixed            $data     Generic data
+     * @param array            $data     Generic data
      *
      * @return void
      *
@@ -626,7 +626,7 @@ final class ApiController extends Controller
      *
      * @since 1.0.0
      */
-    public function apiReferenceCreate(RequestAbstract $request, ResponseAbstract $response, mixed $data = null) : void
+    public function apiReferenceCreate(RequestAbstract $request, ResponseAbstract $response, array $data = []) : void
     {
         if (!empty($val = $this->validateReferenceCreate($request))) {
             $response->header->status = RequestStatusCode::R_400;
@@ -724,7 +724,7 @@ final class ApiController extends Controller
      *
      * @param RequestAbstract  $request  Request
      * @param ResponseAbstract $response Response
-     * @param mixed            $data     Generic data
+     * @param array            $data     Generic data
      *
      * @return void
      *
@@ -732,7 +732,7 @@ final class ApiController extends Controller
      *
      * @since 1.0.0
      */
-    public function apiCollectionAdd(RequestAbstract $request, ResponseAbstract $response, mixed $data = null) : void
+    public function apiCollectionAdd(RequestAbstract $request, ResponseAbstract $response, array $data = []) : void
     {
         $collection = (int) $request->getData('collection');
         $media      = $request->getDataJson('media-list');
@@ -755,7 +755,7 @@ final class ApiController extends Controller
      *
      * @param RequestAbstract  $request  Request
      * @param ResponseAbstract $response Response
-     * @param mixed            $data     Generic data
+     * @param array            $data     Generic data
      *
      * @return void
      *
@@ -763,7 +763,7 @@ final class ApiController extends Controller
      *
      * @since 1.0.0
      */
-    public function apiCollectionCreate(RequestAbstract $request, ResponseAbstract $response, mixed $data = null) : void
+    public function apiCollectionCreate(RequestAbstract $request, ResponseAbstract $response, array $data = []) : void
     {
         if (!empty($val = $this->validateCollectionCreate($request))) {
             $response->header->status = RequestStatusCode::R_400;
@@ -947,7 +947,7 @@ final class ApiController extends Controller
      *
      * @param RequestAbstract  $request  Request
      * @param ResponseAbstract $response Response
-     * @param mixed            $data     Generic data
+     * @param array            $data     Generic data
      *
      * @return void
      *
@@ -957,7 +957,7 @@ final class ApiController extends Controller
      *
      * @since 1.0.0
      */
-    public function apiMediaCreate(RequestAbstract $request, ResponseAbstract $response, mixed $data = null) : void
+    public function apiMediaCreate(RequestAbstract $request, ResponseAbstract $response, array $data = []) : void
     {
         $path        = \urldecode($request->getDataString('path') ?? '');
         $virtualPath = \urldecode($request->getDataString('virtualpath') ?? '/');
@@ -1023,7 +1023,7 @@ final class ApiController extends Controller
      *
      * @param HttpRequest  $request  Request
      * @param HttpResponse $response Response
-     * @param mixed        $data     Generic data
+     * @param array        $data     Generic data
      *
      * @return void
      *
@@ -1031,7 +1031,7 @@ final class ApiController extends Controller
      *
      * @since 1.0.0
      */
-    public function apiMediaExport(RequestAbstract $request, ResponseAbstract $response, mixed $data = null) : void
+    public function apiMediaExport(RequestAbstract $request, ResponseAbstract $response, array $data = []) : void
     {
         $filePath = '';
         $media    = null;
@@ -1072,11 +1072,8 @@ final class ApiController extends Controller
 
                 return;
             }
-            if (!isset($data, $data['guard'])) {
-                if (!isset($data)) {
-                    $data = [];
-                }
 
+            if (!isset($data['guard'])) {
                 $data['guard'] = __DIR__ . '/../Files';
             }
         } elseif (empty($data) || !isset($data['guard'])) {
@@ -1378,7 +1375,7 @@ final class ApiController extends Controller
      *
      * @param RequestAbstract  $request  Request
      * @param ResponseAbstract $response Response
-     * @param mixed            $data     Generic data
+     * @param array            $data     Generic data
      *
      * @return void
      *
@@ -1386,7 +1383,7 @@ final class ApiController extends Controller
      *
      * @since 1.0.0
      */
-    public function apiMediaTypeCreate(RequestAbstract $request, ResponseAbstract $response, mixed $data = null) : void
+    public function apiMediaTypeCreate(RequestAbstract $request, ResponseAbstract $response, array $data = []) : void
     {
         if (!empty($val = $this->validateMediaTypeCreate($request))) {
             $response->header->status = RequestStatusCode::R_400;
@@ -1450,7 +1447,7 @@ final class ApiController extends Controller
      *
      * @param RequestAbstract  $request  Request
      * @param ResponseAbstract $response Response
-     * @param mixed            $data     Generic data
+     * @param array            $data     Generic data
      *
      * @return void
      *
@@ -1458,7 +1455,7 @@ final class ApiController extends Controller
      *
      * @since 1.0.0
      */
-    public function apiMediaTypeL11nCreate(RequestAbstract $request, ResponseAbstract $response, mixed $data = null) : void
+    public function apiMediaTypeL11nCreate(RequestAbstract $request, ResponseAbstract $response, array $data = []) : void
     {
         if (!empty($val = $this->validateMediaTypeL11nCreate($request))) {
             $response->header->status = RequestStatusCode::R_400;
