@@ -40,9 +40,11 @@ trait FileUploaderTrait
      * @since 1.0.0
      * @codeCoverageIgnore
      */
-    public static function setUpFileUploaderTrait(RequestAbstract $request, ResponseAbstract $response, $data = null) : void
+    public function setUpFileUploaderTrait(RequestAbstract $request, ResponseAbstract $response, $data = null) : void
     {
-        $head = $response->data['Content']->head;
-        $head->addAsset(AssetType::JS, '/Modules/Media/Controller.js', ['type' => 'module']);
+        $head  = $response->data['Content']->head;
+        $nonce = $this->app->appSettings->getOption('script-nonce');
+
+        $head->addAsset(AssetType::JS, '/Modules/Media/Controller.js', ['nonce' => $nonce, 'type' => 'module']);
     }
 }
