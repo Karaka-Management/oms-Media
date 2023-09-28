@@ -26,7 +26,7 @@ use phpOMS\DataStorage\Database\Mapper\ReadMapper;
  * @since   1.0.0
  *
  * @template T of Collection
- * @extends MediaMapper
+ * @extends MediaMapper<Media>
  */
 final class CollectionMapper extends MediaMapper
 {
