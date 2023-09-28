@@ -222,8 +222,8 @@ class MediaMapper extends DataMapperFactory
         $result = $query->count(self::TABLE)
             ->where('media_relation_src', '=', $id)
             ->execute()
-            ?->fetch();
+            ?->fetch() ?? [];
 
-        return $references + ((int) $result[0] ?? 0);
+        return $references + ((int) ($result[0] ?? 0));
     }
 }

@@ -1088,7 +1088,7 @@ final class ApiController extends Controller
         }
 
         if ($media->hasPassword()
-            && !$media->comparePassword($request->getDataString('password'))
+            && !$media->comparePassword($request->getDataString('password') ?? '')
         ) {
             $view = new View($this->app->l11nManager, $request, $response);
             $view->setTemplate('/Modules/Media/Theme/Api/invalidPassword');

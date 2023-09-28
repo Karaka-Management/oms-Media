@@ -360,9 +360,9 @@ final class Installer extends InstallerAbstract
 
         $module->apiMediaUpload($request, $response);
 
-        $uploadedIds = $response->get('')['response'];
+        $uploadedIds = $response->getDataArray('')['response'];
 
-        if ($data['create_collection']) {
+        if ($data['create_collection'] ?? false) {
             $response = new HttpResponse();
             $request  = new HttpRequest(new HttpUri(''));
 
