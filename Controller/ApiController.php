@@ -562,12 +562,38 @@ final class ApiController extends Controller
      */
     public function apiMediaUpdate(RequestAbstract $request, ResponseAbstract $response, array $data = []) : void
     {
+        if (!empty($val = $this->validateMediaUpdate($request))) {
+            $response->header->status = RequestStatusCode::R_400;
+            $this->createInvalidUpdateResponse($request, $response, $val);
+
+            return;
+        }
+
         /** @var Media $old */
         $old = MediaMapper::get()->where('id', (int) $request->getData('id'))->execute();
         $new = $this->updateMediaFromRequest($request, clone $old);
 
         $this->updateModel($request->header->account, $old, $new, MediaMapper::class, 'media', $request->getOrigin());
         $this->createStandardUpdateResponse($request, $response, $new);
+    }
+
+    /**
+     * Validate media update request
+     *
+     * @param RequestAbstract $request Request
+     *
+     * @return array<string, bool> Returns the validation array of the request
+     *
+     * @since 1.0.0
+     */
+    private function validateMediaUpdate(RequestAbstract $request) : array
+    {
+        $val = [];
+        if (($val['id'] = !$request->hasData('id'))) {
+            return $val;
+        }
+
+        return [];
     }
 
     /**
@@ -599,6 +625,7 @@ final class ApiController extends Controller
             return $new;
         }
 
+        // @todo: create test for this content change and the parsed content change
         if ($request->hasData('content')) {
             \file_put_contents(
                 $new->isAbsolute
