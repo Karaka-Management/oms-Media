@@ -218,7 +218,9 @@ class MediaMapper extends DataMapperFactory
             ->where('source', $id)
             ->execute();
 
-        $query  = new Builder(self::$db);
+        $query = new Builder(self::$db);
+
+        /** @var array $result */
         $result = $query->count(self::TABLE)
             ->where('media_relation_src', '=', $id)
             ->execute()
