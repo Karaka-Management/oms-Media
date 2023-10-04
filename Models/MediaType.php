@@ -59,7 +59,7 @@ class MediaType implements \JsonSerializable
      * @var string|BaseStringL11n
      * @since 1.0.0
      */
-    protected string | BaseStringL11n $title = '';
+    public string | BaseStringL11n $title = '';
 
     /**
      * Constructor.
