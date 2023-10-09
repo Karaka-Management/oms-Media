@@ -1,11 +1,12 @@
+import { jsOMS }      from '../../jsOMS/Utils/oLib.js';
 import { Autoloader } from '../../jsOMS/Autoloader.js';
 import { NotificationMessage } from '../../jsOMS/Message/Notification/NotificationMessage.js';
 import { NotificationType } from '../../jsOMS/Message/Notification/NotificationType.js';
 import { Upload } from './Models/Upload.js';
 
-Autoloader.defineNamespace('jsOMS.Modules');
+Autoloader.defineNamespace('omsApp.Modules');
 
-jsOMS.Modules.Media = class {
+omsApp.Modules.Media = class {
     /**
      * @constructor
      *

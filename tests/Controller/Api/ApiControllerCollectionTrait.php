@@ -72,7 +72,7 @@ trait ApiControllerCollectionTrait
         }
 
         $media        = [];
-        $createdMedia = $response->get('')['response'];
+        $createdMedia = $response->getDataArray('')['response'];
         foreach ($createdMedia as $file) {
             $media[] = $file;
         }
@@ -87,7 +87,7 @@ trait ApiControllerCollectionTrait
 
         $this->module->apiCollectionCreate($request, $response);
 
-        $collection = $response->get('')['response'];
+        $collection = $response->getDataArray('')['response'];
         self::assertEquals('Test Collection', $collection->name);
         self::assertCount(2, $collection->getSources());
     }
@@ -123,7 +123,7 @@ trait ApiControllerCollectionTrait
 
         $this->module->apiCollectionCreate($request, $response);
 
-        $collection = $response->get('')['response'];
+        $collection = $response->getDataArray('')['response'];
         self::assertTrue(\is_dir(__DIR__ . '/../../../Files/test/path'));
 
         Directory::delete(__DIR__ . '/../../../Files/test/path');

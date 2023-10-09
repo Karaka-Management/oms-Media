@@ -120,7 +120,7 @@ trait ApiControllerMediaTrait
             Directory::delete(__DIR__ . '/temp');
         }
 
-        $media = $response->get('')['response'];
+        $media = $response->getDataArray('')['response'];
         self::assertCount(2, $media);
     }
 
@@ -171,7 +171,7 @@ trait ApiControllerMediaTrait
             Directory::delete(__DIR__ . '/temp');
         }
 
-        $media = $response->get('')['response'];
+        $media = $response->getDataArray('')['response'];
         self::assertTrue(\is_file(__DIR__ . '/../test/path/testFile1.txt'));
         self::assertTrue(\is_file(__DIR__ . '/../test/path/testFile2.txt'));
 
@@ -238,7 +238,7 @@ trait ApiControllerMediaTrait
         TestUtils::setMember($request, 'files', $files);
         $this->module->apiMediaUpload($request, $response);
 
-        $id       = \reset($response->get('')['response']);
+        $id       = \reset($response->getDataArray('')['response']);
         $response = new HttpResponse();
         $request  = new HttpRequest(new HttpUri(''));
 
@@ -278,7 +278,7 @@ trait ApiControllerMediaTrait
 
         $this->module->apiMediaCreate($request, $response);
 
-        self::assertCount(1, $response->get('')['response']);
+        self::assertCount(1, $response->getDataArray('')['response']);
         self::assertTrue(\is_file(__DIR__ . '/../test/path/created.md'));
 
         Directory::delete(__DIR__ . '/../test');

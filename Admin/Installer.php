@@ -183,7 +183,7 @@ final class Installer extends InstallerAbstract
 
         $module->apiReferenceCreate($request, $response);
 
-        $responseData = $response->get('');
+        $responseData = $response->getData('');
         if (!\is_array($responseData)) {
             return [];
         }
@@ -221,7 +221,7 @@ final class Installer extends InstallerAbstract
 
         $module->apiCollectionCreate($request, $response);
 
-        $responseData = $response->get('');
+        $responseData = $response->getData('');
         if (!\is_array($responseData)) {
             return [];
         }
@@ -259,7 +259,7 @@ final class Installer extends InstallerAbstract
 
         $module->apiMediaTypeCreate($request, $response);
 
-        $responseData = $response->get('');
+        $responseData = $response->getData('');
         if (!\is_array($responseData)) {
             return [];
         }
@@ -375,7 +375,7 @@ final class Installer extends InstallerAbstract
             $module->apiCollectionCreate($request, $response);
         }
 
-        $responseData = $response->get('');
+        $responseData = $response->getData('');
         if (!\is_array($responseData)) {
             return [];
         }

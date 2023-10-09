@@ -16,7 +16,7 @@ use \phpOMS\Uri\UriFactory;
 
 ?>
 <!DOCTYPE html>
-<style>html, body, iframe { margin: 0; padding: 0; border: 0; }</style>
+<style>html, body, iframe { margin: 0; padding: 0; border: 0; width: 100%; height: 100%; overflow: hidden; }</style>
 <iframe
     class="col-simple"
     id="iMediaFrame"
