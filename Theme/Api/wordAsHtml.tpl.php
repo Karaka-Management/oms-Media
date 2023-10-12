@@ -18,7 +18,7 @@ use phpOMS\Autoloader;
 
 Autoloader::addPath(__DIR__ . '/../../../../Resources/');
 
-$media = $this->data['media'];
+$media = $this->media;
 
 $reader = IOFactory::createReader('Word2007');
 $doc    = $reader->load(($media->isAbsolute ? '' : __DIR__ . '/../../../../') . $media->getPath());

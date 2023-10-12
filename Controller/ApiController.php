@@ -625,7 +625,6 @@ final class ApiController extends Controller
             return $new;
         }
 
-        // @todo: create test for this content change and the parsed content change
         if ($request->hasData('content')) {
             \file_put_contents(
                 $new->isAbsolute

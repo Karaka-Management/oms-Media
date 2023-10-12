@@ -17,6 +17,6 @@ use phpOMS\Utils\Parser\Spreadsheet\SpreadsheetParser;
 
 Autoloader::addPath(__DIR__ . '/../../../../Resources/');
 
-$media = $this->data['media'];
+$media = $this->media;
 
 echo SpreadsheetParser::parseSpreadsheet(($media->isAbsolute ? '' : __DIR__ . '/../../../../') . $media->getPath(), 'html');
