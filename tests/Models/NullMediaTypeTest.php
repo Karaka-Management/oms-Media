@@ -23,7 +23,7 @@ final class NullMediaTypeTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @covers Modules\Media\Models\NullMediaType
-     * @group framework
+     * @group module
      */
     public function testNull() : void
     {
@@ -32,11 +32,21 @@ final class NullMediaTypeTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @covers Modules\Media\Models\NullMediaType
-     * @group framework
+     * @group module
      */
     public function testId() : void
     {
         $null = new NullMediaType(2);
         self::assertEquals(2, $null->id);
+    }
+
+    /**
+     * @covers Modules\Media\Models\NullMediaType
+     * @group module
+     */
+    public function testJsonSerialize() : void
+    {
+        $null = new NullMediaType(2);
+        self::assertEquals(['id' => 2], $null);
     }
 }
