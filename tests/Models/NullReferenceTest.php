@@ -37,7 +37,7 @@ final class NullReferenceTest extends \PHPUnit\Framework\TestCase
     public function testId() : void
     {
         $null = new NullReference(2);
-        self::assertEquals(2, $null->getId());
+        self::assertEquals(2, $null->id);
     }
 
     /**
