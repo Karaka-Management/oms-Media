@@ -20,6 +20,7 @@ use Modules\Media\Models\PathSettings;
 use Modules\Media\Models\UploadStatus;
 use phpOMS\Message\Http\HttpRequest;
 use phpOMS\Message\Http\HttpResponse;
+use phpOMS\Message\Http\RequestStatusCode;
 use phpOMS\System\File\Local\Directory;
 use phpOMS\System\MimeType;
 use phpOMS\Uri\HttpUri;
