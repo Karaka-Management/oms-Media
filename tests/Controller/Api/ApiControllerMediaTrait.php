@@ -615,4 +615,14 @@ trait ApiControllerMediaTrait
         $this->module->apiMediaExport($request, $response);
         self::assertEquals(MimeType::M_BIN, $response->header->get('Content-Type')[0]);
     }
+
+    public function testInvalidapiMediaUpdate() : void
+    {
+        $response = new HttpResponse();
+        $request  = new HttpRequest(new HttpUri(''));
+
+        $request->header->account = 1;
+        $this->module->apiMediaUpdate($request, $response);
+        self::assertEquals(RequestStatusCode::R_400, $response->header->status);
+    }
 }
