@@ -33,7 +33,7 @@ declare(strict_types=1);
                         echo '<tr>';
                         echo '<td>'
                             . \str_repeat('&nbsp;', (\substr_count(\trim($stat['name'], '/'), '/')) * 8)
-                            . ($stat['name'][\strlen($stat['name']) - 1] === '/' ? '<i class="fa fa-folder-open-o"></i> ' : '<i class="fa fa-file-o"></i> ')
+                            . ($stat['name'][\strlen($stat['name']) - 1] === '/' ? '<i class="g-icon">folder_open</i> ' : '<i class="g-icon">article</i> ')
                             . $stat['name'];
                     }
                 ?>

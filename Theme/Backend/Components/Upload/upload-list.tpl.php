@@ -36,8 +36,8 @@ use phpOMS\Uri\UriFactory;
                                             <table id="iMediaInput-table" class="default">
                                                 <thead>
                                                     <tr>
-                                                        <td><?= $this->getHtml('ID', '0', '0'); ?><i class="sort-asc fa fa-chevron-up"></i><i class="sort-desc fa fa-chevron-down"></i>
-                                                        <td><?= $this->getHtml('Name', 'Media', 'Backend'); ?><i class="sort-asc fa fa-chevron-up"></i><i class="sort-desc fa fa-chevron-down"></i>
+                                                        <td><?= $this->getHtml('ID', '0', '0'); ?><i class="sort-asc g-icon">expand_less</i><i class="sort-desc g-icon">expand_more</i>
+                                                        <td><?= $this->getHtml('Name', 'Media', 'Backend'); ?><i class="sort-asc g-icon">expand_less</i><i class="sort-desc g-icon">expand_more</i>
                                                 <tbody>
                                                     <template id="iMediaInput-rowElement" class="rowTemplate">
                                                         <tr tabindex="-1">
@@ -62,14 +62,14 @@ use phpOMS\Uri\UriFactory;
         </div>
 
         <section class="portlet">
-            <div class="portlet-head"><?= $this->getHtml('Files', 'Media', 'Backend'); ?><i class="lni lni-download download btn end-xs"></i></div>
+            <div class="portlet-head"><?= $this->getHtml('Files', 'Media', 'Backend'); ?><i class="g-icon download btn end-xs">download</i></div>
                 <div class="slider">
                 <table id="iFiles" class="default">
                     <thead>
                         <tr>
                             <td>
-                            <td><?= $this->getHtml('ID', '0', '0'); ?><i class="sort-asc fa fa-chevron-up"></i><i class="sort-desc fa fa-chevron-down"></i>
-                            <td class="wf-100"><?= $this->getHtml('Name', 'Media', 'Backend'); ?><i class="sort-asc fa fa-chevron-up"></i><i class="sort-desc fa fa-chevron-down"></i>
+                            <td><?= $this->getHtml('ID', '0', '0'); ?><i class="sort-asc g-icon">expand_less</i><i class="sort-desc g-icon">expand_more</i>
+                            <td class="wf-100"><?= $this->getHtml('Name', 'Media', 'Backend'); ?><i class="sort-asc g-icon">expand_less</i><i class="sort-desc g-icon">expand_more</i>
                     <tbody
                         id="iMediaInput-tags"
                         class="tags"

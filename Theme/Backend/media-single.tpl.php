@@ -52,7 +52,7 @@ echo $this->data['nav']->render();
     <div class="col-xs-12">
         <div class="box">
             <ul class="crumbs-2">
-                <li data-href="<?= UriFactory::build('{/app}/media/list?path=/Accounts/' . $accountDir); ?>"><a href="<?= UriFactory::build('{/app}/media/list?path=/Accounts/' . $accountDir); ?>"><i class="fa fa-home"></i></a>
+                <li data-href="<?= UriFactory::build('{/app}/media/list?path=/Accounts/' . $accountDir); ?>"><a href="<?= UriFactory::build('{/app}/media/list?path=/Accounts/' . $accountDir); ?>"><i class="g-icon">home</i></a>
                 <li data-href="<?= UriFactory::build('{/app}/media/list?path=/'); ?>"><a href="<?= UriFactory::build('{/app}/media/list?path=/'); ?>">/</a></li>
                 <?php
                     $subPath    = '';

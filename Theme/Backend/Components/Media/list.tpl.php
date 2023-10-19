@@ -25,7 +25,7 @@ $next     = empty($this->media)
     : '{%}?{?}&mpivot=' . \end($this->media)->id . '&mptype=n';
 ?>
 <div class="portlet">
-    <div class="portlet-head"><?= $this->getHtml('Media', 'Media'); ?><i class="lni lni-download download btn end-xs"></i></div>
+    <div class="portlet-head"><?= $this->getHtml('Media', 'Media'); ?><i class="g-icon download btn end-xs">download</i></div>
     <div class="slider">
     <table class="default">
         <thead>
@@ -45,7 +45,7 @@ $next     = empty($this->media)
                 $icon          = $fileIconFunction($extensionType);
         ?>
         <tr data-href="<?= $url; ?>">
-            <td data-label="<?= $this->getHtml('Type'); ?>"><a href="<?= $url; ?>"><i class="fa fa-<?= $this->printHtml($icon); ?>"></i></a>
+            <td data-label="<?= $this->getHtml('Type'); ?>"><a href="<?= $url; ?>"><i class="g-icon"><?= $this->printHtml($icon); ?></i></a>
             <td data-label="<?= $this->getHtml('Path'); ?>"><a class="content" href="<?= UriFactory::build('{/base}/media/list?{?}&path=' . $value->getVirtualPath()); ?>"><?= $this->printHtml($value->getVirtualPath()); ?></a>
             <td data-label="<?= $this->getHtml('Name'); ?>"><a href="<?= $url; ?>"><?= $this->printHtml($value->name); ?></a>
             <td data-label="<?= $this->getHtml('Extension'); ?>"><a href="<?= $url; ?>"><?= $this->printHtml($value->extension); ?></a>

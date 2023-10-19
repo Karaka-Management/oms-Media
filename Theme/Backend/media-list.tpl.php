@@ -55,7 +55,7 @@ $next     = empty($media) ? '{/base}/media/list' : '{/base}/media/list?{?}&id=' 
         <div class="box">
             <ul class="crumbs-2">
                 <li data-href="<?= $uri = UriFactory::build('{/base}/media/list?path=/Accounts/' . $accountDir); ?>">
-                    <a href="<?= $uri; ?>"><i class="fa fa-home"></i></a>
+                    <a href="<?= $uri; ?>"><i class="g-icon">home</i></a>
                 <li data-href="<?= $uri = UriFactory::build('{/base}/media/list?path=/'); ?>">
                     <a href="<?= $uri; ?>">/</a>
                 <?php
@@ -89,7 +89,7 @@ $next     = empty($media) ? '{/base}/media/list' : '{/base}/media/list?{?}&id=' 
     <div class="col-xs-12">
         <div class="portlet">
             <div class="portlet-head">
-                <?= $this->getHtml('Media'); ?><i class="fa fa-download end-xs download btn"></i>
+                <?= $this->getHtml('Media'); ?><i class="g-icon end-xs download btn">download</i>
             </div>
             <div class="slider">
             <table id="iMediaList" class="default sticky">
@@ -103,66 +103,66 @@ $next     = empty($media) ? '{/base}/media/list' : '{/base}/media/list?{?}&id=' 
                     <td class="wf-100"><?= $this->getHtml('Name'); ?>
                         <label for="iMediaList-sort-1">
                             <input type="radio" name="iMediaList-sort" id="iMediaList-sort-1">
-                            <i class="sort-asc fa fa-chevron-up"></i>
+                            <i class="sort-asc g-icon">expand_less</i>
                         </label>
                         <label for="iMediaList-sort-2">
                             <input type="radio" name="iMediaList-sort" id="iMediaList-sort-2">
-                            <i class="sort-desc fa fa-chevron-down"></i>
+                            <i class="sort-desc g-icon">expand_more</i>
                         </label>
                         <label>
-                            <i class="filter fa fa-filter"></i>
+                            <i class="filter g-icon">filter_alt</i>
                         </label>
                     <td class="wf-100"><?= $this->getHtml('Tag'); ?>
                         <label>
-                            <i class="filter fa fa-filter"></i>
+                            <i class="filter g-icon">filter_alt</i>
                         </label>
                     <td><?= $this->getHtml('Type'); ?>
                         <label for="iMediaList-sort-3">
                             <input type="radio" name="iMediaList-sort" id="iMediaList-sort-3">
-                            <i class="sort-asc fa fa-chevron-up"></i>
+                            <i class="sort-asc g-icon">expand_less</i>
                         </label>
                         <label for="iMediaList-sort-4">
                             <input type="radio" name="iMediaList-sort" id="iMediaList-sort-4">
-                            <i class="sort-desc fa fa-chevron-down"></i>
+                            <i class="sort-desc g-icon">expand_more</i>
                         </label>
                         <label>
-                            <i class="filter fa fa-filter"></i>
+                            <i class="filter g-icon">filter_alt</i>
                         </label>
                     <td><?= $this->getHtml('Size'); ?>
                         <label for="iMediaList-sort-5">
                             <input type="radio" name="iMediaList-sort" id="iMediaList-sort-5">
-                            <i class="sort-asc fa fa-chevron-up"></i>
+                            <i class="sort-asc g-icon">expand_less</i>
                         </label>
                         <label for="iMediaList-sort-6">
                             <input type="radio" name="iMediaList-sort" id="iMediaList-sort-6">
-                            <i class="sort-desc fa fa-chevron-down"></i>
+                            <i class="sort-desc g-icon">expand_more</i>
                         </label>
                         <label>
-                            <i class="filter fa fa-filter"></i>
+                            <i class="filter g-icon">filter_alt</i>
                         </label>
                     <td><?= $this->getHtml('Creator'); ?>
                         <label for="iMediaList-sort-7">
                             <input type="radio" name="iMediaList-sort" id="iMediaList-sort-7">
-                            <i class="sort-asc fa fa-chevron-up"></i>
+                            <i class="sort-asc g-icon">expand_less</i>
                         </label>
                         <label for="iMediaList-sort-8">
                             <input type="radio" name="iMediaList-sort" id="iMediaList-sort-8">
-                            <i class="sort-desc fa fa-chevron-down"></i>
+                            <i class="sort-desc g-icon">expand_more</i>
                         </label>
                         <label>
-                            <i class="filter fa fa-filter"></i>
+                            <i class="filter g-icon">filter_alt</i>
                         </label>
                     <td><?= $this->getHtml('Created'); ?>
                         <label for="iMediaList-sort-9">
                             <input type="radio" name="iMediaList-sort" id="iMediaList-sort-9">
-                            <i class="sort-asc fa fa-chevron-up"></i>
+                            <i class="sort-asc g-icon">expand_less</i>
                         </label>
                         <label for="iMediaList-sort-10">
                             <input type="radio" name="iMediaList-sort" id="iMediaList-sort-10">
-                            <i class="sort-desc fa fa-chevron-down"></i>
+                            <i class="sort-desc g-icon">expand_more</i>
                         </label>
                         <label>
-                            <i class="filter fa fa-filter"></i>
+                            <i class="filter g-icon">filter_alt</i>
                         </label>
                 <tbody>
                     <?php if (!empty($parentPath)) :
@@ -171,7 +171,7 @@ $next     = empty($media) ? '{/base}/media/list' : '{/base}/media/list?{?}&id=' 
                         <tr tabindex="0" data-href="<?= $url; ?>">
                             <td>
                             <td data-label="<?= $this->getHtml('Type'); ?>">
-                                <a href="<?= $url; ?>"><i class="fa fa-folder-open-o"></i></a>
+                                <a href="<?= $url; ?>"><i class="g-icon">folder_open</i></a>
                             <td data-label="<?= $this->getHtml('Name'); ?>">
                                 <a href="<?= $url; ?>">..
                             </a>
@@ -203,7 +203,7 @@ $next     = empty($media) ? '{/base}/media/list' : '{/base}/media/list?{?}&id=' 
                                 <span class="checkmark"></span>
                             </label>
                         <td data-label="<?= $this->getHtml('Type'); ?>">
-                            <a href="<?= $url; ?>"><i class="fa fa-<?= $this->printHtml($icon); ?>"></i></a>
+                            <a href="<?= $url; ?>"><i class="g-icon"><?= $this->printHtml($icon); ?></i></a>
                         <td data-label="<?= $this->getHtml('Name'); ?>">
                             <a href="<?= $url; ?>"><?= $this->printHtml($value->name); ?></a>
                         <td data-label="<?= $this->getHtml('Tag'); ?>"><?php $tags = $value->getTags(); foreach ($tags as $tag) : ?>
