@@ -26,6 +26,7 @@ return ['Media' => [
     'Created'          => 'Erstellt',
     'Creator'          => 'Ersteller',
     'Data'             => 'Daten',
+    'Download'         => 'Download',
     'Description'      => 'Beschreibung',
     'Edit'             => 'Bearbeiten',
     'Editability'      => 'Beweis',

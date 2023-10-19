@@ -17,28 +17,28 @@ use \phpOMS\System\File\ExtensionType;
 $fileIconFunction = function (int $extensionType) : string
 {
     if ($extensionType === ExtensionType::CODE) {
-        return 'file-code-o';
+        return 'code_blocks';
     } elseif ($extensionType === ExtensionType::TEXT || $extensionType === ExtensionType::WORD) {
-        return 'file-text-o';
+        return 'description';
     } elseif ($extensionType === ExtensionType::PRESENTATION) {
-        return 'file-powerpoint-o';
+        return 'present_to_all';
     } elseif ($extensionType === ExtensionType::PDF) {
-        return 'file-pdf-o';
+        return 'picture_as_pdf';
     } elseif ($extensionType === ExtensionType::ARCHIVE) {
-        return 'file-zip-o';
+        return 'folder_zip';
     } elseif ($extensionType === ExtensionType::AUDIO) {
-        return 'file-audio-o';
+        return 'music_note';
     } elseif ($extensionType === ExtensionType::VIDEO) {
-        return 'file-video-o';
+        return 'video_library';
     } elseif ($extensionType === ExtensionType::IMAGE) {
-        return 'file-image-o';
+        return 'image';
     } elseif ($extensionType === ExtensionType::SPREADSHEET) {
-        return 'file-excel-o';
+        return 'table';
     } elseif ($extensionType === ExtensionType::DIRECTORY) {
-        return 'folder-open-o';
+        return 'folder_open';
     } elseif ($extensionType === ExtensionType::REFERENCE) {
-        return 'share';
+        return 'switch_access_shortcut';
     }
 
-    return 'file';
+    return 'description';
 };
