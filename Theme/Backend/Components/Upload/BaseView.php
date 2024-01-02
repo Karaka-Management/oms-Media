@@ -54,6 +54,12 @@ class BaseView extends View
      */
     public string $name = '';
 
+    /**
+     * Media files
+     *
+     * @var \Modules\Media\Models\Media[]
+     * @since 1.0.0
+     */
     public array $files = [];
 
     /**
@@ -75,6 +81,7 @@ class BaseView extends View
         $this->name        = $data[1] ?? 'UNDEFINED';
         $this->virtualPath = $data[2] ?? $this->virtualPath;
         $this->files       = $data[3] ?? $this->files;
+
         return parent::render();
     }
 }

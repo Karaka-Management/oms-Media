@@ -14,13 +14,7 @@ declare(strict_types=1);
 
 namespace Modules\Media\Controller;
 
-use Model\SettingMapper;
 use Modules\Media\Models\MediaMapper;
-use phpOMS\Contract\RenderableInterface;
-use phpOMS\Message\RequestAbstract;
-use phpOMS\Message\ResponseAbstract;
-use phpOMS\Security\EncryptionHelper;
-use phpOMS\Views\View;
 
 /**
  * Media controller class.

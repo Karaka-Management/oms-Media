@@ -27,7 +27,7 @@ $next     = empty($this->media)
 <div class="portlet">
     <div class="portlet-head"><?= $this->getHtml('Media', 'Media'); ?><i class="g-icon download btn end-xs">download</i></div>
     <div class="slider">
-    <table class="default">
+    <table class="default sticky">
         <thead>
             <td>
             <td><?= $this->getHtml('Path', 'Media'); ?>

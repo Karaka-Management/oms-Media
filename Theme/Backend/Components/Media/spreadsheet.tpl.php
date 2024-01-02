@@ -50,7 +50,7 @@ Autoloader::addPath(__DIR__ . '/../../../../../../Resources/');
                     $csv  = \explode("\n", \trim($data, "\n"));
                     ?>
                     <div class="slider">
-                    <table class="default">
+                    <table class="default sticky">
                     <?php
                     foreach ($csv as $line)  {
                         $lineCsv = \str_getcsv($line, ';', '"');

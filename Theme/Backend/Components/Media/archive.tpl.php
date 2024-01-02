@@ -23,7 +23,7 @@ declare(strict_types=1);
         <div class="tab-content">
             <input type="radio" id="media-c-tab-1" name="tabular-1" checked>
             <div class="tab">
-                <table class="default">
+                <table class="default sticky">
                 <?php
                     $archive = new ZipArchive();
                     $archive->open(($this->media->isAbsolute ? '' : __DIR__ . '/../../../../../../') . $this->media->getPath());

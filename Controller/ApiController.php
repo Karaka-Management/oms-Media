@@ -41,7 +41,6 @@ use phpOMS\Application\ApplicationAbstract;
 use phpOMS\Asset\AssetType;
 use phpOMS\Autoloader;
 use phpOMS\Localization\BaseStringL11n;
-use phpOMS\Message\Http\HttpRequest;
 use phpOMS\Message\Http\HttpResponse;
 use phpOMS\Message\Http\RequestStatusCode;
 use phpOMS\Message\RequestAbstract;
@@ -1045,11 +1044,11 @@ final class ApiController extends Controller
     }
 
     /**
-     * Routing end-point for application behaviour.
+     * Routing end-point for application behavior.
      *
-     * @param HttpRequest  $request  Request
-     * @param HttpResponse $response Response
-     * @param array        $data     Generic data
+     * @param \phpOMS\Message\Http\HttpRequest $request  Request
+     * @param HttpResponse                     $response Response
+     * @param array                            $data     Generic data
      *
      * @return void
      *
@@ -1192,11 +1191,11 @@ final class ApiController extends Controller
     }
 
     /**
-     * Routing end-point for application behaviour.
+     * Routing end-point for application behavior.
      *
-     * @param Media        $media    Media
-     * @param HttpRequest  $request  Request
-     * @param HttpResponse $response Response
+     * @param Media                            $media    Media
+     * @param \phpOMS\Message\Http\HttpRequest $request  Request
+     * @param HttpResponse                     $response Response
      *
      * @return View
      *

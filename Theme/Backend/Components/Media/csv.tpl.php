@@ -26,7 +26,7 @@ use phpOMS\Utils\IO\Csv\CsvSettings;
             <input type="radio" id="media-c-tab-1" name="tabular-1" checked>
             <div class="tab">
                 <div class="slider">
-                <table class="default">
+                <table class="default sticky">
                 <?php
                     $f = \fopen(($this->media->isAbsolute ? '' : __DIR__ . '/../../../../../../') . $this->media->getPath(), 'r');
 
