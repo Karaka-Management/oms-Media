@@ -100,10 +100,10 @@ class MediaType implements \JsonSerializable
         } elseif ($this->title instanceof BaseStringL11n) {
             $this->title->content = $title;
         } else {
-            $this->title          = new BaseStringL11n();
-            $this->title->ref     = $this->id;
-            $this->title->content = $title;
-            $this->title->setLanguage($lang);
+            $this->title           = new BaseStringL11n();
+            $this->title->ref      = $this->id;
+            $this->title->content  = $title;
+            $this->title->language = $lang;
         }
     }
 
@@ -113,9 +113,9 @@ class MediaType implements \JsonSerializable
     public function toArray() : array
     {
         return [
-            'id'     => $this->id,
-            'title'  => $this->title,
-            'name'   => $this->name,
+            'id'    => $this->id,
+            'title' => $this->title,
+            'name'  => $this->name,
         ];
     }
 

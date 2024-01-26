@@ -35,12 +35,12 @@ use Modules\Media\Models\ReferenceMapper;
 use Modules\Media\Models\UploadFile;
 use Modules\Media\Models\UploadStatus;
 use Modules\Media\Theme\Backend\Components\Media\ElementView;
-use Modules\Tag\Models\NullTag;
 use phpOMS\Account\PermissionType;
 use phpOMS\Application\ApplicationAbstract;
 use phpOMS\Asset\AssetType;
 use phpOMS\Autoloader;
 use phpOMS\Localization\BaseStringL11n;
+use phpOMS\Localization\ISO639x1Enum;
 use phpOMS\Message\Http\HttpResponse;
 use phpOMS\Message\Http\RequestStatusCode;
 use phpOMS\Message\RequestAbstract;
@@ -131,38 +131,19 @@ final class ApiController extends Controller
                 }
             }
 
-            // add tags
-            if (!empty($tags = $request->getDataJson('tags'))) {
-                foreach ($tags as $tag) {
-                    if (!isset($tag['id'])) {
-                        $request->setData('title', $tag['title'], true);
-                        $request->setData('color', $tag['color'], true);
-                        $request->setData('icon', $tag['icon'] ?? null, true);
-                        $request->setData('language', $tag['language'], true);
-
-                        $internalResponse = new HttpResponse();
-                        $this->app->moduleManager->get('Tag')->apiTagCreate($request, $internalResponse);
-
-                        if (!\is_array($data = $internalResponse->getDataArray($request->uri->__toString()))) {
-                            continue;
-                        }
-
-                        $file->addTag($tId = $data['response']);
-                    } else {
-                        $file->addTag(new NullTag($tId = (int) $tag['id']));
-                    }
-
-                    $this->createModelRelation(
-                        $request->header->account,
-                        $file->id,
-                        $tId,
-                        MediaMapper::class,
-                        'tags',
-                        '',
-                        $request->getOrigin()
-                    );
-                }
+            if ($request->hasData('tags')) {
+                $file->tags = $this->app->moduleManager->get('Tag', 'Api')->createTagsFromRequest($request);
             }
+
+            $this->createModelRelation(
+                $request->header->account,
+                $file->id,
+                \array_map(function (\Modules\Tag\Models\Tag $tag) { return $tag->id; }, $file->tags),
+                MediaMapper::class,
+                'tags',
+                '',
+                $request->getOrigin()
+            );
         }
 
         $this->createStandardAddResponse($request, $response, $ids);
@@ -203,8 +184,8 @@ final class ApiController extends Controller
             $splitMediaFilename  = \explode('.', $mediaFilename);
             $splitUploadFilename = \explode('.', $uploadFilename);
 
-            $mediaExtension  =  ($c = \count($splitMediaFilename)) > 1 ? $splitMediaFilename[$c - 1] : '';
-            $uploadExtension =  ($c = \count($splitUploadFilename)) > 1 ? $splitUploadFilename[$c - 1] : '';
+            $mediaExtension  = ($c = \count($splitMediaFilename)) > 1 ? $splitMediaFilename[$c - 1] : '';
+            $uploadExtension = ($c = \count($splitUploadFilename)) > 1 ? $splitUploadFilename[$c - 1] : '';
 
             if ($sameNameIfPossible && $mediaExtension === $uploadExtension) {
                 $uploadFilename = $mediaFilename;
@@ -274,7 +255,7 @@ final class ApiController extends Controller
         int $pathSettings = PathSettings::RANDOM_PATH,
         bool $hasAccountRelation = true,
         bool $readContent = false,
-        int $unit = null
+        ?int $unit = null
     ) : array
     {
         if (empty($files)) {
@@ -388,9 +369,9 @@ final class ApiController extends Controller
         int $account,
         string $virtualPath = '',
         string $ip = '127.0.0.1',
-        ApplicationAbstract $app = null,
+        ?ApplicationAbstract $app = null,
         bool $readContent = false,
-        int $unit = null,
+        ?int $unit = null,
         string $password = '',
         bool $isEncrypted = false
     ) : Media
@@ -961,7 +942,7 @@ final class ApiController extends Controller
             );
 
             $parentCollection = $childCollection;
-            $temp            .= '/' . $paths[$i];
+            $temp .= '/' . $paths[$i];
         }
 
         return $parentCollection;
@@ -987,7 +968,7 @@ final class ApiController extends Controller
         $path        = \urldecode($request->getDataString('path') ?? '');
         $virtualPath = \urldecode($request->getDataString('virtualpath') ?? '/');
         $fileName    = $request->getDataString('filename') ?? ($request->getDataString('name') ?? '');
-        $fileName   .= \strripos($fileName, '.') === false ? '.txt' : '';
+        $fileName .= \strripos($fileName, '.') === false ? '.txt' : '';
 
         $outputDir = '';
         $basePath  = __DIR__ . '/../../../Modules/Media/Files';
@@ -1165,7 +1146,7 @@ final class ApiController extends Controller
         do {
             $randomName = \sha1(\random_bytes(32));
 
-            $path         =  '../../../Temp/' . $randomName . '.' . $media->getExtension();
+            $path         = '../../../Temp/' . $randomName . '.' . $media->getExtension();
             $absolutePath = __DIR__ . '/' . $path;
 
             ++$counter;
@@ -1439,7 +1420,7 @@ final class ApiController extends Controller
         if ($request->hasData('title')) {
             $type->setL11n(
                 $request->getDataString('title') ?? '',
-                $request->getDataString('lang') ?? $request->header->l11n->language
+                ISO639x1Enum::tryFromValue($request->getDataString('lang')) ?? $request->header->l11n->language
             );
         }
 
@@ -1505,12 +1486,10 @@ final class ApiController extends Controller
      */
     private function createMediaTypeL11nFromRequest(RequestAbstract $request) : BaseStringL11n
     {
-        $l11nMediaType          = new BaseStringL11n();
-        $l11nMediaType->ref     = $request->getDataInt('type') ?? 0;
-        $l11nMediaType->content = $request->getDataString('title') ?? '';
-        $l11nMediaType->setLanguage(
-            $request->getDataString('language') ?? $request->header->l11n->language
-        );
+        $l11nMediaType           = new BaseStringL11n();
+        $l11nMediaType->ref      = $request->getDataInt('type') ?? 0;
+        $l11nMediaType->content  = $request->getDataString('title') ?? '';
+        $l11nMediaType->language = ISO639x1Enum::tryFromValue($request->getDataString('language')) ?? $request->header->l11n->language;
 
         return $l11nMediaType;
     }

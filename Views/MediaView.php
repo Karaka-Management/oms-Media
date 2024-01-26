@@ -87,7 +87,7 @@ class MediaView extends View
      *
      * @since 1.0.0
      */
-    protected function isCollectionFunction(Media $media, string $sub = null) : bool
+    protected function isCollectionFunction(Media $media, ?string $sub = null) : bool
     {
         return ($media->extension === 'collection'
                 && !\is_file($media->getPath() . ($sub ?? '')))

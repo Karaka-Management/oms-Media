@@ -23,7 +23,6 @@ use phpOMS\Message\Http\HttpResponse;
 use phpOMS\Message\Http\RequestStatusCode;
 use phpOMS\System\File\Local\Directory;
 use phpOMS\System\MimeType;
-use phpOMS\Uri\HttpUri;
 use phpOMS\Utils\TestUtils;
 
 trait ApiControllerMediaTrait
@@ -83,7 +82,7 @@ trait ApiControllerMediaTrait
     public function testApiMediaUploadRandomPath() : void
     {
         $response = new HttpResponse();
-        $request  = new HttpRequest(new HttpUri(''));
+        $request  = new HttpRequest();
 
         $request->header->account = 1;
         $request->setData('name', 'Test Upload');
@@ -132,7 +131,7 @@ trait ApiControllerMediaTrait
     public function testApiMediaUploadDefinedPath() : void
     {
         $response = new HttpResponse();
-        $request  = new HttpRequest(new HttpUri(''));
+        $request  = new HttpRequest();
 
         $request->header->account = 1;
         $request->setData('name', 'Test Upload');
@@ -204,7 +203,7 @@ trait ApiControllerMediaTrait
     public function testApiMediaUpdate() : void
     {
         $response = new HttpResponse();
-        $request  = new HttpRequest(new HttpUri(''));
+        $request  = new HttpRequest();
 
         $request->header->account = 1;
         $request->setData('name', 'Test Media');
@@ -241,7 +240,7 @@ trait ApiControllerMediaTrait
 
         $id       = \reset($response->getDataArray('')['response']);
         $response = new HttpResponse();
-        $request  = new HttpRequest(new HttpUri(''));
+        $request  = new HttpRequest();
 
         $request->header->account = 1;
         $request->setData('id', $id);
@@ -269,7 +268,7 @@ trait ApiControllerMediaTrait
     public function testApiMediaCreateWithPath() : void
     {
         $response = new HttpResponse();
-        $request  = new HttpRequest(new HttpUri(''));
+        $request  = new HttpRequest();
 
         $request->header->account = 1;
         $request->setData('name', 'Created File');
@@ -294,7 +293,7 @@ trait ApiControllerMediaTrait
         $media = new Media();
 
         $response = new HttpResponse();
-        $request  = new HttpRequest(new HttpUri(''));
+        $request  = new HttpRequest();
 
         $response->header->lock();
 
@@ -318,7 +317,7 @@ trait ApiControllerMediaTrait
     public function testApiMediaExportHTM() : void
     {
         $response = new HttpResponse();
-        $request  = new HttpRequest(new HttpUri(''));
+        $request  = new HttpRequest();
 
         $request->header->account = 1;
         $request->setData('id', '1');
@@ -335,7 +334,7 @@ trait ApiControllerMediaTrait
     public function testApiMediaExportPDF() : void
     {
         $response = new HttpResponse();
-        $request  = new HttpRequest(new HttpUri(''));
+        $request  = new HttpRequest();
 
         $request->header->account = 1;
         $request->setData('id', '1');
@@ -352,7 +351,7 @@ trait ApiControllerMediaTrait
     public function testApiMediaExportC() : void
     {
         $response = new HttpResponse();
-        $request  = new HttpRequest(new HttpUri(''));
+        $request  = new HttpRequest();
 
         $request->header->account = 1;
         $request->setData('id', '1');
@@ -369,7 +368,7 @@ trait ApiControllerMediaTrait
     public function testApiMediaExportTXT() : void
     {
         $response = new HttpResponse();
-        $request  = new HttpRequest(new HttpUri(''));
+        $request  = new HttpRequest();
 
         $request->header->account = 1;
         $request->setData('id', '1');
@@ -386,7 +385,7 @@ trait ApiControllerMediaTrait
     public function testApiMediaExportCSV() : void
     {
         $response = new HttpResponse();
-        $request  = new HttpRequest(new HttpUri(''));
+        $request  = new HttpRequest();
 
         $request->header->account = 1;
         $request->setData('id', '1');
@@ -403,7 +402,7 @@ trait ApiControllerMediaTrait
     public function testApiMediaExportXLS() : void
     {
         $response = new HttpResponse();
-        $request  = new HttpRequest(new HttpUri(''));
+        $request  = new HttpRequest();
 
         $request->header->account = 1;
         $request->setData('id', '1');
@@ -420,7 +419,7 @@ trait ApiControllerMediaTrait
     public function testApiMediaExportXLSX() : void
     {
         $response = new HttpResponse();
-        $request  = new HttpRequest(new HttpUri(''));
+        $request  = new HttpRequest();
 
         $request->header->account = 1;
         $request->setData('id', '1');
@@ -437,7 +436,7 @@ trait ApiControllerMediaTrait
     public function testApiMediaExportDOC() : void
     {
         $response = new HttpResponse();
-        $request  = new HttpRequest(new HttpUri(''));
+        $request  = new HttpRequest();
 
         $request->header->account = 1;
         $request->setData('id', '1');
@@ -454,7 +453,7 @@ trait ApiControllerMediaTrait
     public function testApiMediaExportDOCX() : void
     {
         $response = new HttpResponse();
-        $request  = new HttpRequest(new HttpUri(''));
+        $request  = new HttpRequest();
 
         $request->header->account = 1;
         $request->setData('id', '1');
@@ -471,7 +470,7 @@ trait ApiControllerMediaTrait
     public function testApiMediaExportPPT() : void
     {
         $response = new HttpResponse();
-        $request  = new HttpRequest(new HttpUri(''));
+        $request  = new HttpRequest();
 
         $request->header->account = 1;
         $request->setData('id', '1');
@@ -488,7 +487,7 @@ trait ApiControllerMediaTrait
     public function testApiMediaExportPPTX() : void
     {
         $response = new HttpResponse();
-        $request  = new HttpRequest(new HttpUri(''));
+        $request  = new HttpRequest();
 
         $request->header->account = 1;
         $request->setData('id', '1');
@@ -505,7 +504,7 @@ trait ApiControllerMediaTrait
     public function testApiMediaExportJPG() : void
     {
         $response = new HttpResponse();
-        $request  = new HttpRequest(new HttpUri(''));
+        $request  = new HttpRequest();
 
         $request->header->account = 1;
         $request->setData('id', '1');
@@ -522,7 +521,7 @@ trait ApiControllerMediaTrait
     public function testApiMediaExportGIF() : void
     {
         $response = new HttpResponse();
-        $request  = new HttpRequest(new HttpUri(''));
+        $request  = new HttpRequest();
 
         $request->header->account = 1;
         $request->setData('id', '1');
@@ -539,7 +538,7 @@ trait ApiControllerMediaTrait
     public function testApiMediaExportPNG() : void
     {
         $response = new HttpResponse();
-        $request  = new HttpRequest(new HttpUri(''));
+        $request  = new HttpRequest();
 
         $request->header->account = 1;
         $request->setData('id', '1');
@@ -556,7 +555,7 @@ trait ApiControllerMediaTrait
     public function testApiMediaExportMP3() : void
     {
         $response = new HttpResponse();
-        $request  = new HttpRequest(new HttpUri(''));
+        $request  = new HttpRequest();
 
         $request->header->account = 1;
         $request->setData('id', '1');
@@ -573,7 +572,7 @@ trait ApiControllerMediaTrait
     public function testApiMediaExportMP4() : void
     {
         $response = new HttpResponse();
-        $request  = new HttpRequest(new HttpUri(''));
+        $request  = new HttpRequest();
 
         $request->header->account = 1;
         $request->setData('id', '1');
@@ -590,7 +589,7 @@ trait ApiControllerMediaTrait
     public function testApiMediaExportMPEG() : void
     {
         $response = new HttpResponse();
-        $request  = new HttpRequest(new HttpUri(''));
+        $request  = new HttpRequest();
 
         $request->header->account = 1;
         $request->setData('id', '1');
@@ -607,7 +606,7 @@ trait ApiControllerMediaTrait
     public function testApiMediaExportBIN() : void
     {
         $response = new HttpResponse();
-        $request  = new HttpRequest(new HttpUri(''));
+        $request  = new HttpRequest();
 
         $request->header->account = 1;
         $request->setData('id', '1');
@@ -620,7 +619,7 @@ trait ApiControllerMediaTrait
     public function testInvalidapiMediaUpdate() : void
     {
         $response = new HttpResponse();
-        $request  = new HttpRequest(new HttpUri(''));
+        $request  = new HttpRequest();
 
         $request->header->account = 1;
         $this->module->apiMediaUpdate($request, $response);

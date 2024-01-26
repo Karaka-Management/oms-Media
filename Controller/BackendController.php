@@ -196,10 +196,10 @@ final class BackendController extends Controller
      * @since 1.0.0
      * @codeCoverageIgnore
      */
-    public function viewMediaSingle(RequestAbstract $request, ResponseAbstract $response, array $data = []) : RenderableInterface
+    public function viewMediaView(RequestAbstract $request, ResponseAbstract $response, array $data = []) : RenderableInterface
     {
         $view = new MediaView($this->app->l11nManager, $request, $response);
-        $view->setTemplate('/Modules/Media/Theme/Backend/media-single');
+        $view->setTemplate('/Modules/Media/Theme/Backend/media-view');
         $view->data['nav'] = $this->app->moduleManager->get('Navigation')->createNavigationMid(1000401001, $request, $response);
 
         $id = $request->getDataInt('id');

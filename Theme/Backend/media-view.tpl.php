@@ -23,9 +23,6 @@ include __DIR__ . '/template-functions.php';
 $media = $this->data['media'];
 $view  = $this->data['view'];
 
-/** @var \Modules\Tag\Models\Tag[] $tag */
-$tags = $media->getTags();
-
 /** @var \Modules\Admin\Models\Account $account */
 $account    = $this->data['account'];
 $accountDir = $account->id . ' ' . $account->login;
@@ -92,11 +89,11 @@ echo $this->data['nav']->render();
                             $size = FileSizeType::autoFormat($media->size);
                             echo $this->printHtml(\number_format($size[0], 1, '.', ',') . $size[1]); ?>
                         <tr><td><?= $this->getHtml('Created'); ?><td><?= $this->printHtml($media->createdAt->format('Y-m-d')); ?>
-                        <tr><td><?= $this->getHtml('Creator'); ?><td><a href="<?= UriFactory::build('{/base}/profile/single?for=' . $media->createdBy->id); ?>"><?= $this->printHtml(
+                        <tr><td><?= $this->getHtml('Creator'); ?><td><a href="<?= UriFactory::build('{/base}/profile/view?for=' . $media->createdBy->id); ?>"><?= $this->printHtml(
                             \ltrim($media->createdBy->name2 . ', ' . $media->createdBy->name1, ', ')
                         ); ?></a>
                         <tr><td><?= $this->getHtml('Tags'); ?><td>
-                            <?php foreach ($tags as $tag) : ?>
+                            <?php foreach ($media->tags as $tag) : ?>
                                 <span class="tag" style="background: <?= $this->printHtml($tag->color); ?>"><?= empty($tag->icon) ? '' : ''; ?><?= $this->printHtml($tag->getL11n()); ?></span>
                             <?php endforeach; ?>
                         <tr><td colspan="2"><?= $this->getHtml('Description'); ?>

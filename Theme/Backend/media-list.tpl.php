@@ -187,7 +187,7 @@ $next     = empty($media) ? '{/base}/media/list' : '{/base}/media/list?{?}&id=' 
 
                             $url = $value->extension === 'collection'
                                 ? UriFactory::build('{/base}/media/list?path=' . \rtrim($value->getVirtualPath(), '/') . '/' . $value->name)
-                                : UriFactory::build('{/base}/media/single?id=' . $value->id
+                                : UriFactory::build('{/base}/media/view?id=' . $value->id
                                     . '&path={?path}' . (
                                             $value->id === 0
                                                 ? '/' . $value->name
@@ -206,7 +206,8 @@ $next     = empty($media) ? '{/base}/media/list' : '{/base}/media/list?{?}&id=' 
                             <a href="<?= $url; ?>"><i class="g-icon"><?= $this->printHtml($icon); ?></i></a>
                         <td data-label="<?= $this->getHtml('Name'); ?>">
                             <a href="<?= $url; ?>"><?= $this->printHtml($value->name); ?></a>
-                        <td data-label="<?= $this->getHtml('Tag'); ?>"><?php $tags = $value->getTags(); foreach ($tags as $tag) : ?>
+                        <td data-label="<?= $this->getHtml('Tag'); ?>">
+                            <?php foreach ($value->tags as $tag) : ?>
                             <a href="<?= $url; ?>">
                                 <span class="tag" style="background: <?= $this->printHtml($tag->color); ?>">
                                     <?= empty($tag->icon) ? '' : ''; ?>
@@ -220,7 +221,7 @@ $next     = empty($media) ? '{/base}/media/list' : '{/base}/media/list?{?}&id=' 
                             $size = FileSizeType::autoFormat($value->size);
                             echo $this->printHtml($value->extension !== 'collection' ? \number_format($size[0], 1, '.', ',') . $size[1] : ''); ?></a>
                         <td data-label="<?= $this->getHtml('Creator'); ?>">
-                            <a class="content" href="<?= UriFactory::build('{/base}/profile/single?{?}&for=' . $value->createdBy->id); ?>">
+                            <a class="content" href="<?= UriFactory::build('{/base}/profile/view?{?}&for=' . $value->createdBy->id); ?>">
                                 <?= $this->printHtml($this->renderUserName(
                                     '%3$s %2$s %1$s',
                                     [$value->createdBy->name1, $value->createdBy->name2, $value->createdBy->name3, $value->createdBy->login ?? '']

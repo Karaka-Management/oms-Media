@@ -92,7 +92,7 @@ use phpOMS\Uri\UriFactory;
                                 <td>
                         </template>
                         <?php foreach ($this->files as $file) :
-                            $url = UriFactory::build('{/base}/media/single?{?}&id=' . $file->id);
+                            $url = UriFactory::build('{/base}/media/view?{?}&id=' . $file->id);
                         ?>
                             <tr data-tpl-value="/id" data-value="" data-uuid="" data-name="media-list">
                                 <td><label class="radio" for="iFile-<?= $file->id; ?>">

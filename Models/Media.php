@@ -16,7 +16,6 @@ namespace Modules\Media\Models;
 
 use Modules\Admin\Models\Account;
 use Modules\Admin\Models\NullAccount;
-use Modules\Tag\Models\NullTag;
 use Modules\Tag\Models\Tag;
 use phpOMS\Security\EncryptionHelper;
 
@@ -226,16 +225,6 @@ class Media implements \JsonSerializable
     }
 
     /**
-     * @return int
-     *
-     * @since 1.0.0
-     */
-    public function getId() : int
-    {
-        return $this->id;
-    }
-
-    /**
      * Encrypt the media file
      *
      * @param string      $key        Password to encrypt the file with
@@ -245,7 +234,7 @@ class Media implements \JsonSerializable
      *
      * @since 1.0.0
      */
-    public function encrypt(string $key, string $outputPath = null) : bool
+    public function encrypt(string $key, ?string $outputPath = null) : bool
     {
         return EncryptionHelper::encryptFile($this->getAbsolutePath(), $outputPath ?? $this->getAbsolutePath(), $key);
     }
@@ -260,7 +249,7 @@ class Media implements \JsonSerializable
      *
      * @since 1.0.0
      */
-    public function decrypt(string $key, string $outputPath = null) : bool
+    public function decrypt(string $key, ?string $outputPath = null) : bool
     {
         return EncryptionHelper::decryptFile($this->getAbsolutePath(), $outputPath ?? $this->getAbsolutePath(), $key);
     }
@@ -553,32 +542,6 @@ class Media implements \JsonSerializable
         }
 
         return false;
-    }
-
-    /**
-     * Get tags.
-     *
-     * @return Tag[]
-     *
-     * @since 1.0.0
-     */
-    public function getTags() : array
-    {
-        return $this->tags;
-    }
-
-    /**
-     * Get tag.
-     *
-     * @param int $id Element id
-     *
-     * @return Tag
-     *
-     * @since 1.0.0
-     */
-    public function getTag(int $id) : Tag
-    {
-        return $this->tags[$id] ?? new NullTag();
     }
 
     /**

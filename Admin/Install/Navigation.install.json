@@ -17,11 +17,11 @@
     },
     {
         "id": 1000410001,
-        "pid": "/profile/single",
+        "pid": "/profile/view",
         "type": 2,
         "subtype": 2,
         "name": "Media",
-        "uri": "{/base}/profile/single/media?{?}",
+        "uri": "{/base}/profile/view/media?{?}",
         "target": "self",
         "icon": null,
         "order": 3,

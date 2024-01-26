@@ -73,7 +73,7 @@ class BaseView extends View
     /**
      * {@inheritdoc}
      */
-    public function __construct(L11nManager $l11n = null, RequestAbstract $request, ResponseAbstract $response)
+    public function __construct(?L11nManager $l11n = null, RequestAbstract $request, ResponseAbstract $response)
     {
         parent::__construct($l11n, $request, $response);
         $this->setTemplate('/Modules/Media/Theme/Backend/Components/InlinePreview/inline-preview');
@@ -92,18 +92,6 @@ class BaseView extends View
         $this->isRequired  = $data[4] ?? false;
 
         return parent::render();
-    }
-
-    /**
-     * Get selector id
-     *
-     * @return string
-     *
-     * @since 1.0.0
-     */
-    public function getId() : string
-    {
-        return $this->id;
     }
 
     /**

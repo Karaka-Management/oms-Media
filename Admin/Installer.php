@@ -28,7 +28,6 @@ use phpOMS\Module\ModuleInfo;
 use phpOMS\System\File\Local\Directory;
 use phpOMS\System\File\Local\File;
 use phpOMS\System\File\PathException;
-use phpOMS\Uri\HttpUri;
 
 /**
  * Installer class.
@@ -174,7 +173,7 @@ final class Installer extends InstallerAbstract
         $module = $app->moduleManager->getModuleInstance('Media');
 
         $response = new HttpResponse();
-        $request  = new HttpRequest(new HttpUri(''));
+        $request  = new HttpRequest();
 
         $request->header->account = 1;
         $request->setData('name', $data['name'] ?? '');
@@ -211,7 +210,7 @@ final class Installer extends InstallerAbstract
         $path = isset($data['path']) ? ($data['path']) : $data['virtualPath'] ?? '';
 
         $response = new HttpResponse();
-        $request  = new HttpRequest(new HttpUri(''));
+        $request  = new HttpRequest();
 
         $request->header->account = 1;
         $request->setData('name', $data['name'] ?? '');
@@ -247,7 +246,7 @@ final class Installer extends InstallerAbstract
         $module = $app->moduleManager->get('Media');
 
         $response = new HttpResponse();
-        $request  = new HttpRequest(new HttpUri(''));
+        $request  = new HttpRequest();
 
         $request->header->account = 1;
         $request->setData('name', $data['name'] ?? '');
@@ -275,7 +274,7 @@ final class Installer extends InstallerAbstract
             }
 
             $response = new HttpResponse();
-            $request  = new HttpRequest(new HttpUri(''));
+            $request  = new HttpRequest();
 
             $request->header->account = 1;
             $request->setData('title', $l11n['title'] ?? '');
@@ -306,7 +305,7 @@ final class Installer extends InstallerAbstract
         $module = $app->moduleManager->get('Media');
 
         $response = new HttpResponse();
-        $request  = new HttpRequest(new HttpUri(''));
+        $request  = new HttpRequest();
 
         $request->header->account = 1;
         $request->setData('path', empty($data['path'] ?? '') ? '' : $data['path']);
@@ -364,7 +363,7 @@ final class Installer extends InstallerAbstract
 
         if ($data['create_collection'] ?? false) {
             $response = new HttpResponse();
-            $request  = new HttpRequest(new HttpUri(''));
+            $request  = new HttpRequest();
 
             $request->header->account = 1;
             $request->setData('name', (string) ($data['name'] ?? ''));

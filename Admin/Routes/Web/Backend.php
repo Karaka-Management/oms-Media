@@ -29,7 +29,7 @@ return [
             ],
         ],
     ],
-    '^.*/media/list.*$' => [
+    '^.*/media/list(\?.*$|$)' => [
         [
             'dest'       => '\Modules\Media\Controller\BackendController:viewMediaList',
             'verb'       => RouteVerb::GET,
@@ -40,7 +40,7 @@ return [
             ],
         ],
     ],
-    '^.*/media/upload.*$' => [
+    '^.*/media/upload(\?.*$|$)' => [
         [
             'dest'       => '\Modules\Media\Controller\BackendController:viewMediaUpload',
             'verb'       => RouteVerb::GET,
@@ -51,7 +51,7 @@ return [
             ],
         ],
     ],
-    '^.*/media/file/create.*$' => [
+    '^.*/media/file/create(\?.*$|$)' => [
         [
             'dest'       => '\Modules\Media\Controller\BackendController:viewMediaFileCreate',
             'verb'       => RouteVerb::GET,
@@ -62,7 +62,7 @@ return [
             ],
         ],
     ],
-    '^.*/media/collection/create.*$' => [
+    '^.*/media/collection/create(\?.*$|$)' => [
         [
             'dest'       => '\Modules\Media\Controller\BackendController:viewMediaCollectionCreate',
             'verb'       => RouteVerb::GET,
@@ -73,9 +73,9 @@ return [
             ],
         ],
     ],
-    '^.*/media/single.*$' => [
+    '^.*/media/view(\?.*$|$)' => [
         [
-            'dest'       => '\Modules\Media\Controller\BackendController:viewMediaSingle',
+            'dest'       => '\Modules\Media\Controller\BackendController:viewMediaView',
             'verb'       => RouteVerb::GET,
             'permission' => [
                 'module' => BackendController::NAME,

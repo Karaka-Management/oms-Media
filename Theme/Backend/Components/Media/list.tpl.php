@@ -20,7 +20,7 @@ include __DIR__ . '/../../template-functions.php';
 $previous = empty($this->media)
     ? '{%}'
     : '{%}?{?}&mpivot=' . \reset($this->media)->id . '&mptype=p';
-$next     = empty($this->media)
+$next = empty($this->media)
     ? '{%}'
     : '{%}?{?}&mpivot=' . \end($this->media)->id . '&mptype=n';
 ?>
@@ -38,7 +38,7 @@ $next     = empty($this->media)
             <td><?= $this->getHtml('Created', 'Media'); ?>
         <tbody>
             <?php $count = 0; foreach ($this->media as $key => $value) : ++$count;
-                $url     = UriFactory::build('{/base}/media/single?{?}&id=' . $value->id);
+                $url     = UriFactory::build('{/base}/media/view?{?}&id=' . $value->id);
 
                 $icon          = '';
                 $extensionType = FileUtils::getExtensionType($value->extension);

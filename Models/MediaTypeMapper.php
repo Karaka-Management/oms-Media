@@ -49,11 +49,11 @@ final class MediaTypeMapper extends DataMapperFactory
      */
     public const HAS_MANY = [
         'title' => [
-            'mapper'  => MediaTypeL11nMapper::class,
-            'table'   => 'media_type_l11n',
-            'self'    => 'media_type_l11n_type',
-            'column'  => 'content',
-            'external'=> null,
+            'mapper'   => MediaTypeL11nMapper::class,
+            'table'    => 'media_type_l11n',
+            'self'     => 'media_type_l11n_type',
+            'column'   => 'content',
+            'external' => null,
         ],
     ];
 

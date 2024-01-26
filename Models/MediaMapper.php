@@ -40,27 +40,27 @@ class MediaMapper extends DataMapperFactory
      * @since 1.0.0
      */
     public const COLUMNS = [
-        'media_id'                  => ['name' => 'media_id',              'type' => 'int',               'internal' => 'id'],
-        'media_name'                => ['name' => 'media_name',            'type' => 'string',            'internal' => 'name',        'autocomplete' => true],
-        'media_description'         => ['name' => 'media_description',     'type' => 'string',            'internal' => 'description', 'autocomplete' => true],
-        'media_description_raw'     => ['name' => 'media_description_raw', 'type' => 'string',            'internal' => 'descriptionRaw'],
-        'media_content'             => ['name' => 'media_content', 'type' => 'int',            'internal' => 'content'],
-        'media_versioned'           => ['name' => 'media_versioned',       'type' => 'bool',              'internal' => 'isVersioned'],
-        'media_status'              => ['name' => 'media_status',          'type' => 'int',              'internal' => 'status'],
-        'media_file'                => ['name' => 'media_file',            'type' => 'string',            'internal' => 'path',        'autocomplete' => true],
-        'media_virtual'             => ['name' => 'media_virtual',         'type' => 'string',            'internal' => 'virtualPath', 'autocomplete' => true],
-        'media_absolute'            => ['name' => 'media_absolute',        'type' => 'bool',              'internal' => 'isAbsolute'],
-        'media_encrypted'           => ['name' => 'media_encrypted',           'type' => 'bool',            'internal' => 'isEncrypted'],
-        'media_password'            => ['name' => 'media_password',        'type' => 'string',            'internal' => 'password'],
-        'media_extension'           => ['name' => 'media_extension',       'type' => 'string',            'internal' => 'extension'],
-        'media_size'                => ['name' => 'media_size',            'type' => 'int',               'internal' => 'size'],
-        'media_source'              => ['name' => 'media_source',      'type' => 'int',              'internal' => 'source'],
-        'media_class'               => ['name' => 'media_class',      'type' => 'int',              'internal' => 'class'],
-        'media_language'            => ['name' => 'media_language',       'type' => 'string',            'internal' => 'language'],
-        'media_country'             => ['name' => 'media_country',       'type' => 'string',            'internal' => 'country'],
-        'media_unit'                => ['name' => 'media_unit',      'type' => 'int',               'internal' => 'unit',   'readonly' => true],
-        'media_created_by'          => ['name' => 'media_created_by',      'type' => 'int',               'internal' => 'createdBy',   'readonly' => true],
-        'media_created_at'          => ['name' => 'media_created_at',      'type' => 'DateTimeImmutable', 'internal' => 'createdAt',   'readonly' => true],
+        'media_id'              => ['name' => 'media_id',              'type' => 'int',               'internal' => 'id'],
+        'media_name'            => ['name' => 'media_name',            'type' => 'string',            'internal' => 'name',        'autocomplete' => true],
+        'media_description'     => ['name' => 'media_description',     'type' => 'string',            'internal' => 'description', 'autocomplete' => true],
+        'media_description_raw' => ['name' => 'media_description_raw', 'type' => 'string',            'internal' => 'descriptionRaw'],
+        'media_content'         => ['name' => 'media_content', 'type' => 'int',            'internal' => 'content'],
+        'media_versioned'       => ['name' => 'media_versioned',       'type' => 'bool',              'internal' => 'isVersioned'],
+        'media_status'          => ['name' => 'media_status',          'type' => 'int',              'internal' => 'status'],
+        'media_file'            => ['name' => 'media_file',            'type' => 'string',            'internal' => 'path',        'autocomplete' => true],
+        'media_virtual'         => ['name' => 'media_virtual',         'type' => 'string',            'internal' => 'virtualPath', 'autocomplete' => true],
+        'media_absolute'        => ['name' => 'media_absolute',        'type' => 'bool',              'internal' => 'isAbsolute'],
+        'media_encrypted'       => ['name' => 'media_encrypted',           'type' => 'bool',            'internal' => 'isEncrypted'],
+        'media_password'        => ['name' => 'media_password',        'type' => 'string',            'internal' => 'password'],
+        'media_extension'       => ['name' => 'media_extension',       'type' => 'string',            'internal' => 'extension'],
+        'media_size'            => ['name' => 'media_size',            'type' => 'int',               'internal' => 'size'],
+        'media_source'          => ['name' => 'media_source',      'type' => 'int',              'internal' => 'source'],
+        'media_class'           => ['name' => 'media_class',      'type' => 'int',              'internal' => 'class'],
+        'media_language'        => ['name' => 'media_language',       'type' => 'string',            'internal' => 'language'],
+        'media_country'         => ['name' => 'media_country',       'type' => 'string',            'internal' => 'country'],
+        'media_unit'            => ['name' => 'media_unit',      'type' => 'int',               'internal' => 'unit',   'readonly' => true],
+        'media_created_by'      => ['name' => 'media_created_by',      'type' => 'int',               'internal' => 'createdBy',   'readonly' => true],
+        'media_created_at'      => ['name' => 'media_created_at',      'type' => 'DateTimeImmutable', 'internal' => 'createdAt',   'readonly' => true],
     ];
 
     /**
@@ -100,13 +100,13 @@ class MediaMapper extends DataMapperFactory
      * @since 1.0.0
      */
     public const HAS_MANY = [
-        'tags'         => [
+        'tags' => [
             'mapper'   => TagMapper::class,
             'table'    => 'media_tag',
             'external' => 'media_tag_dst',
             'self'     => 'media_tag_src',
         ],
-        'types'         => [
+        'types' => [
             'mapper'   => MediaTypeMapper::class,
             'table'    => 'media_type_rel',
             'external' => 'media_type_rel_dst',

@@ -22,7 +22,6 @@ use phpOMS\Message\Http\HttpRequest;
 use phpOMS\Message\Http\HttpResponse;
 use phpOMS\Message\Http\RequestStatusCode;
 use phpOMS\System\File\Local\Directory;
-use phpOMS\Uri\HttpUri;
 use phpOMS\Utils\TestUtils;
 
 trait ApiControllerCollectionTrait
@@ -34,7 +33,7 @@ trait ApiControllerCollectionTrait
     public function testApiCollectionCreateWitRandomPath() : void
     {
         $response = new HttpResponse();
-        $request  = new HttpRequest(new HttpUri(''));
+        $request  = new HttpRequest();
 
         $request->header->account = 1;
         $request->setData('name', 'Test Upload');
@@ -78,7 +77,7 @@ trait ApiControllerCollectionTrait
         }
 
         $response = new HttpResponse();
-        $request  = new HttpRequest(new HttpUri(''));
+        $request  = new HttpRequest();
 
         $request->header->account = 1;
         $request->setData('name', 'Test Collection');
@@ -99,7 +98,7 @@ trait ApiControllerCollectionTrait
     public function testApiCollectionCreateInvalid() : void
     {
         $response = new HttpResponse();
-        $request  = new HttpRequest(new HttpUri(''));
+        $request  = new HttpRequest();
 
         $request->header->account = 1;
 
@@ -114,7 +113,7 @@ trait ApiControllerCollectionTrait
     public function testApiCollectionCreateWithPath() : void
     {
         $response = new HttpResponse();
-        $request  = new HttpRequest(new HttpUri(''));
+        $request  = new HttpRequest();
 
         $request->header->account = 1;
         $request->setData('name', 'Test Collection');

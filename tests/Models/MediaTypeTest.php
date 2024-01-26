@@ -61,15 +61,15 @@ final class MediaTypeTest extends \PHPUnit\Framework\TestCase
      */
     public function testSerialize() : void
     {
-        $this->type->name        = 'Name';
+        $this->type->name = 'Name';
 
         $serialized = $this->type->jsonSerialize();
         unset($serialized['title']);
 
         self::assertEquals(
             [
-                'id'          => 0,
-                'name'        => 'Name',
+                'id'   => 0,
+                'name' => 'Name',
             ],
             $serialized
         );
