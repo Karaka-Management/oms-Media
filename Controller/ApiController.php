@@ -451,7 +451,7 @@ final class ApiController extends Controller
      *
      * @since 1.0.0
      */
-    public static function loadFileContent(string $path, string $extension, string $output = 'html') : string
+    public static function loadFileContent(string $path, string $extension, string $output = 'html', array $data = []) : string
     {
         switch ($extension) {
             case 'pdf':
@@ -497,6 +497,9 @@ final class ApiController extends Controller
                 $contents = \file_get_contents($path);
 
                 return $contents === false ? '' : $contents;
+            case 'htm':
+            case 'html':
+                return \phpOMS\Utils\Parser\Html\HtmlParser::parseHtml($path, $output, $data['path'] ?? '');
             default:
                 return '';
         }
