@@ -481,7 +481,13 @@ class Media implements \JsonSerializable
      */
     public function hasMediaTypeId(int $id) : bool
     {
-        return isset($this->types[$id]);
+        foreach ($this->types as $type) {
+            if ($type->id === $id) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
