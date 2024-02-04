@@ -1,0 +1,9 @@
+{
+    "id": "{id}",
+    "title": "{title}",
+    "content": "{content}",
+    "extension": "{extension}",
+    "path": "{path}",
+    "types": ["{types}"],
+    "tags": ["{tags}"]
+}

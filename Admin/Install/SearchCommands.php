@@ -1,0 +1,32 @@
+<?php
+/**
+ * Jingga
+ *
+ * PHP Version 8.1
+ *
+ * @package   Modules\Media
+ * @copyright Dennis Eichhorn
+ * @license   OMS License 2.0
+ * @version   1.0.0
+ * @link      https://jingga.app
+ */
+declare(strict_types=1);
+
+use Modules\Media\Controller\SearchController;
+use Modules\Media\Models\PermissionCategory;
+use phpOMS\Account\PermissionType;
+use phpOMS\Router\RouteVerb;
+
+return [
+    '^(?!:).+.*?' => [
+        [
+            'dest'       => '\Modules\Media\Controller\SearchController:searchGeneral',
+            'verb'       => RouteVerb::ANY,
+            'permission' => [
+                'module' => SearchController::NAME,
+                'type'   => PermissionType::READ,
+                'state'  => PermissionCategory::MEDIA,
+            ],
+        ],
+    ],
+];
