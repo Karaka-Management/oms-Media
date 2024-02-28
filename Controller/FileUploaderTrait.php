@@ -45,6 +45,6 @@ trait FileUploaderTrait
         $head  = $response->data['Content']->head;
         $nonce = $this->app->appSettings->getOption('script-nonce');
 
-        $head->addAsset(AssetType::JS, '/Modules/Media/Controller.js', ['nonce' => $nonce, 'type' => 'module']);
+        $head->addAsset(AssetType::JS, '/Modules/Media/Controller.js?v=' . self::VERSION, ['nonce' => $nonce, 'type' => 'module']);
     }
 }

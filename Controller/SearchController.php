@@ -41,6 +41,11 @@ final class SearchController extends Controller
      *
      * @api
      *
+     * @todo Implement a decent full text search for files/variables which finds texts that are similar
+     *      (e.g. similar spelling, only some words in between, maybe different word order, etc.)
+     *      Solution: Elasticsearch
+     *      https://github.com/Karaka-Management/Karaka/issues/160
+     *
      * @since 1.0.0
      */
     public function searchGeneral(RequestAbstract $request, ResponseAbstract $response, array $data = []) : void

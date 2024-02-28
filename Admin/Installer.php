@@ -170,7 +170,7 @@ final class Installer extends InstallerAbstract
     private static function createReference(ApplicationAbstract $app, array $data) : array
     {
         /** @var \Modules\Media\Controller\ApiController $module */
-        $module = $app->moduleManager->getModuleInstance('Media');
+        $module = $app->moduleManager->get('Media');
 
         $response = new HttpResponse();
         $request  = new HttpRequest();
@@ -205,7 +205,7 @@ final class Installer extends InstallerAbstract
     private static function createCollection(ApplicationAbstract $app, array $data) : array
     {
         /** @var \Modules\Media\Controller\ApiController $module */
-        $module = $app->moduleManager->getModuleInstance('Media');
+        $module = $app->moduleManager->get('Media');
 
         $path = isset($data['path']) ? ($data['path']) : $data['virtualPath'] ?? '';
 

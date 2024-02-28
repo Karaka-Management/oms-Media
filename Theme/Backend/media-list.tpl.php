@@ -238,7 +238,7 @@ $next     = empty($media) ? '{/base}/media/list' : '{/base}/media/list?{?}&id=' 
             <div class="portlet-foot">
                 <a tabindex="0" class="button" href="<?= UriFactory::build($previous); ?>"><?= $this->getHtml('Previous', '0', '0'); ?></a>
                 <a tabindex="0" class="button" href="<?= UriFactory::build($next); ?>"><?= $this->getHtml('Next', '0', '0'); ?></a>
-                <a tabindex="0" class="button floatRight" href="<?= UriFactory::build('api/media/download'); ?>">
+                <a tabindex="0" class="button rf" href="<?= UriFactory::build('api/media/download'); ?>">
                     <?= $this->getHtml('Download'); ?>
                 </a>
             </div>

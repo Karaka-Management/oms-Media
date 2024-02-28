@@ -25,7 +25,7 @@ use phpOMS\Uri\UriFactory;
                         <label for="mediaInput"><?= $this->getHtml('Media', 'Media', 'Backend'); ?></label>
                         <div class="ipt-wrap">
                             <div class="ipt-first">
-                                <div class="advancedInput wf-100" id="iMediaInput">
+                                <div class="advIpt wf-100" id="iMediaInput">
                                     <input autocomplete="off" class="input" id="mediaInput" name="mediaFile" type="text"
                                         data-emptyAfter="true"
                                         data-autocomplete="off"

@@ -32,10 +32,12 @@ use Modules\Media\Models\PathSettings;
 use Modules\Media\Models\PermissionCategory;
 use Modules\Media\Models\Reference;
 use Modules\Media\Models\ReferenceMapper;
+use Modules\Media\Models\Report;
 use Modules\Media\Models\UploadFile;
 use Modules\Media\Models\UploadStatus;
 use Modules\Media\Theme\Backend\Components\Media\ElementView;
 use phpOMS\Account\PermissionType;
+use phpOMS\Ai\Ocr\Tesseract\TesseractOcr;
 use phpOMS\Application\ApplicationAbstract;
 use phpOMS\Asset\AssetType;
 use phpOMS\Autoloader;
@@ -456,6 +458,16 @@ final class ApiController extends Controller
         switch ($extension) {
             case 'pdf':
                 return \phpOMS\Utils\Parser\Pdf\PdfParser::pdf2text($path/*, __DIR__ . '/../../../Tools/OCRImageOptimizer/bin/OCRImageOptimizerApp'*/);
+            case 'jpg':
+            case 'jpeg':
+            case 'png':
+            case 'gif':
+            case 'tiff':
+            case 'webp':
+            case 'bmp':
+                $ocr  = new TesseractOcr();
+
+                return $ocr->parseImage($path);
             case 'doc':
             case 'docx':
                 $include = \realpath(__DIR__ . '/../../../Resources/');
@@ -500,6 +512,8 @@ final class ApiController extends Controller
             case 'htm':
             case 'html':
                 return \phpOMS\Utils\Parser\Html\HtmlParser::parseHtml($path, $output, $data['path'] ?? '');
+            case 'xml':
+                return \phpOMS\Utils\Parser\Xml\XmlParser::parseXml($path, $output, $data['path'] ?? '');
             default:
                 return '';
         }
@@ -523,11 +537,13 @@ final class ApiController extends Controller
             throw new \Exception(); // @codeCoverageIgnore
         }
 
-        return FileUtils::absolute(\str_replace('\\', '/',
-            \str_replace($realpath, '',
-                \rtrim($path, '\\/')
+        return FileUtils::absolute(
+            \str_replace(
+                '\\',
+                '/',
+                \str_replace($realpath, '', \rtrim($path, '\\/'))
             )
-        ));
+        );
     }
 
     /**
@@ -1211,7 +1227,7 @@ final class ApiController extends Controller
             $css = \preg_replace('!\s+!', ' ', $css);
             $head->setStyle('core', $css ?? '');
 
-            $head->addAsset(AssetType::CSS, 'cssOMS/styles.css?v=1.0.0');
+            $head->addAsset(AssetType::CSS, 'cssOMS/styles.css?v=' . self::VERSION);
             $view->data['head'] = $head;
 
             switch (\strtolower($media->extension)) {
@@ -1219,6 +1235,7 @@ final class ApiController extends Controller
                 case 'jpeg':
                 case 'gif':
                 case 'png':
+                case 'webp':
                     $view->setTemplate('/Modules/Media/Theme/Backend/Components/Media/image_raw');
                     break;
                 case 'pdf':
@@ -1250,6 +1267,13 @@ final class ApiController extends Controller
                 case 'xls':
                 case 'xlsx':
                     $view->setTemplate('/Modules/Media/Theme/Api/spreadsheetAsHtml');
+                    break;
+                case 'xml':
+                    $view->setTemplate('/Modules/Media/Theme/Backend/Components/Media/xml_raw');
+                    break;
+                case 'htm':
+                case 'html':
+                    $view->setTemplate('/Modules/Media/Theme/Backend/Components/Media/html_raw');
                     break;
                 case 'doc':
                 case 'docx':
@@ -1312,14 +1336,19 @@ final class ApiController extends Controller
                 $response->header->set('Content-Type', MimeType::M_TXT, true);
                 break;
             case 'csv':
-            case 'json':
                 $response->header->set('Content-Type', MimeType::M_CSV, true);
+                break;
+            case 'json':
+                $response->header->set('Content-Type', MimeType::M_JSON, true);
                 break;
             case 'xls':
                 $response->header->set('Content-Type', MimeType::M_XLS, true);
                 break;
             case 'xlsx':
                 $response->header->set('Content-Type', MimeType::M_XLSX, true);
+                break;
+            case 'xml':
+                $response->header->set('Content-Type', MimeType::M_XML, true);
                 break;
             case 'doc':
                 $response->header->set('Content-Type', MimeType::M_DOC, true);
@@ -1342,6 +1371,9 @@ final class ApiController extends Controller
                 break;
             case 'png':
                 $response->header->set('Content-Type', MimeType::M_PNG, true);
+                break;
+            case 'webp':
+                $response->header->set('Content-Type', MimeType::M_WEBP, true);
                 break;
             case 'mp3':
                 $response->header->set('Content-Type', MimeType::M_MP3, true);
