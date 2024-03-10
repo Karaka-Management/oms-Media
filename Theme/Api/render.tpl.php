@@ -17,6 +17,23 @@ use Modules\Media\Models\NullMedia;
 /** @var \Modules\Media\Models\Media $media */
 $media = $this->media ?? new NullMedia();
 
-$fp = \fopen(($media->isAbsolute ? '' : __DIR__ . '/../../../../') . $media->getPath(), 'r');
-\fpassthru($fp);
-\fclose($fp);
+if (\is_file($media->getAbsolutePath())) {
+    $fp = \fopen($media->getAbsolutePath(), 'r');
+    if ($fp !== false) {
+        \fpassthru($fp);
+        \fclose($fp);
+    }
+} elseif (\is_dir($media->getAbsolutePath())) {
+    \phpOMS\Utils\IO\Zip\Zip::pack(
+        $media->getAbsolutePath(),
+        $tmp = \tempnam(\sys_get_temp_dir(), 'oms_tmp_')
+    );
+
+    $fp = \fopen($tmp, 'r');
+    if ($fp !== false) {
+        \fpassthru($fp);
+        \fclose($fp);
+
+        \unlink($tmp);
+    }
+}

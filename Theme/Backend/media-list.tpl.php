@@ -40,9 +40,11 @@ $next     = empty($media) ? '{/base}/media/list' : '{/base}/media/list?{?}&id=' 
             <a tabindex="0" class="button" href="<?= UriFactory::build('{/base}/media/upload?path={?path}'); ?>">
                 <?= $this->getHtml('Upload'); ?>
             </a>
+            <!--
             <a tabindex="0" class="button" href="<?= UriFactory::build('{/base}/media/file/create?path={?path}'); ?>">
                 <?= $this->getHtml('CreateFile'); ?>
             </a>
+            -->
             <a tabindex="0" class="button" href="<?= UriFactory::build('{/base}/media/collection/create?path={?path}'); ?>">
                 <?= $this->getHtml('CreateCollection'); ?>
             </a>
@@ -210,7 +212,7 @@ $next     = empty($media) ? '{/base}/media/list' : '{/base}/media/list?{?}&id=' 
                             <?php foreach ($value->tags as $tag) : ?>
                             <a href="<?= $url; ?>">
                                 <span class="tag" style="background: <?= $this->printHtml($tag->color); ?>">
-                                    <?= empty($tag->icon) ? '' : ''; ?>
+                                    <?= empty($tag->icon) ? '' : '<i class="g-icon">' . $this->printHtml($tag->icon) . '</i>'; ?>
                                     <?= $this->printHtml($tag->getL11n()); ?>
                                 </span>
                             </a>
@@ -238,7 +240,7 @@ $next     = empty($media) ? '{/base}/media/list' : '{/base}/media/list?{?}&id=' 
             <div class="portlet-foot">
                 <a tabindex="0" class="button" href="<?= UriFactory::build($previous); ?>"><?= $this->getHtml('Previous', '0', '0'); ?></a>
                 <a tabindex="0" class="button" href="<?= UriFactory::build($next); ?>"><?= $this->getHtml('Next', '0', '0'); ?></a>
-                <a tabindex="0" class="button rf" href="<?= UriFactory::build('api/media/download'); ?>">
+                <a tabindex="0" class="button rf" href="<?= UriFactory::build('{/api}media/export?path={?path}&type=download'); ?>">
                     <?= $this->getHtml('Download'); ?>
                 </a>
             </div>

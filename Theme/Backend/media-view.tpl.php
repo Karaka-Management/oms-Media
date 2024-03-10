@@ -37,9 +37,15 @@ echo $this->data['nav']->render();
     <div class="col-xs-12">
         <div class="box">
             <?php if ($this->request->getData('path') !== null) : ?>
-                <a tabindex="0" class="button" href="<?= UriFactory::build('{/base}/media/list?path=' . ($media->id === 0 ? $media->getVirtualPath() : '{?path}')); ?>"><?= $this->getHtml('Back'); ?></a>
+                <a tabindex="0" class="button"
+                    href="<?= UriFactory::build('{/base}/media/list?path=' . ($media->id === 0 ? $media->getVirtualPath() : '{?path}')); ?>">
+                        <?= $this->getHtml('Back'); ?>
+                </a>
             <?php else: ?>
-                <a tabindex="0" class="button" href="<?= $this->request->getReferer() !== '' ? $this->request->getReferer() : UriFactory::build('{/base}/media/list'); ?>"><?= $this->getHtml('Back'); ?></a>
+                <a tabindex="0" class="button"
+                    href="<?= $this->request->getReferer() !== '' ? $this->request->getReferer() : UriFactory::build('{/base}/media/list'); ?>">
+                        <?= $this->getHtml('Back'); ?>
+                </a>
             <?php endif; ?>
         </div>
     </div>
@@ -94,15 +100,15 @@ echo $this->data['nav']->render();
                         ); ?></a>
                         <tr><td><?= $this->getHtml('Tags'); ?><td>
                             <?php foreach ($media->tags as $tag) : ?>
-                                <span class="tag" style="background: <?= $this->printHtml($tag->color); ?>"><?= empty($tag->icon) ? '' : ''; ?><?= $this->printHtml($tag->getL11n()); ?></span>
+                                <span class="tag" style="background: <?= $this->printHtml($tag->color); ?>">
+                                    <?= empty($tag->icon) ? '' : '<i class="g-icon">' . $this->printHtml($tag->icon) . '</i>'; ?>
+                                    <?= $this->printHtml($tag->getL11n()); ?>
+                                </span>
                             <?php endforeach; ?>
                         <tr><td colspan="2"><?= $this->getHtml('Description'); ?>
                         <tr><td colspan="2"><?= $media->description; ?>
                 </table>
             </div>
-            <?php
-            $path = $this->filePathFunction($media, $this->request->getData('sub') ?? '');
-            if ($this->isTextFile($media, $path)) : ?>
             <div id="iMediaFileUpdate" class="portlet-foot"
                 data-update-content="#mediaFile .portlet-body"
                 data-update-element="#mediaFile .textContent"
@@ -110,17 +116,25 @@ echo $this->data['nav']->render();
                 data-tag="form"
                 data-method="POST"
                 data-uri="<?= UriFactory::build('{/api}media?{?}&csrf={$CSRF}'); ?>">
-                <button class="save vh"><?= $this->getHtml('Save', '0', '0'); ?></button>
-                <button class="cancel vh"><?= $this->getHtml('Cancel', '0', '0'); ?></button>
-                <button class="update"><?= $this->getHtml('Edit', '0', '0'); ?></button>
+                <a tabindex="0"
+                    class="button"
+                    href="<?= UriFactory::build('{/api}media/export?id=' . $media->id . '&type=download'); ?>"
+                ><?= $this->getHtml('Download'); ?></a>
+                <?php
+                    $path = $this->filePathFunction($media, $this->request->getData('sub') ?? '');
+                    if ($this->isTextFile($media, $path)) :
+                ?>
+                    <button class="save vh"><?= $this->getHtml('Save', '0', '0'); ?></button>
+                    <button class="cancel vh"><?= $this->getHtml('Cancel', '0', '0'); ?></button>
+                    <button class="update"><?= $this->getHtml('Edit', '0', '0'); ?></button>
+                <?php endif; ?>
             </div>
-            <?php endif; ?>
         </section>
     </div>
 </div>
 
 <?php
-$media = $media->class === MediaClass::REFERENCE ? $media->source : $media;
+    $media = $media->class === MediaClass::REFERENCE ? $media->source : $media;
 ?>
 
 <div class="row col-simple">

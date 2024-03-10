@@ -29,4 +29,14 @@ return [
             ],
         ],
     ],
+    '^:tag (\?.*$|$)' => [
+        [
+            'dest'       => '\Modules\Media\Controller\SearchController:searchTag',
+            'verb'       => RouteVerb::ANY,
+            'permission' => [
+                'module' => SearchController::NAME,
+                'type'   => PermissionType::READ,
+            ],
+        ],
+    ],
 ];

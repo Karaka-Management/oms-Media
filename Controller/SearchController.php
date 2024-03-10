@@ -41,6 +41,59 @@ final class SearchController extends Controller
      *
      * @api
      *
+     * @since 1.0.0
+     */
+    public function searchTag(RequestAbstract $request, ResponseAbstract $response, array $data = []) : void
+    {
+        $search = $request->getDataString('search') ?? '';
+
+        $searchIdStartPos = \stripos($search, ':');
+        $patternStartPos  = $searchIdStartPos === false
+            ? -1
+            : \stripos($search, ' ', $searchIdStartPos);
+
+        $pattern = \substr($search, $patternStartPos + 1);
+
+        /** @var \Modules\Media\Models\Media[] $media */
+        $media = MediaMapper::getAll()
+            ->with('tags')
+            ->with('tags/title')
+            ->where('tags/title/language', $response->header->l11n->language)
+            ->where('tags/title/content', $pattern)
+            ->sort('createdAt', OrderType::DESC)
+            ->limit(8)
+            ->execute();
+
+        $results = [];
+        foreach ($media as $file) {
+            $results[] = [
+                'title'     => $file->name . ' (' . $file->extension . ')',
+                'summary'   => '',
+                'link'      => '{/base}/media/view?id=' . $file->id,
+                'account'   => '',
+                'createdAt' => $file->createdAt,
+                'image' => '',
+                'tags'  => $file->tags,
+                'type'  => 'list_links',
+                'module'  => 'Media',
+            ];
+        }
+
+        $response->header->set('Content-Type', MimeType::M_JSON . '; charset=utf-8', true);
+        $response->add($request->uri->__toString(), $results);
+    }
+
+    /**
+     * Api method to search for tags
+     *
+     * @param RequestAbstract  $request  Request
+     * @param ResponseAbstract $response Response
+     * @param array            $data     Generic data
+     *
+     * @return void
+     *
+     * @api
+     *
      * @todo Implement a decent full text search for files/variables which finds texts that are similar
      *      (e.g. similar spelling, only some words in between, maybe different word order, etc.)
      *      Solution: Elasticsearch

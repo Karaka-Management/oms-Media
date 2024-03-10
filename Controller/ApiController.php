@@ -32,10 +32,10 @@ use Modules\Media\Models\PathSettings;
 use Modules\Media\Models\PermissionCategory;
 use Modules\Media\Models\Reference;
 use Modules\Media\Models\ReferenceMapper;
-use Modules\Media\Models\Report;
 use Modules\Media\Models\UploadFile;
 use Modules\Media\Models\UploadStatus;
 use Modules\Media\Theme\Backend\Components\Media\ElementView;
+use Modules\Messages\Models\EmailMapper;
 use phpOMS\Account\PermissionType;
 use phpOMS\Ai\Ocr\Tesseract\TesseractOcr;
 use phpOMS\Application\ApplicationAbstract;
@@ -67,6 +67,63 @@ use phpOMS\Views\View;
  */
 final class ApiController extends Controller
 {
+    /**
+     * Api method to create tag
+     *
+     * @param RequestAbstract  $request  Request
+     * @param ResponseAbstract $response Response
+     * @param array            $data     Generic data
+     *
+     * @return void
+     *
+     * @api
+     *
+     * @since 1.0.0
+     */
+    public function apiMediaEmailSend(RequestAbstract $request, ResponseAbstract $response, array $data = []) : void
+    {
+        $email = $request->getDataString('email');
+
+        $media = $data['media'] ?? MediaMapper::get()
+            ->where('id', (int) $request->getData('id'))
+            ->execute();
+
+        /** @var \Model\Setting $template */
+        $template = $this->app->appSettings->get(
+            names: (string) $request->getDataString('template')
+        );
+
+        $handler = $this->app->moduleManager->get('Admin', 'Api')->setUpServerMailHandler();
+
+        $mail = EmailMapper::get()
+            ->with('l11n')
+            ->where('id', $template)
+            ->where('l11n/language', $response->header->l11n->language)
+            ->execute();
+
+        $status = false;
+        if ($mail->id !== 0) {
+            $status = $this->app->moduleManager->get('Admin', 'Api')->setupEmailDefaults($mail, $response->header->l11n->language);
+        }
+
+        $mail->addTo($email);
+        $mail->addAttachment($media->getAbsolutePath(), $media->name);
+
+        if ($status) {
+            $status = $handler->send($mail);
+        }
+
+        if (!$status) {
+            \phpOMS\Log\FileLogger::getInstance()->error(
+                \phpOMS\Log\FileLogger::MSG_FULL, [
+                    'message' => 'Couldn\'t send bill media: ' . $media->id,
+                    'line'    => __LINE__,
+                    'file'    => self::class,
+                ]
+            );
+        }
+    }
+
     /**
      * Api method to upload media file.
      *
@@ -920,34 +977,42 @@ final class ApiController extends Controller
             $status = \is_dir($physicalPath) ? true : \mkdir($physicalPath, 0755, true);
         }
 
-        $path      = \trim($path, '/');
-        $paths     = \explode('/', $path);
-        $tempPaths = $paths;
-        $length    = \count($paths);
+        $virtualPath      = \trim($path, '/');
+        $virtualPaths     = \explode('/', $virtualPath);
+        $tempVirtualPaths = $virtualPaths;
+        $length    = \count($virtualPaths);
 
         /** @var Collection $parentCollection */
         $parentCollection = null;
 
-        $temp = '';
+        $virtual = '';
+        $real = '';
+        $newVirtual = '';
+
         for ($i = $length; $i > 0; --$i) {
-            $temp = '/' . \implode('/', $tempPaths);
+            $virtual = '/' . \implode('/', $tempVirtualPaths);
 
             /** @var Collection $parentCollection */
-            $parentCollection = CollectionMapper::getParentCollection($temp)->execute();
+            $parentCollection = CollectionMapper::getParentCollection($virtual)->execute();
+
             if ($parentCollection->id > 0) {
+                $real = $parentCollection->getPath();
+
                 break;
             }
 
-            \array_pop($tempPaths);
+            $newVirtual = \array_pop($tempVirtualPaths) . '/' . $newVirtual;
         }
 
         for (; $i < $length; ++$i) {
             /* Create collection */
             $childCollection            = new Collection();
-            $childCollection->name      = $paths[$i];
+            $childCollection->name      = $virtualPaths[$i];
             $childCollection->createdBy = new NullAccount($account);
-            $childCollection->setVirtualPath('/'. \ltrim($temp, '/'));
-            $childCollection->setPath('/Modules/Media/Files' . $temp);
+            $childCollection->setVirtualPath('/'. \ltrim($virtual, '/'));
+
+            // We assume that the new path is real path of the first found parent directory + the new virtual path
+            $childCollection->setPath($real . '/' . \ltrim($newVirtual, '/'));
 
             $this->createModel($account, $childCollection, CollectionMapper::class, 'collection', '127.0.0.1');
             $this->createModelRelation(
@@ -961,7 +1026,7 @@ final class ApiController extends Controller
             );
 
             $parentCollection = $childCollection;
-            $temp .= '/' . $paths[$i];
+            $virtual .= '/' . $virtualPaths[$i];
         }
 
         return $parentCollection;
@@ -1077,6 +1142,13 @@ final class ApiController extends Controller
                 $media->isAbsolute = false;
                 $media->setVirtualPath(\dirname($path));
                 $media->setPath('/' . \ltrim($path, '\\/'));
+            } else {
+                $media = MediaMapper::getAll()
+                    ->where('virtualPath', $path)
+                    ->limit(1)
+                    ->execute();
+
+                $filePath = $media->getAbsolutePath();
             }
         }
 
@@ -1210,7 +1282,7 @@ final class ApiController extends Controller
             $response->endAllOutputBuffering(); // for large files
         }
 
-        if (($type = $request->getDataString('type')) === null) {
+        if (\in_array($type = $request->getDataString('type'), [null, 'download', 'raw', 'bin'])) {
             $view->setTemplate('/Modules/Media/Theme/Api/render');
         } elseif ($type === 'html') {
             $head = new Head();
