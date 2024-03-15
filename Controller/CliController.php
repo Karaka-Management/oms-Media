@@ -42,7 +42,7 @@ final class CliController extends Controller
         $mapper = MediaMapper::yield()
             ->where('isEncrypted', true);
 
-        foreach ($mapper->execute() as $media) {
+        foreach ($mapper->executeYield() as $media) {
             if (!empty($data['old'])) {
                 $media->decrypt($data['old']);
             }

@@ -216,7 +216,7 @@ class MediaMapper extends DataMapperFactory
     {
         $references = self::count()
             ->where('source', $id)
-            ->execute();
+            ->executeCount();
 
         $query = new Builder(self::$db);
 
