@@ -72,10 +72,10 @@ final class SearchController extends Controller
                 'link'      => '{/base}/media/view?id=' . $file->id,
                 'account'   => '',
                 'createdAt' => $file->createdAt,
-                'image' => '',
-                'tags'  => $file->tags,
-                'type'  => 'list_links',
-                'module'  => 'Media',
+                'image'     => '',
+                'tags'      => $file->tags,
+                'type'      => 'list_links',
+                'module'    => 'Media',
             ];
         }
 
@@ -121,10 +121,10 @@ final class SearchController extends Controller
                 'link'      => '{/base}/media/view?id=' . $file->id,
                 'account'   => '',
                 'createdAt' => $file->createdAt,
-                'image' => '',
-                'tags'  => $file->tags,
-                'type'  => 'list_links',
-                'module'  => 'Media',
+                'image'     => '',
+                'tags'      => $file->tags,
+                'type'      => 'list_links',
+                'module'    => 'Media',
             ];
         }
 

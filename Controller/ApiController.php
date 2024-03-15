@@ -83,6 +83,9 @@ final class ApiController extends Controller
     public function apiMediaEmailSend(RequestAbstract $request, ResponseAbstract $response, array $data = []) : void
     {
         $email = $request->getDataString('email');
+        if (empty($email)) {
+            return;
+        }
 
         $media = $data['media'] ?? MediaMapper::get()
             ->where('id', (int) $request->getData('id'))
@@ -522,7 +525,7 @@ final class ApiController extends Controller
             case 'tiff':
             case 'webp':
             case 'bmp':
-                $ocr  = new TesseractOcr();
+                $ocr = new TesseractOcr();
 
                 return $ocr->parseImage($path);
             case 'doc':
@@ -980,13 +983,13 @@ final class ApiController extends Controller
         $virtualPath      = \trim($path, '/');
         $virtualPaths     = \explode('/', $virtualPath);
         $tempVirtualPaths = $virtualPaths;
-        $length    = \count($virtualPaths);
+        $length           = \count($virtualPaths);
 
         /** @var Collection $parentCollection */
         $parentCollection = null;
 
-        $virtual = '';
-        $real = '';
+        $virtual    = '';
+        $real       = '';
         $newVirtual = '';
 
         for ($i = $length; $i > 0; --$i) {
@@ -1143,7 +1146,8 @@ final class ApiController extends Controller
                 $media->setVirtualPath(\dirname($path));
                 $media->setPath('/' . \ltrim($path, '\\/'));
             } else {
-                $media = MediaMapper::getAll()
+                /** @var Media $media */
+                $media = MediaMapper::get()
                     ->where('virtualPath', $path)
                     ->limit(1)
                     ->execute();
