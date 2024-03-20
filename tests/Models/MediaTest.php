@@ -34,7 +34,7 @@ final class MediaTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @covers Modules\Media\Models\Media
+     * @covers \Modules\Media\Models\Media
      * @group module
      */
     public function testDefault() : void
@@ -54,7 +54,7 @@ final class MediaTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @covers Modules\Media\Models\Media
+     * @covers \Modules\Media\Models\Media
      * @group module
      */
     public function testCreatedByInputOutput() : void
@@ -64,7 +64,7 @@ final class MediaTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @covers Modules\Media\Models\Media
+     * @covers \Modules\Media\Models\Media
      * @group module
      */
     public function testExtensionInputOutput() : void
@@ -74,7 +74,7 @@ final class MediaTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @covers Modules\Media\Models\Media
+     * @covers \Modules\Media\Models\Media
      * @group module
      */
     public function testPathInputOutput() : void
@@ -87,7 +87,7 @@ final class MediaTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @covers Modules\Media\Models\Media
+     * @covers \Modules\Media\Models\Media
      * @group module
      */
     public function testAbsolutePathInputOutput() : void
@@ -97,7 +97,7 @@ final class MediaTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @covers Modules\Media\Models\Media
+     * @covers \Modules\Media\Models\Media
      * @group module
      */
     public function testNameInputOutput() : void
@@ -107,7 +107,7 @@ final class MediaTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @covers Modules\Media\Models\Media
+     * @covers \Modules\Media\Models\Media
      * @group module
      */
     public function testDescriptionInputOutput() : void
@@ -117,7 +117,7 @@ final class MediaTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @covers Modules\Media\Models\Media
+     * @covers \Modules\Media\Models\Media
      * @group module
      */
     public function testDescriptionRawInputOutput() : void
@@ -127,7 +127,7 @@ final class MediaTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @covers Modules\Media\Models\Media
+     * @covers \Modules\Media\Models\Media
      * @group module
      */
     public function testSizeInputOutput() : void
@@ -137,7 +137,7 @@ final class MediaTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @covers Modules\Media\Models\Media
+     * @covers \Modules\Media\Models\Media
      * @group module
      */
     public function testVersionedInputOutput() : void
@@ -147,7 +147,7 @@ final class MediaTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @covers Modules\Media\Models\Media
+     * @covers \Modules\Media\Models\Media
      * @group module
      */
     public function testVirtualPathInputOutput() : void
@@ -157,7 +157,7 @@ final class MediaTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @covers Modules\Media\Models\Media
+     * @covers \Modules\Media\Models\Media
      * @group module
      */
     public function testHiddenInputOutput() : void
@@ -167,7 +167,7 @@ final class MediaTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @covers Modules\Media\Models\Media
+     * @covers \Modules\Media\Models\Media
      * @group module
      */
     public function testPasswordInputOutput() : void
@@ -178,7 +178,7 @@ final class MediaTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @covers Modules\Media\Models\Media
+     * @covers \Modules\Media\Models\Media
      * @group module
      */
     public function testSerialize() : void

@@ -27,7 +27,7 @@ use phpOMS\Utils\TestUtils;
 trait ApiControllerCollectionTrait
 {
     /**
-     * @covers Modules\Media\Controller\ApiController
+     * @covers \Modules\Media\Controller\ApiController
      * @group module
      */
     public function testApiCollectionCreateWitRandomPath() : void
@@ -92,7 +92,7 @@ trait ApiControllerCollectionTrait
     }
 
     /**
-     * @covers Modules\Media\Controller\ApiController
+     * @covers \Modules\Media\Controller\ApiController
      * @group module
      */
     public function testApiCollectionCreateInvalid() : void
@@ -107,7 +107,7 @@ trait ApiControllerCollectionTrait
     }
 
     /**
-     * @covers Modules\Media\Controller\ApiController
+     * @covers \Modules\Media\Controller\ApiController
      * @group module
      */
     public function testApiCollectionCreateWithPath() : void
@@ -129,7 +129,7 @@ trait ApiControllerCollectionTrait
     }
 
     /**
-     * @covers Modules\Media\Controller\ApiController
+     * @covers \Modules\Media\Controller\ApiController
      * @group module
      */
     public function testApiCollectionFromMedia() : void

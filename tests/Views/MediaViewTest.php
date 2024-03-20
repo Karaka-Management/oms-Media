@@ -33,7 +33,7 @@ final class MediaViewTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @covers Modules\Media\Views\MediaView
+     * @covers \Modules\Media\Views\MediaView
      * @group module
      */
     public function testFilePath() : void
@@ -57,7 +57,7 @@ final class MediaViewTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @covers Modules\Media\Views\MediaView
+     * @covers \Modules\Media\Views\MediaView
      * @group module
      */
     public function testDirPath() : void
@@ -81,7 +81,7 @@ final class MediaViewTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @covers Modules\Media\Views\MediaView
+     * @covers \Modules\Media\Views\MediaView
      * @group module
      */
     public function testIscollection() : void
@@ -118,7 +118,7 @@ final class MediaViewTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @covers Modules\Media\Views\MediaView
+     * @covers \Modules\Media\Views\MediaView
      * @group module
      */
     public function testFileContent() : void
@@ -133,7 +133,7 @@ final class MediaViewTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @covers Modules\Media\Views\MediaView
+     * @covers \Modules\Media\Views\MediaView
      * @group module
      */
     public function testInvalidFileContentPath() : void
@@ -148,7 +148,7 @@ final class MediaViewTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @covers Modules\Media\Views\MediaView
+     * @covers \Modules\Media\Views\MediaView
      * @group module
      */
     public function testFileLineContent() : void
@@ -166,7 +166,7 @@ final class MediaViewTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @covers Modules\Media\Views\MediaView
+     * @covers \Modules\Media\Views\MediaView
      * @group module
      */
     public function testInvalidFileLineContentPath() : void
@@ -181,7 +181,7 @@ final class MediaViewTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @covers Modules\Media\Views\MediaView
+     * @covers \Modules\Media\Views\MediaView
      * @group module
      */
     public function testIsImage() : void
@@ -205,7 +205,7 @@ final class MediaViewTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @covers Modules\Media\Views\MediaView
+     * @covers \Modules\Media\Views\MediaView
      * @group module
      */
     public function testIsText() : void
@@ -236,7 +236,7 @@ final class MediaViewTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @covers Modules\Media\Views\MediaView
+     * @covers \Modules\Media\Views\MediaView
      * @group module
      */
     public function testIsVideo() : void
@@ -253,7 +253,7 @@ final class MediaViewTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @covers Modules\Media\Views\MediaView
+     * @covers \Modules\Media\Views\MediaView
      * @group module
      */
     public function testIsAudio() : void

@@ -26,7 +26,7 @@ use Modules\Media\Models\MediaMapper;
 final class MediaMapperTest extends \PHPUnit\Framework\TestCase
 {
     /**
-     * @covers Modules\Media\Models\MediaMapper
+     * @covers \Modules\Media\Models\MediaMapper
      * @group module
      */
     public function testCR() : void
@@ -57,7 +57,7 @@ final class MediaMapperTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @covers Modules\Media\Models\MediaMapper
+     * @covers \Modules\Media\Models\MediaMapper
      * @group module
      */
     public function testAbsolute() : void
@@ -87,7 +87,7 @@ final class MediaMapperTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @covers Modules\Media\Models\MediaMapper
+     * @covers \Modules\Media\Models\MediaMapper
      * @group module
      */
     public function testDirectoryMapping() : void
@@ -117,7 +117,7 @@ final class MediaMapperTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @covers Modules\Media\Models\MediaMapper
+     * @covers \Modules\Media\Models\MediaMapper
      * @group module
      */
     public function testGetVirtualPath() : void
@@ -149,7 +149,7 @@ final class MediaMapperTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @covers Modules\Media\Models\MediaMapper
+     * @covers \Modules\Media\Models\MediaMapper
      * @group module
      */
     public function testParentcollection() : void

@@ -34,7 +34,7 @@ final class CollectionTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @covers Modules\Media\Models\Collection
+     * @covers \Modules\Media\Models\Collection
      * @group module
      */
     public function testDefault() : void
@@ -53,7 +53,7 @@ final class CollectionTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @covers Modules\Media\Models\Collection
+     * @covers \Modules\Media\Models\Collection
      * @group module
      */
     public function testCreatedByInputOutput() : void
@@ -63,7 +63,7 @@ final class CollectionTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @covers Modules\Media\Models\Collection
+     * @covers \Modules\Media\Models\Collection
      * @group module
      */
     public function testExtensionInputOutput() : void
@@ -73,7 +73,7 @@ final class CollectionTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @covers Modules\Media\Models\Collection
+     * @covers \Modules\Media\Models\Collection
      * @group module
      */
     public function testPathInputOutput() : void
@@ -86,7 +86,7 @@ final class CollectionTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @covers Modules\Media\Models\Collection
+     * @covers \Modules\Media\Models\Collection
      * @group module
      */
     public function testDescriptionInputOutput() : void
@@ -96,7 +96,7 @@ final class CollectionTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @covers Modules\Media\Models\Collection
+     * @covers \Modules\Media\Models\Collection
      * @group module
      */
     public function testSizeInputOutput() : void
@@ -106,7 +106,7 @@ final class CollectionTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @covers Modules\Media\Models\Collection
+     * @covers \Modules\Media\Models\Collection
      * @group module
      */
     public function testVersionedInputOutput() : void
@@ -116,7 +116,7 @@ final class CollectionTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @covers Modules\Media\Models\Collection
+     * @covers \Modules\Media\Models\Collection
      * @group module
      */
     public function testSourceInputOutput() : void
@@ -129,7 +129,7 @@ final class CollectionTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @covers Modules\Media\Models\Collection
+     * @covers \Modules\Media\Models\Collection
      * @group module
      */
     public function testSourceAddInputOutput() : void
@@ -140,7 +140,7 @@ final class CollectionTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @covers Modules\Media\Models\Collection
+     * @covers \Modules\Media\Models\Collection
      * @group module
      */
     public function testIteration() : void

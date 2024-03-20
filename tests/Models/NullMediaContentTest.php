@@ -22,7 +22,7 @@ use Modules\Media\Models\NullMediaContent;
 final class NullMediaContentTest extends \PHPUnit\Framework\TestCase
 {
     /**
-     * @covers Modules\Media\Models\NullMediaContent
+     * @covers \Modules\Media\Models\NullMediaContent
      * @group module
      */
     public function testNull() : void
@@ -31,7 +31,7 @@ final class NullMediaContentTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @covers Modules\Media\Models\NullMediaContent
+     * @covers \Modules\Media\Models\NullMediaContent
      * @group module
      */
     public function testId() : void
@@ -41,7 +41,7 @@ final class NullMediaContentTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @covers Modules\Media\Models\NullMediaContent
+     * @covers \Modules\Media\Models\NullMediaContent
      * @group module
      */
     public function testJsonSerialize() : void

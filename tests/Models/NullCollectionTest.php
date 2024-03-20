@@ -22,7 +22,7 @@ use Modules\Media\Models\NullCollection;
 final class NullCollectionTest extends \PHPUnit\Framework\TestCase
 {
     /**
-     * @covers Modules\Media\Models\NullCollection
+     * @covers \Modules\Media\Models\NullCollection
      * @group module
      */
     public function testNull() : void
@@ -31,7 +31,7 @@ final class NullCollectionTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @covers Modules\Media\Models\NullCollection
+     * @covers \Modules\Media\Models\NullCollection
      * @group module
      */
     public function testId() : void
@@ -41,7 +41,7 @@ final class NullCollectionTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @covers Modules\Media\Models\NullCollection
+     * @covers \Modules\Media\Models\NullCollection
      * @group module
      */
     public function testJsonSerialize() : void

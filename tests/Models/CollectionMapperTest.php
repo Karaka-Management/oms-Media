@@ -24,7 +24,7 @@ use Modules\Media\Models\CollectionMapper;
 final class CollectionMapperTest extends \PHPUnit\Framework\TestCase
 {
     /**
-     * @covers Modules\Media\Models\CollectionMapper
+     * @covers \Modules\Media\Models\CollectionMapper
      * @group module
      */
     public function testCR() : void

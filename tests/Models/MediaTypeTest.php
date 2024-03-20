@@ -33,7 +33,7 @@ final class MediaTypeTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @covers Modules\Media\Models\MediaType
+     * @covers \Modules\Media\Models\MediaType
      * @group module
      */
     public function testDefault() : void
@@ -43,7 +43,7 @@ final class MediaTypeTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @covers Modules\Media\Models\MediaType
+     * @covers \Modules\Media\Models\MediaType
      * @group module
      */
     public function testL11nInputOutput() : void
@@ -56,7 +56,7 @@ final class MediaTypeTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @covers Modules\Media\Models\MediaType
+     * @covers \Modules\Media\Models\MediaType
      * @group module
      */
     public function testSerialize() : void

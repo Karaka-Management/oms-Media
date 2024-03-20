@@ -28,7 +28,7 @@ use phpOMS\Utils\TestUtils;
 trait ApiControllerMediaTrait
 {
     /**
-     * @covers Modules\Media\Controller\ApiController
+     * @covers \Modules\Media\Controller\ApiController
      * @group module
      */
     public function testCreateDbEntries() : void
@@ -76,7 +76,7 @@ trait ApiControllerMediaTrait
     }
 
     /**
-     * @covers Modules\Media\Controller\ApiController
+     * @covers \Modules\Media\Controller\ApiController
      * @group module
      */
     public function testApiMediaUploadRandomPath() : void
@@ -125,7 +125,7 @@ trait ApiControllerMediaTrait
     }
 
     /**
-     * @covers Modules\Media\Controller\ApiController
+     * @covers \Modules\Media\Controller\ApiController
      * @group module
      */
     public function testApiMediaUploadDefinedPath() : void
@@ -179,7 +179,7 @@ trait ApiControllerMediaTrait
     }
 
     /**
-     * @covers Modules\Media\Controller\ApiController
+     * @covers \Modules\Media\Controller\ApiController
      * @group module
      */
     public function testUploadFilesInvalidPathSetting() : void
@@ -197,7 +197,7 @@ trait ApiControllerMediaTrait
     }
 
     /**
-     * @covers Modules\Media\Controller\ApiController
+     * @covers \Modules\Media\Controller\ApiController
      * @group module
      */
     public function testApiMediaUpdate() : void
@@ -262,7 +262,7 @@ trait ApiControllerMediaTrait
     }
 
     /**
-     * @covers Modules\Media\Controller\ApiController
+     * @covers \Modules\Media\Controller\ApiController
      * @group module
      */
     public function testApiMediaCreateWithPath() : void
@@ -285,7 +285,7 @@ trait ApiControllerMediaTrait
     }
 
     /**
-     * @covers Modules\Media\Controller\ApiController
+     * @covers \Modules\Media\Controller\ApiController
      * @group module
      */
     public function testCreateView() : void
@@ -311,7 +311,7 @@ trait ApiControllerMediaTrait
     }
 
     /**
-     * @covers Modules\Media\Controller\ApiController
+     * @covers \Modules\Media\Controller\ApiController
      * @group module
      */
     public function testApiMediaExportHTM() : void
@@ -328,7 +328,7 @@ trait ApiControllerMediaTrait
     }
 
     /**
-     * @covers Modules\Media\Controller\ApiController
+     * @covers \Modules\Media\Controller\ApiController
      * @group module
      */
     public function testApiMediaExportPDF() : void
@@ -345,7 +345,7 @@ trait ApiControllerMediaTrait
     }
 
     /**
-     * @covers Modules\Media\Controller\ApiController
+     * @covers \Modules\Media\Controller\ApiController
      * @group module
      */
     public function testApiMediaExportC() : void
@@ -362,7 +362,7 @@ trait ApiControllerMediaTrait
     }
 
     /**
-     * @covers Modules\Media\Controller\ApiController
+     * @covers \Modules\Media\Controller\ApiController
      * @group module
      */
     public function testApiMediaExportTXT() : void
@@ -379,7 +379,7 @@ trait ApiControllerMediaTrait
     }
 
     /**
-     * @covers Modules\Media\Controller\ApiController
+     * @covers \Modules\Media\Controller\ApiController
      * @group module
      */
     public function testApiMediaExportCSV() : void
@@ -396,7 +396,7 @@ trait ApiControllerMediaTrait
     }
 
     /**
-     * @covers Modules\Media\Controller\ApiController
+     * @covers \Modules\Media\Controller\ApiController
      * @group module
      */
     public function testApiMediaExportXLS() : void
@@ -413,7 +413,7 @@ trait ApiControllerMediaTrait
     }
 
     /**
-     * @covers Modules\Media\Controller\ApiController
+     * @covers \Modules\Media\Controller\ApiController
      * @group module
      */
     public function testApiMediaExportXLSX() : void
@@ -430,7 +430,7 @@ trait ApiControllerMediaTrait
     }
 
     /**
-     * @covers Modules\Media\Controller\ApiController
+     * @covers \Modules\Media\Controller\ApiController
      * @group module
      */
     public function testApiMediaExportDOC() : void
@@ -447,7 +447,7 @@ trait ApiControllerMediaTrait
     }
 
     /**
-     * @covers Modules\Media\Controller\ApiController
+     * @covers \Modules\Media\Controller\ApiController
      * @group module
      */
     public function testApiMediaExportDOCX() : void
@@ -464,7 +464,7 @@ trait ApiControllerMediaTrait
     }
 
     /**
-     * @covers Modules\Media\Controller\ApiController
+     * @covers \Modules\Media\Controller\ApiController
      * @group module
      */
     public function testApiMediaExportPPT() : void
@@ -481,7 +481,7 @@ trait ApiControllerMediaTrait
     }
 
     /**
-     * @covers Modules\Media\Controller\ApiController
+     * @covers \Modules\Media\Controller\ApiController
      * @group module
      */
     public function testApiMediaExportPPTX() : void
@@ -498,7 +498,7 @@ trait ApiControllerMediaTrait
     }
 
     /**
-     * @covers Modules\Media\Controller\ApiController
+     * @covers \Modules\Media\Controller\ApiController
      * @group module
      */
     public function testApiMediaExportJPG() : void
@@ -515,7 +515,7 @@ trait ApiControllerMediaTrait
     }
 
     /**
-     * @covers Modules\Media\Controller\ApiController
+     * @covers \Modules\Media\Controller\ApiController
      * @group module
      */
     public function testApiMediaExportGIF() : void
@@ -532,7 +532,7 @@ trait ApiControllerMediaTrait
     }
 
     /**
-     * @covers Modules\Media\Controller\ApiController
+     * @covers \Modules\Media\Controller\ApiController
      * @group module
      */
     public function testApiMediaExportPNG() : void
@@ -549,7 +549,7 @@ trait ApiControllerMediaTrait
     }
 
     /**
-     * @covers Modules\Media\Controller\ApiController
+     * @covers \Modules\Media\Controller\ApiController
      * @group module
      */
     public function testApiMediaExportMP3() : void
@@ -566,7 +566,7 @@ trait ApiControllerMediaTrait
     }
 
     /**
-     * @covers Modules\Media\Controller\ApiController
+     * @covers \Modules\Media\Controller\ApiController
      * @group module
      */
     public function testApiMediaExportMP4() : void
@@ -583,7 +583,7 @@ trait ApiControllerMediaTrait
     }
 
     /**
-     * @covers Modules\Media\Controller\ApiController
+     * @covers \Modules\Media\Controller\ApiController
      * @group module
      */
     public function testApiMediaExportMPEG() : void
@@ -600,7 +600,7 @@ trait ApiControllerMediaTrait
     }
 
     /**
-     * @covers Modules\Media\Controller\ApiController
+     * @covers \Modules\Media\Controller\ApiController
      * @group module
      */
     public function testApiMediaExportBIN() : void

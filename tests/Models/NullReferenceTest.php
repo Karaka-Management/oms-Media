@@ -22,7 +22,7 @@ use Modules\Media\Models\NullReference;
 final class NullReferenceTest extends \PHPUnit\Framework\TestCase
 {
     /**
-     * @covers Modules\Media\Models\NullReference
+     * @covers \Modules\Media\Models\NullReference
      * @group module
      */
     public function testNull() : void
@@ -31,7 +31,7 @@ final class NullReferenceTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @covers Modules\Media\Models\NullReference
+     * @covers \Modules\Media\Models\NullReference
      * @group module
      */
     public function testId() : void
@@ -41,7 +41,7 @@ final class NullReferenceTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @covers Modules\Media\Models\NullReference
+     * @covers \Modules\Media\Models\NullReference
      * @group module
      */
     public function testJsonSerialize() : void
