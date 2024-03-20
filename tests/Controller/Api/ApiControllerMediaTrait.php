@@ -29,8 +29,8 @@ trait ApiControllerMediaTrait
 {
     /**
      * @covers \Modules\Media\Controller\ApiController
-     * @group module
      */
+    #[\PHPUnit\Framework\Attributes\Group('module')]
     public function testCreateDbEntries() : void
     {
         $status = [
@@ -77,8 +77,8 @@ trait ApiControllerMediaTrait
 
     /**
      * @covers \Modules\Media\Controller\ApiController
-     * @group module
      */
+    #[\PHPUnit\Framework\Attributes\Group('module')]
     public function testApiMediaUploadRandomPath() : void
     {
         $response = new HttpResponse();
@@ -126,8 +126,8 @@ trait ApiControllerMediaTrait
 
     /**
      * @covers \Modules\Media\Controller\ApiController
-     * @group module
      */
+    #[\PHPUnit\Framework\Attributes\Group('module')]
     public function testApiMediaUploadDefinedPath() : void
     {
         $response = new HttpResponse();
@@ -180,8 +180,8 @@ trait ApiControllerMediaTrait
 
     /**
      * @covers \Modules\Media\Controller\ApiController
-     * @group module
      */
+    #[\PHPUnit\Framework\Attributes\Group('module')]
     public function testUploadFilesInvalidPathSetting() : void
     {
         self::assertEquals(
@@ -198,8 +198,8 @@ trait ApiControllerMediaTrait
 
     /**
      * @covers \Modules\Media\Controller\ApiController
-     * @group module
      */
+    #[\PHPUnit\Framework\Attributes\Group('module')]
     public function testApiMediaUpdate() : void
     {
         $response = new HttpResponse();
@@ -263,8 +263,8 @@ trait ApiControllerMediaTrait
 
     /**
      * @covers \Modules\Media\Controller\ApiController
-     * @group module
      */
+    #[\PHPUnit\Framework\Attributes\Group('module')]
     public function testApiMediaCreateWithPath() : void
     {
         $response = new HttpResponse();
@@ -286,8 +286,8 @@ trait ApiControllerMediaTrait
 
     /**
      * @covers \Modules\Media\Controller\ApiController
-     * @group module
      */
+    #[\PHPUnit\Framework\Attributes\Group('module')]
     public function testCreateView() : void
     {
         $media = new Media();
@@ -312,8 +312,8 @@ trait ApiControllerMediaTrait
 
     /**
      * @covers \Modules\Media\Controller\ApiController
-     * @group module
      */
+    #[\PHPUnit\Framework\Attributes\Group('module')]
     public function testApiMediaExportHTM() : void
     {
         $response = new HttpResponse();
@@ -329,8 +329,8 @@ trait ApiControllerMediaTrait
 
     /**
      * @covers \Modules\Media\Controller\ApiController
-     * @group module
      */
+    #[\PHPUnit\Framework\Attributes\Group('module')]
     public function testApiMediaExportPDF() : void
     {
         $response = new HttpResponse();
@@ -346,8 +346,8 @@ trait ApiControllerMediaTrait
 
     /**
      * @covers \Modules\Media\Controller\ApiController
-     * @group module
      */
+    #[\PHPUnit\Framework\Attributes\Group('module')]
     public function testApiMediaExportC() : void
     {
         $response = new HttpResponse();
@@ -363,8 +363,8 @@ trait ApiControllerMediaTrait
 
     /**
      * @covers \Modules\Media\Controller\ApiController
-     * @group module
      */
+    #[\PHPUnit\Framework\Attributes\Group('module')]
     public function testApiMediaExportTXT() : void
     {
         $response = new HttpResponse();
@@ -380,8 +380,8 @@ trait ApiControllerMediaTrait
 
     /**
      * @covers \Modules\Media\Controller\ApiController
-     * @group module
      */
+    #[\PHPUnit\Framework\Attributes\Group('module')]
     public function testApiMediaExportCSV() : void
     {
         $response = new HttpResponse();
@@ -397,8 +397,8 @@ trait ApiControllerMediaTrait
 
     /**
      * @covers \Modules\Media\Controller\ApiController
-     * @group module
      */
+    #[\PHPUnit\Framework\Attributes\Group('module')]
     public function testApiMediaExportXLS() : void
     {
         $response = new HttpResponse();
@@ -414,8 +414,8 @@ trait ApiControllerMediaTrait
 
     /**
      * @covers \Modules\Media\Controller\ApiController
-     * @group module
      */
+    #[\PHPUnit\Framework\Attributes\Group('module')]
     public function testApiMediaExportXLSX() : void
     {
         $response = new HttpResponse();
@@ -431,8 +431,8 @@ trait ApiControllerMediaTrait
 
     /**
      * @covers \Modules\Media\Controller\ApiController
-     * @group module
      */
+    #[\PHPUnit\Framework\Attributes\Group('module')]
     public function testApiMediaExportDOC() : void
     {
         $response = new HttpResponse();
@@ -448,8 +448,8 @@ trait ApiControllerMediaTrait
 
     /**
      * @covers \Modules\Media\Controller\ApiController
-     * @group module
      */
+    #[\PHPUnit\Framework\Attributes\Group('module')]
     public function testApiMediaExportDOCX() : void
     {
         $response = new HttpResponse();
@@ -465,8 +465,8 @@ trait ApiControllerMediaTrait
 
     /**
      * @covers \Modules\Media\Controller\ApiController
-     * @group module
      */
+    #[\PHPUnit\Framework\Attributes\Group('module')]
     public function testApiMediaExportPPT() : void
     {
         $response = new HttpResponse();
@@ -482,8 +482,8 @@ trait ApiControllerMediaTrait
 
     /**
      * @covers \Modules\Media\Controller\ApiController
-     * @group module
      */
+    #[\PHPUnit\Framework\Attributes\Group('module')]
     public function testApiMediaExportPPTX() : void
     {
         $response = new HttpResponse();
@@ -499,8 +499,8 @@ trait ApiControllerMediaTrait
 
     /**
      * @covers \Modules\Media\Controller\ApiController
-     * @group module
      */
+    #[\PHPUnit\Framework\Attributes\Group('module')]
     public function testApiMediaExportJPG() : void
     {
         $response = new HttpResponse();
@@ -516,8 +516,8 @@ trait ApiControllerMediaTrait
 
     /**
      * @covers \Modules\Media\Controller\ApiController
-     * @group module
      */
+    #[\PHPUnit\Framework\Attributes\Group('module')]
     public function testApiMediaExportGIF() : void
     {
         $response = new HttpResponse();
@@ -533,8 +533,8 @@ trait ApiControllerMediaTrait
 
     /**
      * @covers \Modules\Media\Controller\ApiController
-     * @group module
      */
+    #[\PHPUnit\Framework\Attributes\Group('module')]
     public function testApiMediaExportPNG() : void
     {
         $response = new HttpResponse();
@@ -550,8 +550,8 @@ trait ApiControllerMediaTrait
 
     /**
      * @covers \Modules\Media\Controller\ApiController
-     * @group module
      */
+    #[\PHPUnit\Framework\Attributes\Group('module')]
     public function testApiMediaExportMP3() : void
     {
         $response = new HttpResponse();
@@ -567,8 +567,8 @@ trait ApiControllerMediaTrait
 
     /**
      * @covers \Modules\Media\Controller\ApiController
-     * @group module
      */
+    #[\PHPUnit\Framework\Attributes\Group('module')]
     public function testApiMediaExportMP4() : void
     {
         $response = new HttpResponse();
@@ -584,8 +584,8 @@ trait ApiControllerMediaTrait
 
     /**
      * @covers \Modules\Media\Controller\ApiController
-     * @group module
      */
+    #[\PHPUnit\Framework\Attributes\Group('module')]
     public function testApiMediaExportMPEG() : void
     {
         $response = new HttpResponse();
@@ -601,8 +601,8 @@ trait ApiControllerMediaTrait
 
     /**
      * @covers \Modules\Media\Controller\ApiController
-     * @group module
      */
+    #[\PHPUnit\Framework\Attributes\Group('module')]
     public function testApiMediaExportBIN() : void
     {
         $response = new HttpResponse();

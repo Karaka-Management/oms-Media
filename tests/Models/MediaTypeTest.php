@@ -20,6 +20,7 @@ use phpOMS\Localization\BaseStringL11n;
 /**
  * @internal
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\Modules\Media\Models\MediaType::class)]
 final class MediaTypeTest extends \PHPUnit\Framework\TestCase
 {
     private MediaType $type;
@@ -32,20 +33,14 @@ final class MediaTypeTest extends \PHPUnit\Framework\TestCase
         $this->type = new MediaType();
     }
 
-    /**
-     * @covers \Modules\Media\Models\MediaType
-     * @group module
-     */
+    #[\PHPUnit\Framework\Attributes\Group('module')]
     public function testDefault() : void
     {
         self::assertEquals(0, $this->type->id);
         self::assertEquals('', $this->type->name);
     }
 
-    /**
-     * @covers \Modules\Media\Models\MediaType
-     * @group module
-     */
+    #[\PHPUnit\Framework\Attributes\Group('module')]
     public function testL11nInputOutput() : void
     {
         $this->type->setL11n('Test1');
@@ -55,10 +50,7 @@ final class MediaTypeTest extends \PHPUnit\Framework\TestCase
         self::assertEquals('Test2', $this->type->getL11n());
     }
 
-    /**
-     * @covers \Modules\Media\Models\MediaType
-     * @group module
-     */
+    #[\PHPUnit\Framework\Attributes\Group('module')]
     public function testSerialize() : void
     {
         $this->type->name = 'Name';

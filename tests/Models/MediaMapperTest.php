@@ -23,12 +23,10 @@ use Modules\Media\Models\MediaMapper;
 /**
  * @internal
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\Modules\Media\Models\MediaMapper::class)]
 final class MediaMapperTest extends \PHPUnit\Framework\TestCase
 {
-    /**
-     * @covers \Modules\Media\Models\MediaMapper
-     * @group module
-     */
+    #[\PHPUnit\Framework\Attributes\Group('module')]
     public function testCR() : void
     {
         $media                 = new Media();
@@ -56,10 +54,7 @@ final class MediaMapperTest extends \PHPUnit\Framework\TestCase
         self::assertEquals($media->name, $mediaR->name);
     }
 
-    /**
-     * @covers \Modules\Media\Models\MediaMapper
-     * @group module
-     */
+    #[\PHPUnit\Framework\Attributes\Group('module')]
     public function testAbsolute() : void
     {
         $media              = new Media();
@@ -86,10 +81,7 @@ final class MediaMapperTest extends \PHPUnit\Framework\TestCase
         self::assertEquals($media->name, $mediaR->name);
     }
 
-    /**
-     * @covers \Modules\Media\Models\MediaMapper
-     * @group module
-     */
+    #[\PHPUnit\Framework\Attributes\Group('module')]
     public function testDirectoryMapping() : void
     {
         $media              = new Media();
@@ -116,10 +108,7 @@ final class MediaMapperTest extends \PHPUnit\Framework\TestCase
         self::assertEquals($media->name, $mediaR->name);
     }
 
-    /**
-     * @covers \Modules\Media\Models\MediaMapper
-     * @group module
-     */
+    #[\PHPUnit\Framework\Attributes\Group('module')]
     public function testGetVirtualPath() : void
     {
         $media              = new Media();
@@ -148,10 +137,7 @@ final class MediaMapperTest extends \PHPUnit\Framework\TestCase
         self::assertEquals($media->name, $mediaR->name);
     }
 
-    /**
-     * @covers \Modules\Media\Models\MediaMapper
-     * @group module
-     */
+    #[\PHPUnit\Framework\Attributes\Group('module')]
     public function testParentcollection() : void
     {
         $collection                 = new Collection();

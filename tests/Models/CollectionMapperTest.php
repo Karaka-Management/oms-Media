@@ -21,12 +21,10 @@ use Modules\Media\Models\CollectionMapper;
 /**
  * @internal
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\Modules\Media\Models\CollectionMapper::class)]
 final class CollectionMapperTest extends \PHPUnit\Framework\TestCase
 {
-    /**
-     * @covers \Modules\Media\Models\CollectionMapper
-     * @group module
-     */
+    #[\PHPUnit\Framework\Attributes\Group('module')]
     public function testCR() : void
     {
         $media                 = new Collection();

@@ -20,6 +20,7 @@ use Modules\Media\Views\MediaView;
 /**
  * @internal
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\Modules\Media\Views\MediaView::class)]
 final class MediaViewTest extends \PHPUnit\Framework\TestCase
 {
     protected MediaView $view;
@@ -32,10 +33,7 @@ final class MediaViewTest extends \PHPUnit\Framework\TestCase
         $this->view = new MediaView();
     }
 
-    /**
-     * @covers \Modules\Media\Views\MediaView
-     * @group module
-     */
+    #[\PHPUnit\Framework\Attributes\Group('module')]
     public function testFilePath() : void
     {
         $method = new \ReflectionMethod($this->view, 'filePathFunction');
@@ -56,10 +54,7 @@ final class MediaViewTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    /**
-     * @covers \Modules\Media\Views\MediaView
-     * @group module
-     */
+    #[\PHPUnit\Framework\Attributes\Group('module')]
     public function testDirPath() : void
     {
         $method = new \ReflectionMethod($this->view, 'dirPathFunction');
@@ -80,10 +75,7 @@ final class MediaViewTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    /**
-     * @covers \Modules\Media\Views\MediaView
-     * @group module
-     */
+    #[\PHPUnit\Framework\Attributes\Group('module')]
     public function testIscollection() : void
     {
         $method = new \ReflectionMethod($this->view, 'isCollectionFunction');
@@ -117,10 +109,7 @@ final class MediaViewTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    /**
-     * @covers \Modules\Media\Views\MediaView
-     * @group module
-     */
+    #[\PHPUnit\Framework\Attributes\Group('module')]
     public function testFileContent() : void
     {
         $method = new \ReflectionMethod($this->view, 'getFileContent');
@@ -132,10 +121,7 @@ final class MediaViewTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    /**
-     * @covers \Modules\Media\Views\MediaView
-     * @group module
-     */
+    #[\PHPUnit\Framework\Attributes\Group('module')]
     public function testInvalidFileContentPath() : void
     {
         $method = new \ReflectionMethod($this->view, 'getFileContent');
@@ -147,10 +133,7 @@ final class MediaViewTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    /**
-     * @covers \Modules\Media\Views\MediaView
-     * @group module
-     */
+    #[\PHPUnit\Framework\Attributes\Group('module')]
     public function testFileLineContent() : void
     {
         $method = new \ReflectionMethod($this->view, 'lineContentFunction');
@@ -165,10 +148,7 @@ final class MediaViewTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    /**
-     * @covers \Modules\Media\Views\MediaView
-     * @group module
-     */
+    #[\PHPUnit\Framework\Attributes\Group('module')]
     public function testInvalidFileLineContentPath() : void
     {
         $method = new \ReflectionMethod($this->view, 'lineContentFunction');
@@ -180,10 +160,7 @@ final class MediaViewTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    /**
-     * @covers \Modules\Media\Views\MediaView
-     * @group module
-     */
+    #[\PHPUnit\Framework\Attributes\Group('module')]
     public function testIsImage() : void
     {
         $method = new \ReflectionMethod($this->view, 'isImageFile');
@@ -204,10 +181,7 @@ final class MediaViewTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    /**
-     * @covers \Modules\Media\Views\MediaView
-     * @group module
-     */
+    #[\PHPUnit\Framework\Attributes\Group('module')]
     public function testIsText() : void
     {
         $method = new \ReflectionMethod($this->view, 'isTextFile');
@@ -235,10 +209,7 @@ final class MediaViewTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    /**
-     * @covers \Modules\Media\Views\MediaView
-     * @group module
-     */
+    #[\PHPUnit\Framework\Attributes\Group('module')]
     public function testIsVideo() : void
     {
         $method = new \ReflectionMethod($this->view, 'isVideoFile');
@@ -252,10 +223,7 @@ final class MediaViewTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    /**
-     * @covers \Modules\Media\Views\MediaView
-     * @group module
-     */
+    #[\PHPUnit\Framework\Attributes\Group('module')]
     public function testIsAudio() : void
     {
         $method = new \ReflectionMethod($this->view, 'isAudioFile');

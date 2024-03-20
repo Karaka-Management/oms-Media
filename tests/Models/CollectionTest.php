@@ -21,6 +21,7 @@ use Modules\Media\Models\NullMedia;
 /**
  * @internal
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\Modules\Media\Models\Collection::class)]
 final class CollectionTest extends \PHPUnit\Framework\TestCase
 {
     protected Collection $media;
@@ -33,10 +34,7 @@ final class CollectionTest extends \PHPUnit\Framework\TestCase
         $this->media = new Collection();
     }
 
-    /**
-     * @covers \Modules\Media\Models\Collection
-     * @group module
-     */
+    #[\PHPUnit\Framework\Attributes\Group('module')]
     public function testDefault() : void
     {
         self::assertEquals(0, $this->media->id);
@@ -52,30 +50,21 @@ final class CollectionTest extends \PHPUnit\Framework\TestCase
         self::assertInstanceOf('\Modules\Media\Models\NullMedia', $this->media->getSourceByName('invalid'));
     }
 
-    /**
-     * @covers \Modules\Media\Models\Collection
-     * @group module
-     */
+    #[\PHPUnit\Framework\Attributes\Group('module')]
     public function testCreatedByInputOutput() : void
     {
         $this->media->createdBy = new NullAccount(1);
         self::assertEquals(1, $this->media->createdBy->id);
     }
 
-    /**
-     * @covers \Modules\Media\Models\Collection
-     * @group module
-     */
+    #[\PHPUnit\Framework\Attributes\Group('module')]
     public function testExtensionInputOutput() : void
     {
         $this->media->extension = 'pdf';
         self::assertEquals('pdf', $this->media->extension);
     }
 
-    /**
-     * @covers \Modules\Media\Models\Collection
-     * @group module
-     */
+    #[\PHPUnit\Framework\Attributes\Group('module')]
     public function testPathInputOutput() : void
     {
         $this->media->setPath('/home/root');
@@ -85,40 +74,28 @@ final class CollectionTest extends \PHPUnit\Framework\TestCase
         self::assertEquals('/home/root', $this->media->getPath());
     }
 
-    /**
-     * @covers \Modules\Media\Models\Collection
-     * @group module
-     */
+    #[\PHPUnit\Framework\Attributes\Group('module')]
     public function testDescriptionInputOutput() : void
     {
         $this->media->description = 'This is a description';
         self::assertEquals('This is a description', $this->media->description);
     }
 
-    /**
-     * @covers \Modules\Media\Models\Collection
-     * @group module
-     */
+    #[\PHPUnit\Framework\Attributes\Group('module')]
     public function testSizeInputOutput() : void
     {
         $this->media->size = 11;
         self::assertEquals(11, $this->media->size);
     }
 
-    /**
-     * @covers \Modules\Media\Models\Collection
-     * @group module
-     */
+    #[\PHPUnit\Framework\Attributes\Group('module')]
     public function testVersionedInputOutput() : void
     {
         $this->media->isVersioned = true;
         self::assertTrue($this->media->isVersioned);
     }
 
-    /**
-     * @covers \Modules\Media\Models\Collection
-     * @group module
-     */
+    #[\PHPUnit\Framework\Attributes\Group('module')]
     public function testSourceInputOutput() : void
     {
         $this->media->setSources([$a = new NullMedia(1), $b = new NullMedia(2), $c = new NullMedia(3)]);
@@ -128,10 +105,7 @@ final class CollectionTest extends \PHPUnit\Framework\TestCase
         self::assertEquals($b, $this->media->getSourceByName('test'));
     }
 
-    /**
-     * @covers \Modules\Media\Models\Collection
-     * @group module
-     */
+    #[\PHPUnit\Framework\Attributes\Group('module')]
     public function testSourceAddInputOutput() : void
     {
         $this->media->setSources([$a = new NullMedia(1), $b = new NullMedia(2), $c = new NullMedia(3)]);
@@ -139,10 +113,7 @@ final class CollectionTest extends \PHPUnit\Framework\TestCase
         self::assertEquals([$a, $b, $c, $d], $this->media->getSources());
     }
 
-    /**
-     * @covers \Modules\Media\Models\Collection
-     * @group module
-     */
+    #[\PHPUnit\Framework\Attributes\Group('module')]
     public function testIteration() : void
     {
         $this->media->setSources([$a = new NullMedia(1), $b = new NullMedia(2), $c = new NullMedia(3)]);

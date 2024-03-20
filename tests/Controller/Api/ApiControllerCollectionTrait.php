@@ -28,8 +28,8 @@ trait ApiControllerCollectionTrait
 {
     /**
      * @covers \Modules\Media\Controller\ApiController
-     * @group module
      */
+    #[\PHPUnit\Framework\Attributes\Group('module')]
     public function testApiCollectionCreateWitRandomPath() : void
     {
         $response = new HttpResponse();
@@ -93,8 +93,8 @@ trait ApiControllerCollectionTrait
 
     /**
      * @covers \Modules\Media\Controller\ApiController
-     * @group module
      */
+    #[\PHPUnit\Framework\Attributes\Group('module')]
     public function testApiCollectionCreateInvalid() : void
     {
         $response = new HttpResponse();
@@ -108,8 +108,8 @@ trait ApiControllerCollectionTrait
 
     /**
      * @covers \Modules\Media\Controller\ApiController
-     * @group module
      */
+    #[\PHPUnit\Framework\Attributes\Group('module')]
     public function testApiCollectionCreateWithPath() : void
     {
         $response = new HttpResponse();
@@ -130,8 +130,8 @@ trait ApiControllerCollectionTrait
 
     /**
      * @covers \Modules\Media\Controller\ApiController
-     * @group module
      */
+    #[\PHPUnit\Framework\Attributes\Group('module')]
     public function testApiCollectionFromMedia() : void
     {
         $media                 = new Media();

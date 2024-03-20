@@ -19,31 +19,23 @@ use Modules\Media\Models\NullReference;
 /**
  * @internal
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\Modules\Media\Models\NullReference::class)]
 final class NullReferenceTest extends \PHPUnit\Framework\TestCase
 {
-    /**
-     * @covers \Modules\Media\Models\NullReference
-     * @group module
-     */
+    #[\PHPUnit\Framework\Attributes\Group('module')]
     public function testNull() : void
     {
         self::assertInstanceOf('\Modules\Media\Models\Reference', new NullReference());
     }
 
-    /**
-     * @covers \Modules\Media\Models\NullReference
-     * @group module
-     */
+    #[\PHPUnit\Framework\Attributes\Group('module')]
     public function testId() : void
     {
         $null = new NullReference(2);
         self::assertEquals(2, $null->id);
     }
 
-    /**
-     * @covers \Modules\Media\Models\NullReference
-     * @group module
-     */
+    #[\PHPUnit\Framework\Attributes\Group('module')]
     public function testJsonSerialize() : void
     {
         $null = new NullReference(2);

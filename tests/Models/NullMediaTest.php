@@ -19,31 +19,23 @@ use Modules\Media\Models\NullMedia;
 /**
  * @internal
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\Modules\Media\Models\NullMedia::class)]
 final class NullMediaTest extends \PHPUnit\Framework\TestCase
 {
-    /**
-     * @covers \Modules\Media\Models\NullMedia
-     * @group module
-     */
+    #[\PHPUnit\Framework\Attributes\Group('module')]
     public function testNull() : void
     {
         self::assertInstanceOf('\Modules\Media\Models\Media', new NullMedia());
     }
 
-    /**
-     * @covers \Modules\Media\Models\NullMedia
-     * @group module
-     */
+    #[\PHPUnit\Framework\Attributes\Group('module')]
     public function testId() : void
     {
         $null = new NullMedia(2);
         self::assertEquals(2, $null->id);
     }
 
-    /**
-     * @covers \Modules\Media\Models\NullMedia
-     * @group module
-     */
+    #[\PHPUnit\Framework\Attributes\Group('module')]
     public function testJsonSerialize() : void
     {
         $null = new NullMedia(2);

@@ -19,31 +19,23 @@ use Modules\Media\Models\NullCollection;
 /**
  * @internal
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\Modules\Media\Models\NullCollection::class)]
 final class NullCollectionTest extends \PHPUnit\Framework\TestCase
 {
-    /**
-     * @covers \Modules\Media\Models\NullCollection
-     * @group module
-     */
+    #[\PHPUnit\Framework\Attributes\Group('module')]
     public function testNull() : void
     {
         self::assertInstanceOf('\Modules\Media\Models\Collection', new NullCollection());
     }
 
-    /**
-     * @covers \Modules\Media\Models\NullCollection
-     * @group module
-     */
+    #[\PHPUnit\Framework\Attributes\Group('module')]
     public function testId() : void
     {
         $null = new NullCollection(2);
         self::assertEquals(2, $null->id);
     }
 
-    /**
-     * @covers \Modules\Media\Models\NullCollection
-     * @group module
-     */
+    #[\PHPUnit\Framework\Attributes\Group('module')]
     public function testJsonSerialize() : void
     {
         $null = new NullCollection(2);

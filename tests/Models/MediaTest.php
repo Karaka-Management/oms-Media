@@ -21,6 +21,7 @@ use Modules\Media\Models\MediaStatus;
 /**
  * @internal
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\Modules\Media\Models\Media::class)]
 final class MediaTest extends \PHPUnit\Framework\TestCase
 {
     protected Media $media;
@@ -33,10 +34,7 @@ final class MediaTest extends \PHPUnit\Framework\TestCase
         $this->media = new Media();
     }
 
-    /**
-     * @covers \Modules\Media\Models\Media
-     * @group module
-     */
+    #[\PHPUnit\Framework\Attributes\Group('module')]
     public function testDefault() : void
     {
         self::assertEquals(0, $this->media->id);
@@ -53,30 +51,21 @@ final class MediaTest extends \PHPUnit\Framework\TestCase
         self::assertFalse($this->media->isVersioned);
     }
 
-    /**
-     * @covers \Modules\Media\Models\Media
-     * @group module
-     */
+    #[\PHPUnit\Framework\Attributes\Group('module')]
     public function testCreatedByInputOutput() : void
     {
         $this->media->createdBy = new NullAccount(1);
         self::assertEquals(1, $this->media->createdBy->id);
     }
 
-    /**
-     * @covers \Modules\Media\Models\Media
-     * @group module
-     */
+    #[\PHPUnit\Framework\Attributes\Group('module')]
     public function testExtensionInputOutput() : void
     {
         $this->media->extension = 'pdf';
         self::assertEquals('pdf', $this->media->extension);
     }
 
-    /**
-     * @covers \Modules\Media\Models\Media
-     * @group module
-     */
+    #[\PHPUnit\Framework\Attributes\Group('module')]
     public function testPathInputOutput() : void
     {
         $this->media->setPath('/home/root');
@@ -86,90 +75,63 @@ final class MediaTest extends \PHPUnit\Framework\TestCase
         self::assertEquals('/home/root', $this->media->getPath());
     }
 
-    /**
-     * @covers \Modules\Media\Models\Media
-     * @group module
-     */
+    #[\PHPUnit\Framework\Attributes\Group('module')]
     public function testAbsolutePathInputOutput() : void
     {
         $this->media->isAbsolute = true;
         self::assertTrue($this->media->isAbsolute);
     }
 
-    /**
-     * @covers \Modules\Media\Models\Media
-     * @group module
-     */
+    #[\PHPUnit\Framework\Attributes\Group('module')]
     public function testNameInputOutput() : void
     {
         $this->media->name = 'Report';
         self::assertEquals('Report', $this->media->name);
     }
 
-    /**
-     * @covers \Modules\Media\Models\Media
-     * @group module
-     */
+    #[\PHPUnit\Framework\Attributes\Group('module')]
     public function testDescriptionInputOutput() : void
     {
         $this->media->description = 'This is a description';
         self::assertEquals('This is a description', $this->media->description);
     }
 
-    /**
-     * @covers \Modules\Media\Models\Media
-     * @group module
-     */
+    #[\PHPUnit\Framework\Attributes\Group('module')]
     public function testDescriptionRawInputOutput() : void
     {
         $this->media->descriptionRaw = 'This is a description raw';
         self::assertEquals('This is a description raw', $this->media->descriptionRaw);
     }
 
-    /**
-     * @covers \Modules\Media\Models\Media
-     * @group module
-     */
+    #[\PHPUnit\Framework\Attributes\Group('module')]
     public function testSizeInputOutput() : void
     {
         $this->media->size = 11;
         self::assertEquals(11, $this->media->size);
     }
 
-    /**
-     * @covers \Modules\Media\Models\Media
-     * @group module
-     */
+    #[\PHPUnit\Framework\Attributes\Group('module')]
     public function testVersionedInputOutput() : void
     {
         $this->media->isVersioned = true;
         self::assertTrue($this->media->isVersioned);
     }
 
-    /**
-     * @covers \Modules\Media\Models\Media
-     * @group module
-     */
+    #[\PHPUnit\Framework\Attributes\Group('module')]
     public function testVirtualPathInputOutput() : void
     {
         $this->media->setVirtualPath('/test/path');
         self::assertEquals('/test/path', $this->media->getVirtualPath());
     }
 
-    /**
-     * @covers \Modules\Media\Models\Media
-     * @group module
-     */
+    #[\PHPUnit\Framework\Attributes\Group('module')]
     public function testHiddenInputOutput() : void
     {
         $this->media->status = MediaStatus::HIDDEN;
         self::assertEquals(MediaStatus::HIDDEN, $this->media->status);
     }
 
-    /**
-     * @covers \Modules\Media\Models\Media
-     * @group module
-     */
+    #[\PHPUnit\Framework\Attributes\Group('module')]
     public function testPasswordInputOutput() : void
     {
         $this->media->setPassword('test');
@@ -177,10 +139,7 @@ final class MediaTest extends \PHPUnit\Framework\TestCase
         self::assertFalse($this->media->comparePassword('test2'));
     }
 
-    /**
-     * @covers \Modules\Media\Models\Media
-     * @group module
-     */
+    #[\PHPUnit\Framework\Attributes\Group('module')]
     public function testSerialize() : void
     {
         $this->media->createdBy = $acc = new NullAccount(1);
