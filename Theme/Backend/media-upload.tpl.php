@@ -29,7 +29,7 @@ use phpOMS\Uri\UriFactory;
 
 <div class="row">
     <div class="col-xs-12 col-md-6">
-        <form method="PUT" id="media-uploader" action="<?= UriFactory::build('{/api}media'); ?>">
+        <form method="PUT" id="media-uploader" action="<?= UriFactory::build('{/api}media?csrf={$CSRF}'); ?>">
             <div class="portlet">
                 <div class="portlet-head"><?= $this->getHtml('Upload'); ?></div>
                 <div class="portlet-body">

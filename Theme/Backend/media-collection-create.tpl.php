@@ -22,14 +22,14 @@ use phpOMS\Uri\UriFactory;
 <div class="row">
     <div class="col-xs-12">
         <div class="box">
-            <a tabindex="0" class="button" href="<?= UriFactory::build('{/base}/media/list?path={?path}'); ?>"><?= $this->getHtml('Back', '0', '0'); ?></a>
+            <a tabindex="0" class="button" href="<?= UriFactory::build('{/base}/media/list?path={?path}&csrf={$CSRF}'); ?>"><?= $this->getHtml('Back', '0', '0'); ?></a>
         </div>
     </div>
 </div>
 
 <div class="row">
     <div class="col-xs-12 col-md-6">
-        <form method="PUT" id="media-uploader" action="<?= UriFactory::build('{/api}media/collection'); ?>">
+        <form method="PUT" id="media-uploader" action="<?= UriFactory::build('{/api}media/collection?csrf={$CSRF}'); ?>">
             <div class="portlet">
                 <div class="portlet-head"><?= $this->getHtml('CreateCollection'); ?></div>
                 <div class="portlet-body">

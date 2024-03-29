@@ -99,7 +99,7 @@ use phpOMS\Uri\UriFactory;
                                         <input id="iFile-<?= $file->id; ?>" type="radio" name="media_file" value="<?= $file->id; ?>"<?= \end($this->files)->id === $file->id ? ' checked' : ''; ?>>
                                         <span class="checkmark"></span>
                                     </label>
-                                <td data-tpl-text="/id" data-tpl-value="/id" data-value=""><?= $this->printHtml((string) $file->id); ?></td>
+                                <td data-tpl-text="/id" data-tpl-value="/id" data-value=""><?= $file->id; ?></td>
                                 <td data-tpl-text="/name" data-tpl-value="/name" data-value=""><?= $this->printHtml($file->name); ?></td>
                                 <td><a href="<?= $url; ?>"><i class="g-icon">attachment</i></a>
                         <?php endforeach; ?>

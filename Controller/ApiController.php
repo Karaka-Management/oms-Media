@@ -1015,7 +1015,7 @@ final class ApiController extends Controller
             $childCollection->setVirtualPath('/'. \ltrim($virtual, '/'));
 
             // We assume that the new path is real path of the first found parent directory + the new virtual path
-            $childCollection->setPath($real . '/' . \ltrim($newVirtual, '/'));
+            $childCollection->setPath(\rtrim($real, '/') . '/' . \ltrim($newVirtual, '/'));
 
             $this->createModel($account, $childCollection, CollectionMapper::class, 'collection', '127.0.0.1');
             $this->createModelRelation(

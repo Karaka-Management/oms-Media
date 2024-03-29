@@ -18,7 +18,7 @@ use phpOMS\Uri\UriFactory;
 
 <section id="mediaFile" class="portlet">
     <div class="portlet-body">
-        <form id="mediaPassword" method="GET" action="<?= UriFactory::build('{%}'); ?>">
+        <form id="mediaPassword" method="GET" action="<?= UriFactory::build('{%}&csrf={$CSRF}'); ?>">
             <div class="form-group">
                 <label for="iPassword"><?= $this->getHtml('Password'); ?></label>
                 <input id="iPassword" type="password" name="password">

@@ -190,8 +190,12 @@ class MediaMapper extends DataMapperFactory
      */
     public static function getParentCollection(string $path = '/') : ReadMapper
     {
-        $virtualPath = '/' . \trim(\substr($path, 0, \strripos($path, '/') + 1), '/');
-        $name        = \substr($path, \strripos($path, '/') + 1);
+        $path = \dirname($path);
+        $name = \basename($path);
+        $virtualPath = '/' . \trim(\dirname($path), '/');
+
+        //$virtualPath = '/' . \trim(\substr($path, 0, \strripos($path, '/') + 1), '/');
+        //$name        = \substr($path, \strripos($path, '/') + 1);
 
         return CollectionMapper::get()
             ->with('sources')
