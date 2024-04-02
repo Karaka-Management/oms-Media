@@ -62,7 +62,7 @@ final class SearchController extends Controller
             ->where('tags/title/content', $pattern)
             ->sort('createdAt', OrderType::DESC)
             ->limit(8)
-            ->execute();
+            ->executeGetArray();
 
         $results = [];
         foreach ($media as $file) {
@@ -111,7 +111,7 @@ final class SearchController extends Controller
             ->where('tags/title/language', $response->header->l11n->language)
             ->sort('createdAt', OrderType::DESC)
             ->limit(8)
-            ->execute();
+            ->executeGetArray();
 
         $results = [];
         foreach ($media as $file) {

@@ -385,10 +385,10 @@ final class BackendController extends Controller
 
         $id = $request->getDataString('id') ?? '';
 
-        $settings               = SettingMapper::getAll()->where('module', $id)->execute();
+        $settings               = SettingMapper::getAll()->where('module', $id)->executeGetArray();
         $view->data['settings'] = $settings;
 
-        $types               = MediaTypeMapper::getAll()->with('title')->where('title/language', $response->header->l11n->language)->execute();
+        $types               = MediaTypeMapper::getAll()->with('title')->where('title/language', $response->header->l11n->language)->executeGetArray();
         $view->data['types'] = $types;
 
         $view->setTemplate('/Modules/' . static::NAME . '/Admin/Settings/Theme/Backend/settings');
@@ -423,7 +423,7 @@ final class BackendController extends Controller
         $view->data['nav']  = $this->app->moduleManager->get('Navigation')->createNavigationMid(1007501001, $request, $response);
         $view->data['type'] = $type;
 
-        $l11n               = MediaTypeL11nMapper::getAll()->where('type', $type->id)->execute();
+        $l11n               = MediaTypeL11nMapper::getAll()->where('type', $type->id)->executeGetArray();
         $view->data['l11n'] = $l11n;
 
         return $view;

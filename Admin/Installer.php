@@ -68,7 +68,7 @@ final class Installer extends InstallerAbstract
         // Because of this, the directory needs to be created manually after the Media installation
         // The admin account should be the only DB account, but we use a loop of all accounts to avoid bugs
         /** @var \Modules\Admin\Models\Account[] $accounts */
-        $accounts = AccountMapper::getAll()->execute();
+        $accounts = AccountMapper::getAll()->executeGetArray();
 
         foreach ($accounts as $account) {
             $collection       = new Collection();

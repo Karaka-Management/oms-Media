@@ -60,7 +60,7 @@ use phpOMS\Uri\UriFactory;
                 <div class="portlet-foot">
                     <input type="submit" id="iMediaCreate" name="mediaCreateButton" value="<?= $this->getHtml('Create', '0', '0'); ?>">
                 </div>
-            </form>
-        </div>
+            </div>
+        </form>
     </div>
 </div>

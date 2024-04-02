@@ -106,7 +106,7 @@ echo $this->data['nav']->render();
                                 </span>
                             <?php endforeach; ?>
                         <tr><td colspan="2"><?= $this->getHtml('Description'); ?>
-                        <tr><td colspan="2"><?= $media->description; ?>
+                        <tr><td colspan="2"><?= $this->printHtml($media->description); ?>
                 </table>
             </div>
             <div id="iMediaFileUpdate" class="portlet-foot"

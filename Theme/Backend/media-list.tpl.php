@@ -30,8 +30,8 @@ $media = $this->data['media'] ?? [];
 $account    = $this->data['account'];
 $accountDir = $account->id . ' ' . $account->login;
 
-$previous = empty($media) ? '{/base}/media/list' : '{/base}/media/list?{?}&id=' . \reset($media)->id . '&ptype=p';
-$next     = empty($media) ? '{/base}/media/list' : '{/base}/media/list?{?}&id=' . \end($media)->id . '&ptype=n';
+$previous = empty($media) ? '{/base}/media/list' : '{/base}/media/list?{?}&offset=' . \reset($media)->id . '&ptype=p';
+$next     = empty($media) ? '{/base}/media/list' : '{/base}/media/list?{?}&offset=' . \end($media)->id . '&ptype=n';
 ?>
 
 <div class="row">
