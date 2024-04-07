@@ -22,6 +22,7 @@ return [
         [
             'dest'       => '\Modules\Media\Controller\BackendController:viewMediaTypeSettings',
             'verb'       => RouteVerb::GET,
+            'active' => true,
             'permission' => [
                 'module' => BackendController::NAME,
                 'type'   => PermissionType::READ,
@@ -33,6 +34,7 @@ return [
         [
             'dest'       => '\Modules\Media\Controller\BackendController:viewMediaList',
             'verb'       => RouteVerb::GET,
+            'active' => true,
             'permission' => [
                 'module' => BackendController::NAME,
                 'type'   => PermissionType::READ,
@@ -44,6 +46,7 @@ return [
         [
             'dest'       => '\Modules\Media\Controller\BackendController:viewMediaUpload',
             'verb'       => RouteVerb::GET,
+            'active' => true,
             'permission' => [
                 'module' => BackendController::NAME,
                 'type'   => PermissionType::CREATE,
@@ -55,6 +58,7 @@ return [
         [
             'dest'       => '\Modules\Media\Controller\BackendController:viewMediaFileCreate',
             'verb'       => RouteVerb::GET,
+            'active' => true,
             'permission' => [
                 'module' => BackendController::NAME,
                 'type'   => PermissionType::CREATE,
@@ -66,6 +70,7 @@ return [
         [
             'dest'       => '\Modules\Media\Controller\BackendController:viewMediaCollectionCreate',
             'verb'       => RouteVerb::GET,
+            'active' => true,
             'permission' => [
                 'module' => BackendController::NAME,
                 'type'   => PermissionType::CREATE,
@@ -77,6 +82,7 @@ return [
         [
             'dest'       => '\Modules\Media\Controller\BackendController:viewMediaView',
             'verb'       => RouteVerb::GET,
+            'active' => true,
             'permission' => [
                 'module' => BackendController::NAME,
                 'type'   => PermissionType::READ,

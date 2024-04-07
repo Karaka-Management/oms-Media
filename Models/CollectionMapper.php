@@ -18,7 +18,7 @@ use Modules\Admin\Models\Account;
 use phpOMS\DataStorage\Database\Mapper\ReadMapper;
 
 /**
- * Mapper class.
+ * Collection mapper class.
  *
  * @package Modules\Media\Models
  * @license OMS License 2.0

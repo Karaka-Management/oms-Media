@@ -15,7 +15,7 @@ declare(strict_types=1);
 namespace Modules\Media\Models;
 
 /**
- * Mapper class.
+ * Reference mapper class.
  *
  * @package Modules\Media\Models
  * @license OMS License 2.0

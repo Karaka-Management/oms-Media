@@ -23,6 +23,7 @@ return [
             'dest'       => '\Modules\Media\Controller\ApiController:apiMediaUpload',
             'verb'       => RouteVerb::PUT,
             'csrf'       => true,
+            'active' => true,
             'permission' => [
                 'module' => ApiController::NAME,
                 'type'   => PermissionType::CREATE,
@@ -33,6 +34,7 @@ return [
             'dest'       => '\Modules\Media\Controller\ApiController:apiMediaUpdate',
             'verb'       => RouteVerb::SET,
             'csrf'       => true,
+            'active' => true,
             'permission' => [
                 'module' => ApiController::NAME,
                 'type'   => PermissionType::CREATE,
@@ -45,6 +47,7 @@ return [
             'dest'       => '\Modules\Media\Controller\ApiController:apiMediaCreate',
             'verb'       => RouteVerb::PUT,
             'csrf'       => true,
+            'active' => true,
             'permission' => [
                 'module' => ApiController::NAME,
                 'type'   => PermissionType::CREATE,
@@ -57,6 +60,7 @@ return [
             'dest'       => '\Modules\Media\Controller\ApiController:apiMediaExport',
             'verb'       => RouteVerb::GET,
             'csrf'       => true,
+            'active' => true,
             'permission' => [
                 'module' => ApiController::NAME,
                 'type'   => PermissionType::READ,
@@ -69,6 +73,7 @@ return [
             'dest'       => '\Modules\Media\Controller\ApiController:apiCollectionCreate',
             'verb'       => RouteVerb::PUT,
             'csrf'       => true,
+            'active' => true,
             'permission' => [
                 'module' => ApiController::NAME,
                 'type'   => PermissionType::CREATE,

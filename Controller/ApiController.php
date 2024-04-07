@@ -68,7 +68,7 @@ use phpOMS\Views\View;
 final class ApiController extends Controller
 {
     /**
-     * Api method to create tag
+     * Api method to create email from media
      *
      * @param RequestAbstract  $request  Request
      * @param ResponseAbstract $response Response
@@ -1560,7 +1560,7 @@ final class ApiController extends Controller
     }
 
     /**
-     * Api method to create tag localization
+     * Api method to create media type localization
      *
      * @param RequestAbstract  $request  Request
      * @param ResponseAbstract $response Response
@@ -1587,7 +1587,7 @@ final class ApiController extends Controller
     }
 
     /**
-     * Method to create tag localization from request.
+     * Method to create media type localization from request.
      *
      * @param RequestAbstract $request Request
      *
