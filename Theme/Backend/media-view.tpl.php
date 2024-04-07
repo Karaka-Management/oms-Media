@@ -98,13 +98,16 @@ echo $this->data['nav']->render();
                         <tr><td><?= $this->getHtml('Creator'); ?><td><a href="<?= UriFactory::build('{/base}/profile/view?for=' . $media->createdBy->id); ?>"><?= $this->printHtml(
                             \ltrim($media->createdBy->name2 . ', ' . $media->createdBy->name1, ', ')
                         ); ?></a>
-                        <tr><td><?= $this->getHtml('Tags'); ?><td>
+                        <tr><td><?= $this->getHtml('Tags'); ?>
+                            <td>
+                            <div class="tag-list">
                             <?php foreach ($media->tags as $tag) : ?>
                                 <span class="tag" style="background: <?= $this->printHtml($tag->color); ?>">
                                     <?= empty($tag->icon) ? '' : '<i class="g-icon">' . $this->printHtml($tag->icon) . '</i>'; ?>
                                     <?= $this->printHtml($tag->getL11n()); ?>
                                 </span>
                             <?php endforeach; ?>
+                            </div>
                         <tr><td colspan="2"><?= $this->getHtml('Description'); ?>
                         <tr><td colspan="2"><?= $this->printHtml($media->description); ?>
                 </table>
