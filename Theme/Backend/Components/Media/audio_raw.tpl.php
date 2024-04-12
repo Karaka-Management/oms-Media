@@ -18,6 +18,6 @@ use phpOMS\Uri\UriFactory;
 <!DOCTYPE html>
 <style>html, body, iframe { margin: 0; padding: 0; border: 0; }</style>
 <audio width="100%" controls>
-    <source src="<?= UriFactory::build('{/api}media/export?id=' . $this->media->id); ?>" type="audio/<?= $this->media->extension; ?>">
+    <source src="<?= UriFactory::build('{/api}media/export?id=' . $this->media->id . '&csrf={$CSRF}'); ?>" type="audio/<?= $this->media->extension; ?>">
     Your browser does not support HTML audio.
 </audio>

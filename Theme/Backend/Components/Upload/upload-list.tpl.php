@@ -76,7 +76,7 @@ use phpOMS\Uri\UriFactory;
                     <tbody
                         id="iMediaInput-tags"
                         class="tags"
-                        data-action='[{"listener": "change", "action": [{"key": 1, "type": "dom.set", "selector": "#iMediaFile", "value": "<?= UriFactory::build('{/api}media/export') . '?id={!#iFiles [name=media_file]:checked}&type=html'; ?>"}]}]'
+                        data-action='[{"listener": "change", "action": [{"key": 1, "type": "dom.set", "selector": "#iMediaFile", "value": "<?= UriFactory::build('{/api}media/export?csrf={$CSRF}') . '&id={!#iFiles [name=media_file]:checked}&type=html'; ?>"}]}]'
                         data-limit="0"
                         data-active="true"
                         data-form="<?= $this->form; ?>"
@@ -116,7 +116,7 @@ use phpOMS\Uri\UriFactory;
         <section id="mediaFile" class="portlet col-simple">
             <div class="portlet-body col-simple">
                 <?php if (!empty($this->files)) : ?>
-                    <iframe class="col-simple" id="iMediaFile" data-src="<?= UriFactory::build('{/api}media/export') . '?id={!#iFiles [name=media_file]:checked}&type=html'; ?>" allowfullscreen></iframe>
+                    <iframe class="col-simple" id="iMediaFile" data-src="<?= UriFactory::build('{/api}media/export?csrf={$CSRF}') . '&id={!#iFiles [name=media_file]:checked}&type=html'; ?>" allowfullscreen></iframe>
                 <?php else : ?>
                     <img width="100%" src="Web/Backend/img/logo_grey.png">
                 <?php endif; ?>

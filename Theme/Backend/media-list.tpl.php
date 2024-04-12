@@ -209,6 +209,7 @@ $next     = empty($media) ? '{/base}/media/list' : '{/base}/media/list?{?}&offse
                         <td data-label="<?= $this->getHtml('Name'); ?>">
                             <a href="<?= $url; ?>"><?= $this->printHtml($value->name); ?></a>
                         <td data-label="<?= $this->getHtml('Tag'); ?>">
+                            <div class="tag-list">
                             <?php foreach ($value->tags as $tag) : ?>
                             <a href="<?= $url; ?>">
                                 <span class="tag" style="background: <?= $this->printHtml($tag->color); ?>">
@@ -217,6 +218,7 @@ $next     = empty($media) ? '{/base}/media/list' : '{/base}/media/list?{?}&offse
                                 </span>
                             </a>
                             <?php endforeach; ?>
+                            </div>
                         <td data-label="<?= $this->getHtml('Extension'); ?>">
                             <a href="<?= $url; ?>"><?= $this->printHtml($value->extension); ?></a>
                         <td data-label="<?= $this->getHtml('Size'); ?>"><a href="<?= $url; ?>"><?php
@@ -240,7 +242,7 @@ $next     = empty($media) ? '{/base}/media/list' : '{/base}/media/list?{?}&offse
             <div class="portlet-foot">
                 <a tabindex="0" class="button" href="<?= UriFactory::build($previous); ?>"><?= $this->getHtml('Previous', '0', '0'); ?></a>
                 <a tabindex="0" class="button" href="<?= UriFactory::build($next); ?>"><?= $this->getHtml('Next', '0', '0'); ?></a>
-                <a tabindex="0" class="button rf" href="<?= UriFactory::build('{/api}media/export?path={?path}&type=download'); ?>">
+                <a tabindex="0" class="button rf" href="<?= UriFactory::build('{/api}media/export?path={?path}&csrf={$CSRF}&type=download'); ?>">
                     <?= $this->getHtml('Download'); ?>
                 </a>
             </div>

@@ -29,7 +29,7 @@ Autoloader::addPath(__DIR__ . '/../../../../../../Resources/');
         <div class="tab-content col-simple">
             <input type="radio" id="media-c-tab-1" name="tabular-1" checked>
             <div class="tab col-simple">
-                <iframe class="col-simple" src="<?= UriFactory::build('{/api}media/export?id=' . $this->media->id); ?>&type=html"></iframe>
+                <iframe class="col-simple" src="<?= UriFactory::build('{/api}media/export?id=' . $this->media->id . '&csrf={$CSRF}'); ?>&type=html"></iframe>
             </div>
             <input type="radio" id="media-c-tab-2" name="tabular-1" checked>
             <div class="tab col-simple">

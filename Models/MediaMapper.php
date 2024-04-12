@@ -155,11 +155,11 @@ class MediaMapper extends DataMapperFactory
      * and in fact most of the time it is different. This is because the location on a hard drive or web
      * drive should not have any impact on the media file/media structure in the application.
      *
-     * As a result media files are structured by virutal path in the app, by file path on the file system
+     * As a result media files are structured by virtual path in the app, by file path on the file system
      * and by Collections which can have sub-collections as well. Collections allow to reference files
-     * in a different virtual path and are therfore similar to "symlinks", except that they don't reference
+     * in a different virtual path and are therefore similar to "symlinks", except that they don't reference
      * a file but create a new virtual media model which groups other media models together in a new virtual
-     * path if so desired without deleting or moving the orginal media files.
+     * path if so desired without deleting or moving the original media files.
      *
      * @param string $virtualPath Virtual path
      * @param int    $status      Media status

@@ -121,7 +121,7 @@ echo $this->data['nav']->render();
                 data-uri="<?= UriFactory::build('{/api}media?{?}&csrf={$CSRF}'); ?>">
                 <a tabindex="0"
                     class="button"
-                    href="<?= UriFactory::build('{/api}media/export?id=' . $media->id . '&type=download'); ?>"
+                    href="<?= UriFactory::build('{/api}media/export?id=' . $media->id . '&csrf={$CSRF}&type=download'); ?>"
                 ><?= $this->getHtml('Download'); ?></a>
                 <?php
                     $path = $this->filePathFunction($media, $this->request->getData('sub') ?? '');

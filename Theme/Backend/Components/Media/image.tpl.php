@@ -28,8 +28,8 @@ use phpOMS\Uri\UriFactory;
             <input type="radio" id="media-c-tab-1" name="tabular-1" checked>
             <div class="x-overflow cT">
                 <img alt="<?= $this->printHtml($this->media->name); ?>" style="max-width: 100%; max-height: 100%; align-self: center;" src="<?= $this->media->id !== 0
-                        ? UriFactory::build('{/api}media/export?id=' . $this->media->id)
-                        : UriFactory::build('{/api}media/export?path=' . \urlencode($this->media->getPath()));
+                        ? UriFactory::build('{/api}media/export?id=' . $this->media->id . '&csrf={$CSRF}')
+                        : UriFactory::build('{/api}media/export?path=' . \urlencode($this->media->getPath()) . '&csrf={$CSRF}');
                     ?>">
             </div>
             <?php if (!empty($this->media->content->content)) : ?>

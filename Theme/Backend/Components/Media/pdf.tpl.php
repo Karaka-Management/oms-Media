@@ -26,7 +26,7 @@ use \phpOMS\Uri\UriFactory;
         <div class="tab-content col-simple">
             <input type="radio" id="media-c-tab-1" name="tabular-1" checked>
             <div class="tab col-simple">
-                <iframe class="col-simple" id="iHelperFrame" src="<?= UriFactory::build('Resources/mozilla/Pdf/web/viewer.html?file=' . \urlencode(UriFactory::build('{/api}media/export?id=' . $this->media->id))); ?>" allowfullscreen></iframe>
+                <iframe class="col-simple" id="iHelperFrame" src="<?= UriFactory::build('Resources/mozilla/Pdf/web/viewer.html?file=' . \urlencode(UriFactory::build('{/api}media/export?id=' . $this->media->id . '&csrf={$CSRF}'))); ?>" allowfullscreen></iframe>
             </div>
             <input type="radio" id="media-c-tab-2" name="tabular-1">
             <div class="tab">

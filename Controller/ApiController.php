@@ -19,6 +19,7 @@ use Modules\Admin\Models\NullAccount;
 use Modules\Media\Models\Collection;
 use Modules\Media\Models\CollectionMapper;
 use Modules\Media\Models\Media;
+use Modules\Media\Models\MediaClass;
 use Modules\Media\Models\MediaContent;
 use Modules\Media\Models\MediaContentMapper;
 use Modules\Media\Models\MediaMapper;
@@ -154,7 +155,8 @@ final class ApiController extends Controller
             pathSettings:       $request->getDataInt('pathsettings') ?? PathSettings::RANDOM_PATH, // IMPORTANT!!!
             hasAccountRelation: $request->getDataBool('link_account') ?? false,
             readContent:        $request->getDataBool('parse_content') ?? false,
-            unit:               $request->getDataInt('unit')
+            unit:               $request->getDataInt('unit'),
+            createCollection:   $request->getDataBool('create_collection') ?? false,
         );
 
         $ids = [];
@@ -317,11 +319,16 @@ final class ApiController extends Controller
         int $pathSettings = PathSettings::RANDOM_PATH,
         bool $hasAccountRelation = true,
         bool $readContent = false,
-        ?int $unit = null
-    ) : array
+        ?int $unit = null,
+        bool $createCollection = true,
+        ?int $type = null,
+        ?int $rel = null,
+        string $mapper = '',
+        string $field = ''
+    ) : Collection
     {
         if (empty($files)) {
-            return [];
+            return new NullCollection();
         }
 
         $outputDir = '';
@@ -333,11 +340,11 @@ final class ApiController extends Controller
             $outputDir = \rtrim($basePath, '/\\');
             $absolute  = true;
         } else {
-            return [];
+            return new NullCollection();
         }
 
         if (!Guard::isSafePath($outputDir, __DIR__ . '/../../../')) {
-            return [];
+            return new NullCollection();
         }
 
         $upload                   = new UploadFile();
@@ -356,7 +363,7 @@ final class ApiController extends Controller
             // Possible: name != filename (name = database media name, filename = name on the file system)
             $stat['name'] = $sameLength ? $names[$nCounter] : $stat['filename'];
 
-            $created[] = self::createDbEntry(
+            $media = self::createDbEntry(
                 $stat,
                 $account,
                 $virtualPath,
@@ -366,9 +373,34 @@ final class ApiController extends Controller
                 password: $password,
                 isEncrypted: !empty($encryptionKey)
             );
+
+            // Create relation to type
+            if (!empty($type)) {
+                $this->createModelRelation($account, $media->id, $type, MediaMapper::class, 'types', '', '127.0.0.1');
+            }
+
+            // Create relation to model
+            if (!empty($rel)) {
+                $this->createModelRelation($account, $rel, $media->id, $mapper, $field, '', '127.0.0.1');
+            }
+
+            $created[] = $media;
         }
 
-        return $created;
+        if (!$createCollection) {
+            $collection          = new NullCollection();
+            $collection->sources = $created;
+
+            return $collection;
+        }
+
+        $collection = $this->createRecursiveMediaCollection($virtualPath, $account, $basePath);
+        foreach ($created as $media) {
+            $this->createModelRelation($account, $collection->id, $media->id, CollectionMapper::class, 'sources', '','127.0.0.1');
+            $collection->sources[] = $media;
+        }
+
+        return $collection;
     }
 
     /**
@@ -975,9 +1007,17 @@ final class ApiController extends Controller
      */
     public function createRecursiveMediaCollection(string $path, int $account, string $physicalPath = '') : Collection
     {
-        $status = false;
+        $status = true;
         if (!empty($physicalPath)) {
             $status = \is_dir($physicalPath) ? true : \mkdir($physicalPath, 0755, true);
+        }
+
+        if (!$status) {
+            $this->app->logger?->error(\phpOMS\Log\FileLogger::MSG_FULL, [
+                'message' => 'Couldn\'t create directory "' . $physicalPath . '"',
+                'line'    => __LINE__,
+                'file'    => self::class,
+            ]);
         }
 
         $virtualPath      = \trim($path, '/');
@@ -996,10 +1036,15 @@ final class ApiController extends Controller
             $virtual = '/' . \implode('/', $tempVirtualPaths);
 
             /** @var Collection $parentCollection */
-            $parentCollection = CollectionMapper::getParentCollection($virtual)->execute();
+            $parentCollection = CollectionMapper::get()
+                ->where('virtualPath', \dirname($virtual))
+                ->where('class', MediaClass::COLLECTION)
+                ->where('name', \basename($virtual))
+                ->limit(1)
+                ->execute();
 
             if ($parentCollection->id > 0) {
-                $real = $parentCollection->getPath();
+                $real = \rtrim($parentCollection->path, '/') . '/' . $parentCollection->name;
 
                 break;
             }
@@ -1012,10 +1057,10 @@ final class ApiController extends Controller
             $childCollection            = new Collection();
             $childCollection->name      = $virtualPaths[$i];
             $childCollection->createdBy = new NullAccount($account);
-            $childCollection->setVirtualPath('/'. \ltrim($virtual, '/'));
+            $childCollection->setVirtualPath('/'. \trim($virtual, '/'));
 
             // We assume that the new path is real path of the first found parent directory + the new virtual path
-            $childCollection->setPath(\rtrim($real, '/') . '/' . \ltrim($newVirtual, '/'));
+            $childCollection->setPath(\rtrim($real, '/') . '/' . \trim($newVirtual, '/'));
 
             $this->createModel($account, $childCollection, CollectionMapper::class, 'collection', '127.0.0.1');
             $this->createModelRelation(
@@ -1033,6 +1078,53 @@ final class ApiController extends Controller
         }
 
         return $parentCollection;
+    }
+
+    public function addMediaToCollectionAndModel(
+        int $account,
+        array $files,
+        ?int $rel = null, string $mapper = '', string $field = '',
+        string $collectionPath = ''
+    ) : void
+    {
+        $mediaFiles = MediaMapper::getAll()->where('id', $files)->executeGetArray();
+        $collection = null;
+
+        foreach ($mediaFiles as $media) {
+            if ($rel !== null) {
+                $this->createModelRelation($account, $rel, $media->id, $mapper, $field, '', '127.0.0.1');
+            }
+
+            if (!empty($addToCollection)) {
+                $ref            = new Reference();
+                $ref->name      = $media->name;
+                $ref->source    = new NullMedia($media->id);
+                $ref->createdBy = new NullAccount($account);
+                $ref->setVirtualPath($collectionPath);
+
+                $this->createModel($account, $ref, ReferenceMapper::class, 'media_reference', '127.0.0.1');
+
+                if ($collection === null) {
+                    /** @var \Modules\Media\Models\Collection $collection */
+                    $collection = CollectionMapper::get()
+                        ->where('virtualPath', \dirname($collectionPath))
+                        ->where('class', MediaClass::COLLECTION)
+                        ->where('name', \basename($collectionPath))
+                        ->limit(1)
+                        ->execute();
+
+                    if ($collection->id === 0) {
+                        $collection = $this->app->moduleManager->get('Media', 'Api')->createRecursiveMediaCollection(
+                            $collectionPath,
+                            $account,
+                            __DIR__ . '/../../../Modules/Media/Files' . $collectionPath
+                        );
+                    }
+                }
+
+                $this->createModelRelation($account, $collection->id, $ref->id, CollectionMapper::class, 'sources', '', '127.0.0.1');
+            }
+        }
     }
 
     /**

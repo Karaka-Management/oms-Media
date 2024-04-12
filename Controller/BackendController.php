@@ -94,10 +94,12 @@ final class BackendController extends Controller
         }
 
         /** @var Media[] $media */
-        $media = $mediaMapper->execute();
+        $media = $mediaMapper->executeGetArray();
 
-        $collectionMapper = CollectionMapper::getParentCollection($path)
-            ->where('tags/title/language', $request->header->l11n->language);
+        $collectionMapper = CollectionMapper::getAll()
+            ->where('virtualPath', \dirname($path))
+            ->where('class', MediaClass::COLLECTION)
+            ->where('name', \basename($path));
 
         if (!$hasPermission) {
             $permWhere = PermissionAbstractMapper::helper($this->app->dbPool->get('select'))

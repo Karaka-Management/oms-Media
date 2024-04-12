@@ -22,6 +22,7 @@ return [
         [
             'dest'       => '\Modules\Media\Controller\SearchController:searchGeneral',
             'verb'       => RouteVerb::ANY,
+            'active'     => true,
             'permission' => [
                 'module' => SearchController::NAME,
                 'type'   => PermissionType::READ,
@@ -33,6 +34,7 @@ return [
         [
             'dest'       => '\Modules\Media\Controller\SearchController:searchTag',
             'verb'       => RouteVerb::ANY,
+            'active'     => true,
             'permission' => [
                 'module' => SearchController::NAME,
                 'type'   => PermissionType::READ,

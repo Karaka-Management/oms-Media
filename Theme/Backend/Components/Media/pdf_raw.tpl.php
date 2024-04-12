@@ -25,7 +25,7 @@ use \phpOMS\Uri\UriFactory;
     src="<?= UriFactory::build(
         '/Resources/mozilla/Pdf/web/viewer.html?file='
         . ($this->media->id === 0
-            ? \urlencode(UriFactory::build('{/api}media/export?path=' . $this->media->getPath()))
-            : \urlencode(UriFactory::build('{/api}media/export?id=' . $this->media->id)
+            ? \urlencode(UriFactory::build('{/api}media/export?path=' . $this->media->getPath()) . '&csrf={$CSRF}')
+            : \urlencode(UriFactory::build('{/api}media/export?id=' . $this->media->id . '&csrf={$CSRF}')
         )));
     ?>" allowfullscreen></iframe>
