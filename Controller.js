@@ -10,6 +10,7 @@ Autoloader.defineNamespace('omsApp.Modules');
  * @todo Create immediate text preview similar to a rich text editor or Typora.
  *      https://github.com/Karaka-Management/oms-Editor/issues/4
  */
+/* global omsApp */
 omsApp.Modules.Media = class {
     /**
      * @constructor
@@ -23,11 +24,14 @@ omsApp.Modules.Media = class {
 
     bind (id)
     {
-        const e    = typeof id === 'undefined' ? document.getElementsByTagName('form') : [document.getElementById(id)],
-            length = e.length;
+        const e = typeof id === 'undefined'
+            ? document.getElementsByTagName('form')
+            : [document.getElementById(id)];
+
+        const length = e.length;
 
         for (let i = 0; i < length; ++i) {
-            //this.bindElement(e[i]);
+            // this.bindElement(e[i]);
         }
     };
 

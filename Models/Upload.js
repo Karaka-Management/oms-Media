@@ -1,5 +1,5 @@
 import { Logger } from '../../../jsOMS/Log/Logger.js';
-import { Request } from '../../../jsOMS/Message/Request/Request.js';
+import { HttpRequest } from '../../../jsOMS/Message/Request/Request.js';
 import { RequestMethod } from '../../../jsOMS/Message/Request/RequestMethod.js';
 import { RequestType } from '../../../jsOMS/Message/Request/RequestType.js';
 
@@ -154,9 +154,9 @@ export class Upload {
          * @todo Karaka/oms-Media#5
          *  Validate file type and file size on the frontend before uploading
          */
-        const request = new HttpRequest(),
-            formData  = new FormData(),
-            self      = this;
+        const request  = new HttpRequest();
+        const formData = new FormData();
+        const self     = this;
 
         this.files.forEach(function (element, index)
         {
