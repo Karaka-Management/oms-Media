@@ -167,7 +167,7 @@ final class MediaMapperTest extends \PHPUnit\Framework\TestCase
         self::assertGreaterThan(0, $media->id);
         self::assertEquals($idMedia, $media->id);
 
-        $collectionR = MediaMapper::getParentCollection($media->getVirtualPath())->execute();
+        $collectionR = MediaMapper::getParentCollection($collection->virtualPath . '/sub/file.txt')->execute();
         self::assertEquals($idCollection, $collectionR->id);
         self::assertEquals($collection->name, $collectionR->name);
     }

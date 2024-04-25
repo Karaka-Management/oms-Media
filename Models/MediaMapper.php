@@ -182,6 +182,8 @@ class MediaMapper extends DataMapperFactory
     /**
      * Get parent collection
      *
+     * WARNING: THIS IS NOT RETURNING THE COLLECTION OF A MEDIA OBJECT BUT ITS PARENT!!!
+     *
      * @param string $path Virtual path
      *
      * @return ReadMapper

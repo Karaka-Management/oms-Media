@@ -192,7 +192,7 @@ trait ApiControllerMediaTrait
                 files: ['test'],
                 account: 1,
                 basePath: '/test',
-            )
+            )->sources
         );
     }
 
