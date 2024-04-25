@@ -1080,6 +1080,20 @@ final class ApiController extends Controller
         return $parentCollection;
     }
 
+    /**
+     * Add Media to a collection and arbitrary model
+     *
+     * @param int      $account Request account
+     * @param int[]    $files   Files to add
+     * @param null|int $rel Relation to model id
+     * @param string   $mapper Mapper to use for relation
+     * @param string   $field Field to use for relation
+     * @param string   $collectionPath Path of the collection the files should get added to
+     *
+     * @return void
+     *
+     * @since 1.0.0
+     */
     public function addMediaToCollectionAndModel(
         int $account,
         array $files,
