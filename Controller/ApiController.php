@@ -303,7 +303,7 @@ final class ApiController extends Controller
      *                                   - FILE_PATH   = combination of base path and virtual path
      * @param bool   $hasAccountRelation The uploaded files should be related to an account
      *
-     * @return Media[]
+     * @return Collection
      *
      * @since 1.0.0
      */
@@ -1013,7 +1013,7 @@ final class ApiController extends Controller
         }
 
         if (!$status) {
-            $this->app->logger?->error(\phpOMS\Log\FileLogger::MSG_FULL, [
+            $this->app->logger->error(\phpOMS\Log\FileLogger::MSG_FULL, [
                 'message' => 'Couldn\'t create directory "' . $physicalPath . '"',
                 'line'    => __LINE__,
                 'file'    => self::class,
@@ -1101,7 +1101,11 @@ final class ApiController extends Controller
         string $collectionPath = ''
     ) : void
     {
-        $mediaFiles = MediaMapper::getAll()->where('id', $files)->executeGetArray();
+        /** @var \Modules\Media\Models\Media[] $mediaFiles */
+        $mediaFiles = MediaMapper::getAll()
+            ->where('id', $files)
+            ->executeGetArray();
+
         $collection = null;
 
         foreach ($mediaFiles as $media) {
@@ -1109,7 +1113,7 @@ final class ApiController extends Controller
                 $this->createModelRelation($account, $rel, $media->id, $mapper, $field, '', '127.0.0.1');
             }
 
-            if (!empty($addToCollection)) {
+            if (!empty($collectionPath)) {
                 $ref            = new Reference();
                 $ref->name      = $media->name;
                 $ref->source    = new NullMedia($media->id);
