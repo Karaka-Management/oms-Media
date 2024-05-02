@@ -236,7 +236,11 @@ class Media implements \JsonSerializable
      */
     public function encrypt(string $key, ?string $outputPath = null) : bool
     {
-        return EncryptionHelper::encryptFile($this->getAbsolutePath(), $outputPath ?? $this->getAbsolutePath(), $key);
+        return EncryptionHelper::encryptFile(
+            $this->getAbsolutePath(),
+            $outputPath ?? $this->getAbsolutePath(),
+            $key
+        );
     }
 
     /**
@@ -251,7 +255,11 @@ class Media implements \JsonSerializable
      */
     public function decrypt(string $key, ?string $outputPath = null) : bool
     {
-        return EncryptionHelper::decryptFile($this->getAbsolutePath(), $outputPath ?? $this->getAbsolutePath(), $key);
+        return EncryptionHelper::decryptFile(
+            $this->getAbsolutePath(),
+            $outputPath ?? $this->getAbsolutePath(),
+            $key
+        );
     }
 
     /**

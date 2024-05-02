@@ -12,6 +12,7 @@
  */
 declare(strict_types=1);
 
+use phpOMS\System\File\ExtensionType;
 use phpOMS\System\File\FileUtils;
 use phpOMS\Uri\UriFactory;
 use phpOMS\Utils\Converter\FileSizeType;
@@ -184,22 +185,24 @@ $next     = empty($media) ? '{/base}/media/list' : '{/base}/media/list?{?}&offse
                             <td>
                     <?php endif; ?>
                     <?php $count = 0;
-                        foreach ($media as $key => $value) :
-                            ++$count;
+                    foreach ($media as $key => $value) :
+                        ++$count;
 
-                            $url = $value->extension === 'collection'
-                                ? UriFactory::build('{/base}/media/list?path=' . \rtrim($value->getVirtualPath(), '/') . '/' . $value->name)
-                                : UriFactory::build('{/base}/media/view?id=' . $value->id
-                                    . '&path={?path}' . (
-                                            $value->id === 0
-                                                ? '/' . $value->name
-                                                : ''
-                                        )
-                                );
+                        $url = $value->extension === 'collection'
+                            ? UriFactory::build('{/base}/media/list?path=' . \rtrim($value->getVirtualPath(), '/') . '/' . $value->name)
+                            : UriFactory::build('{/base}/media/view?id=' . $value->id
+                                . '&path={?path}' . (
+                                        $value->id === 0
+                                            ? '/' . $value->name
+                                            : ''
+                                    )
+                            );
 
-                            $icon = $fileIconFunction(FileUtils::getExtensionType($value->extension));
-                        ?>
-                    <tr tabindex="0" data-href="<?= $url; ?>">
+                        $icon = $fileIconFunction($extensionType = FileUtils::getExtensionType($value->extension));
+                    ?>
+                    <tr tabindex="0"
+                        data-href="<?= $url; ?>"
+                        <?= \in_array($extensionType, [ExtensionType::IMAGE, ExtensionType::PDF]) ? 'data-preview="' . UriFactory::build('{/api}media/export?id=' . $value->id . '&type=html&csrf={$CSRF}') . '"' : ''; ?>>
                         <td><label class="checkbox" for="iMediaSelect-<?= $key; ?>">
                                 <input type="checkbox" id="iMediaSelect-<?= $key; ?>" name="mediaselect">
                                 <span class="checkmark"></span>

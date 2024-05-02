@@ -12,6 +12,7 @@
  */
 declare(strict_types=1);
 
+use phpOMS\System\File\ExtensionType;
 use phpOMS\System\File\FileUtils;
 use phpOMS\Uri\UriFactory;
 
@@ -44,7 +45,8 @@ $next = empty($this->media)
                 $extensionType = FileUtils::getExtensionType($value->extension);
                 $icon          = $fileIconFunction($extensionType);
         ?>
-        <tr data-href="<?= $url; ?>">
+        <tr data-href="<?= $url; ?>"
+            <?= \in_array($extensionType, [ExtensionType::IMAGE, ExtensionType::PDF]) ? 'data-preview="' . UriFactory::build('{/api}media/export?id=' . $value->id . '&type=html&csrf={$CSRF}') . '"' : ''; ?>>
             <td data-label="<?= $this->getHtml('Type'); ?>"><a href="<?= $url; ?>"><i class="g-icon"><?= $this->printHtml($icon); ?></i></a>
             <td data-label="<?= $this->getHtml('Path'); ?>"><a class="content" href="<?= UriFactory::build('{/base}/media/list?{?}&path=' . $value->getVirtualPath()); ?>"><?= $this->printHtml($value->getVirtualPath()); ?></a>
             <td data-label="<?= $this->getHtml('Name'); ?>"><a href="<?= $url; ?>"><?= $this->printHtml($value->name); ?></a>

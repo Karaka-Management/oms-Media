@@ -65,6 +65,22 @@ use phpOMS\Views\View;
  * @license OMS License 2.0
  * @link    https://jingga.app
  * @since   1.0.0
+ *
+ * @feature Allow PDF modification (allow notes on PDF, approval stamps)
+ *      This requires a JS live preview for adding this at a specific position (maybe PDFJSAnnotate, maybe customize PDF.js)
+ *      https://github.com/Karaka-Management/oms-Billing/issues/11
+ *
+ * @feature Job/Schedule which checks unhandled invoices
+ *      https://github.com/Karaka-Management/oms-Billing/issues/10
+ *
+ * @feature Allow to index a local file if it is not in the database
+ *      E.g. button with text "Add to Application"
+ *      Un-indexed files cannot be changed/moved/deleted.
+ *      https://github.com/Karaka-Management/oms-Media/issues/18
+ *
+ * @feature Create preview option for images
+ *      E.g. ctrl+mouse hover or a different "list-view" like in explorer
+ *      https://github.com/Karaka-Management/oms-Media/issues/19
  */
 final class ApiController extends Controller
 {
@@ -358,6 +374,10 @@ final class ApiController extends Controller
 
         $created = [];
         foreach ($status as &$stat) {
+            if (!Guard::isSafeFile($stat['path'] . '/' . $stat['filename'])) {
+                continue;
+            }
+
             ++$nCounter;
 
             // Possible: name != filename (name = database media name, filename = name on the file system)
@@ -385,6 +405,10 @@ final class ApiController extends Controller
             }
 
             $created[] = $media;
+        }
+
+        if (empty($created)) {
+            return new NullCollection();
         }
 
         if (!$createCollection) {

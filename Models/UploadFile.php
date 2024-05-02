@@ -190,7 +190,7 @@ class UploadFile
             }
 
             if (!\is_dir($path) && !Directory::create($path, 0755, true)) {
-                FileLogger::getInstance()->error('Couldn\t upload media file. There maybe is a problem with your permission or uploaded file.');
+                FileLogger::getInstance()->error('Couldn\'t upload media file. There maybe is a problem with your permission or uploaded file.');
             }
 
             if (!\rename($f['tmp_name'], $dest = $path . '/' . $result[$key]['filename'])) {
@@ -198,6 +198,11 @@ class UploadFile
 
                 return $result;
             }
+
+            // Make sure uploaded file is not executable
+            $currentPermissions = \fileperms($dest);
+            $newPermissions = $currentPermissions & ~0100;
+            \chmod($dest, $newPermissions);
 
             if ($encryptionKey !== '') {
                 $isEncrypted = EncryptionHelper::encryptFile($dest, $dest, $encryptionKey);
@@ -218,6 +223,8 @@ class UploadFile
             /*
             if ($encoding !== '') {
                 // changing encoding bugs out image files
+                // @todo Automatically change the file encoding of text files
+                //      https://github.com/Karaka-Management/oms-Media/issues/21
                 //FileUtils::changeFileEncoding($dest, $encoding);
             }*/
 
