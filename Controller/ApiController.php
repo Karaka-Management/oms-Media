@@ -23,12 +23,8 @@ use Modules\Media\Models\MediaClass;
 use Modules\Media\Models\MediaContent;
 use Modules\Media\Models\MediaContentMapper;
 use Modules\Media\Models\MediaMapper;
-use Modules\Media\Models\MediaType;
-use Modules\Media\Models\MediaTypeL11nMapper;
-use Modules\Media\Models\MediaTypeMapper;
 use Modules\Media\Models\NullCollection;
 use Modules\Media\Models\NullMedia;
-use Modules\Media\Models\NullMediaType;
 use Modules\Media\Models\PathSettings;
 use Modules\Media\Models\PermissionCategory;
 use Modules\Media\Models\Reference;
@@ -37,13 +33,12 @@ use Modules\Media\Models\UploadFile;
 use Modules\Media\Models\UploadStatus;
 use Modules\Media\Theme\Backend\Components\Media\ElementView;
 use Modules\Messages\Models\EmailMapper;
+use Modules\Tag\Models\NullTag;
 use phpOMS\Account\PermissionType;
 use phpOMS\Ai\Ocr\Tesseract\TesseractOcr;
 use phpOMS\Application\ApplicationAbstract;
 use phpOMS\Asset\AssetType;
 use phpOMS\Autoloader;
-use phpOMS\Localization\BaseStringL11n;
-use phpOMS\Localization\ISO639x1Enum;
 use phpOMS\Message\Http\HttpResponse;
 use phpOMS\Message\Http\RequestStatusCode;
 use phpOMS\Message\RequestAbstract;
@@ -179,51 +174,26 @@ final class ApiController extends Controller
         foreach ($uploads as $file) {
             $ids[] = $file->id;
 
-            // add media types
-            if (!empty($types = $request->getDataJson('types'))) {
-                foreach ($types as $type) {
-                    if (!isset($type['id'])) {
-                        $request->setData('name', $type['name'], true);
-                        $request->setData('title', $type['title'], true);
-                        $request->setData('lang', $type['lang'] ?? null, true);
-
-                        $internalResponse = new HttpResponse();
-                        $this->apiMediaTypeCreate($request, $internalResponse);
-
-                        if (!\is_array($data = $internalResponse->getDataArray($request->uri->__toString()))) {
-                            continue;
-                        }
-
-                        $file->addMediaType($tId = $data['response']);
-                    } else {
-                        $file->addMediaType(new NullMediaType($tId = (int) $type['id']));
+            // add media tags
+            if (!empty($tags = $request->getDataJson('tags'))) {
+                foreach ($tags as $tag) {
+                    if (!isset($tag['id'])) {
+                        continue;
                     }
+
+                    $file->tags[] = new NullTag($tId = (int) $tag['id']);
 
                     $this->createModelRelation(
                         $request->header->account,
                         $file->id,
                         $tId,
                         MediaMapper::class,
-                        'types',
+                        'tags',
                         '',
                         $request->getOrigin()
                     );
                 }
             }
-
-            if ($request->hasData('tags')) {
-                $file->tags = $this->app->moduleManager->get('Tag', 'Api')->createTagsFromRequest($request);
-            }
-
-            $this->createModelRelation(
-                $request->header->account,
-                $file->id,
-                \array_map(function (\Modules\Tag\Models\Tag $tag) { return $tag->id; }, $file->tags),
-                MediaMapper::class,
-                'tags',
-                '',
-                $request->getOrigin()
-            );
         }
 
         $this->createStandardAddResponse($request, $response, $ids);
@@ -337,7 +307,7 @@ final class ApiController extends Controller
         bool $readContent = false,
         ?int $unit = null,
         bool $createCollection = true,
-        ?int $type = null,
+        ?int $tag = null,
         ?int $rel = null,
         string $mapper = '',
         string $field = ''
@@ -394,9 +364,9 @@ final class ApiController extends Controller
                 isEncrypted: !empty($encryptionKey)
             );
 
-            // Create relation to type
-            if (!empty($type)) {
-                $this->createModelRelation($account, $media->id, $type, MediaMapper::class, 'types', '', '127.0.0.1');
+            // Create relation to tag
+            if (!empty($tag)) {
+                $this->createModelRelation($account, $media->id, $tag, MediaMapper::class, 'tags', '', '127.0.0.1');
             }
 
             // Create relation to model
@@ -1125,6 +1095,10 @@ final class ApiController extends Controller
         string $collectionPath = ''
     ) : void
     {
+        if (empty($files)) {
+            return;
+        }
+
         /** @var \Modules\Media\Models\Media[] $mediaFiles */
         $mediaFiles = MediaMapper::getAll()
             ->where('id', $files)
@@ -1599,144 +1573,6 @@ final class ApiController extends Controller
                 $response->header->set('Content-Disposition', 'attachment; filename="' . \addslashes($media->name) . '"', true);
                 $response->header->set('Content-Transfer-Encoding', 'binary', true);
         }
-    }
-
-    /**
-     * Validate document create request
-     *
-     * @param RequestAbstract $request Request
-     *
-     * @return array<string, bool>
-     *
-     * @since 1.0.0
-     */
-    private function validateMediaTypeCreate(RequestAbstract $request) : array
-    {
-        $val = [];
-        if (($val['name'] = !$request->hasData('name'))
-        ) {
-            return $val;
-        }
-
-        return [];
-    }
-
-    /**
-     * Api method to create document
-     *
-     * @param RequestAbstract  $request  Request
-     * @param ResponseAbstract $response Response
-     * @param array            $data     Generic data
-     *
-     * @return void
-     *
-     * @api
-     *
-     * @since 1.0.0
-     */
-    public function apiMediaTypeCreate(RequestAbstract $request, ResponseAbstract $response, array $data = []) : void
-    {
-        if (!empty($val = $this->validateMediaTypeCreate($request))) {
-            $response->header->status = RequestStatusCode::R_400;
-            $this->createInvalidCreateResponse($request, $response, $val);
-
-            return;
-        }
-
-        $type = $this->createDocTypeFromRequest($request);
-        $this->createModel($request->header->account, $type, MediaTypeMapper::class, 'doc_type', $request->getOrigin());
-        $this->createStandardCreateResponse($request, $response, $type);
-    }
-
-    /**
-     * Method to create task from request.
-     *
-     * @param RequestAbstract $request Request
-     *
-     * @return MediaType
-     *
-     * @since 1.0.0
-     */
-    private function createDocTypeFromRequest(RequestAbstract $request) : MediaType
-    {
-        $type       = new MediaType();
-        $type->name = $request->getDataString('name') ?? '';
-
-        if ($request->hasData('title')) {
-            $type->setL11n(
-                $request->getDataString('title') ?? '',
-                ISO639x1Enum::tryFromValue($request->getDataString('lang')) ?? $request->header->l11n->language
-            );
-        }
-
-        return $type;
-    }
-
-    /**
-     * Validate l11n create request
-     *
-     * @param RequestAbstract $request Request
-     *
-     * @return array<string, bool>
-     *
-     * @since 1.0.0
-     */
-    private function validateMediaTypeL11nCreate(RequestAbstract $request) : array
-    {
-        $val = [];
-        if (($val['title'] = !$request->hasData('title'))
-            || ($val['type'] = !$request->hasData('type'))
-        ) {
-            return $val;
-        }
-
-        return [];
-    }
-
-    /**
-     * Api method to create media type localization
-     *
-     * @param RequestAbstract  $request  Request
-     * @param ResponseAbstract $response Response
-     * @param array            $data     Generic data
-     *
-     * @return void
-     *
-     * @api
-     *
-     * @since 1.0.0
-     */
-    public function apiMediaTypeL11nCreate(RequestAbstract $request, ResponseAbstract $response, array $data = []) : void
-    {
-        if (!empty($val = $this->validateMediaTypeL11nCreate($request))) {
-            $response->header->status = RequestStatusCode::R_400;
-            $this->createInvalidCreateResponse($request, $response, $val);
-
-            return;
-        }
-
-        $l11nMediaType = $this->createMediaTypeL11nFromRequest($request);
-        $this->createModel($request->header->account, $l11nMediaType, MediaTypeL11nMapper::class, 'media_type_l11n', $request->getOrigin());
-        $this->createStandardCreateResponse($request, $response, $l11nMediaType);
-    }
-
-    /**
-     * Method to create media type localization from request.
-     *
-     * @param RequestAbstract $request Request
-     *
-     * @return BaseStringL11n
-     *
-     * @since 1.0.0
-     */
-    private function createMediaTypeL11nFromRequest(RequestAbstract $request) : BaseStringL11n
-    {
-        $l11nMediaType           = new BaseStringL11n();
-        $l11nMediaType->ref      = $request->getDataInt('type') ?? 0;
-        $l11nMediaType->content  = $request->getDataString('title') ?? '';
-        $l11nMediaType->language = ISO639x1Enum::tryFromValue($request->getDataString('language')) ?? $request->header->l11n->language;
-
-        return $l11nMediaType;
     }
 
     /**

@@ -144,9 +144,6 @@ final class Installer extends InstallerAbstract
                 case 'upload':
                     $result['upload'][] = self::uploadMedia($apiApp, $media);
                     break;
-                case 'type':
-                    $result['type'][] = self::createType($apiApp, $media);
-                    break;
                 case 'reference':
                     $result['reference'][] = self::createReference($apiApp, $media);
                     break;
@@ -231,65 +228,6 @@ final class Installer extends InstallerAbstract
     }
 
     /**
-     * Create type.
-     *
-     * @param ApplicationAbstract $app  Application
-     * @param array               $data Media info
-     *
-     * @return array
-     *
-     * @since 1.0.0
-     */
-    private static function createType(ApplicationAbstract $app, array $data) : array
-    {
-        /** @var \Modules\Media\Controller\ApiController $module */
-        $module = $app->moduleManager->get('Media');
-
-        $response = new HttpResponse();
-        $request  = new HttpRequest();
-
-        $request->header->account = 1;
-        $request->setData('name', $data['name'] ?? '');
-
-        if (!empty($data['l11n'])) {
-            $request->setData('title', \reset($data['l11n'])['title']);
-            $request->setData('lang', \reset($data['l11n'])['lang']);
-        }
-
-        $module->apiMediaTypeCreate($request, $response);
-
-        $responseData = $response->getData('');
-        if (!\is_array($responseData)) {
-            return [];
-        }
-
-        $type = $responseData['response'];
-        $id   = $type->id;
-
-        $isFirst = true;
-        foreach ($data['l11n'] as $l11n) {
-            if ($isFirst) {
-                $isFirst = false;
-                continue;
-            }
-
-            $response = new HttpResponse();
-            $request  = new HttpRequest();
-
-            $request->header->account = 1;
-            $request->setData('title', $l11n['title'] ?? '');
-            $request->setData('lang', $l11n['lang'] ?? null);
-            $request->setData('type', $id);
-
-            $module->apiMediaTypeL11nCreate($request, $response);
-        }
-
-        return \is_array($type)
-            ? $type
-            : $type->toArray();
-    }
-
-    /**
      * Upload media.
      *
      * @param ApplicationAbstract $app  Application
@@ -316,7 +254,7 @@ final class Installer extends InstallerAbstract
                     : ($data['virtualPath'] ?? '/')
             )
         );
-        $request->setData('type', $data['media_type'] ?? null); // = identifier for modules
+        $request->setData('type', $data['tag'] ?? null); // = identifier for modules
         $request->setData('pathsettings', $data['path_setting'] ?? PathSettings::FILE_PATH);
 
         $tempPath = __DIR__ . '/../../../temp/';

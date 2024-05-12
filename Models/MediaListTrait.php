@@ -35,18 +35,18 @@ trait MediaListTrait
     public array $files = [];
 
     /**
-     * Get media file by type
+     * Get media file by tag
      *
-     * @param int $type Media type
+     * @param int $tag Media tag
      *
      * @return Media
      *
      * @since 1.0.0
      */
-    public function getFileByType(int $type) : Media
+    public function getFileByTag(int $tag) : Media
     {
         foreach ($this->files as $file) {
-            if ($file->hasMediaTypeId($type)) {
+            if ($file->hasMediaTagId($tag)) {
                 return $file;
             }
         }
@@ -55,18 +55,18 @@ trait MediaListTrait
     }
 
     /**
-     * Get all media files by type name
+     * Get all media files by tag name
      *
-     * @param string $type Media type
+     * @param string $tag Media tag
      *
      * @return Media
      *
      * @since 1.0.0
      */
-    public function getFileByTypeName(string $type) : Media
+    public function getFileByTagName(string $tag) : Media
     {
         foreach ($this->files as $file) {
-            if ($file->hasMediaTypeName($type)) {
+            if ($file->hasMediaTagName($tag)) {
                 return $file;
             }
         }
@@ -75,19 +75,19 @@ trait MediaListTrait
     }
 
     /**
-     * Get all media files by type name
+     * Get all media files by tag name
      *
-     * @param string $type Media type
+     * @param string $tag Media tag
      *
      * @return Media[]
      *
      * @since 1.0.0
      */
-    public function getFilesByTypeName(string $type) : array
+    public function getFilesByTagName(string $tag) : array
     {
         $files = [];
         foreach ($this->files as $file) {
-            if ($file->hasMediaTypeName($type)) {
+            if ($file->hasMediaTagName($tag)) {
                 $files[] = $file;
             }
         }
@@ -96,18 +96,18 @@ trait MediaListTrait
     }
 
     /**
-     * Check if file with a certain type name exists
+     * Check if file with a certain tag name exists
      *
-     * @param string $type Type name
+     * @param string $tag Tag name
      *
      * @return bool
      *
      * @since 1.0.0
      */
-    public function hasFileTypeName(string $type) : bool
+    public function hasFileTagName(string $tag) : bool
     {
         foreach ($this->files as $file) {
-            if ($file->hasMediaTypeName($type)) {
+            if ($file->hasMediaTagName($tag)) {
                 return true;
             }
         }

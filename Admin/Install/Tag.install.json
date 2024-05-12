@@ -1,0 +1,37 @@
+[
+    {
+        "name": "nda",
+        "l11n": {
+            "en": "NDA",
+            "de": "NDA"
+        }
+    },
+    {
+        "name": "receipt",
+        "l11n": {
+            "en": "Receipt",
+            "de": "Quittung"
+        }
+    },
+    {
+        "name": "invoice",
+        "l11n": {
+            "en": "Invoice",
+            "de": "Rechnung"
+        }
+    },
+    {
+        "name": "letter",
+        "l11n": {
+            "en": "Letter",
+            "de": "Brief"
+        }
+    },
+    {
+        "name": "minutes",
+        "l11n": {
+            "en": "Minutes",
+            "de": "Protokoll"
+        }
+    }
+]

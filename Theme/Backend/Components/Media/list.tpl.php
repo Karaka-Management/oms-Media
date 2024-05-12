@@ -25,7 +25,7 @@ $next = empty($this->media)
     ? '{%}'
     : '{%}?{?}&mpivot=' . \end($this->media)->id . '&mptype=n';
 ?>
-<div class="portlet">
+<section class="portlet">
     <div class="portlet-head"><?= $this->getHtml('Media', 'Media'); ?><i class="g-icon download btn end-xs">download</i></div>
     <div class="slider">
     <table class="default sticky">
@@ -66,4 +66,4 @@ $next = empty($this->media)
         <a tabindex="0" class="button" href="<?= UriFactory::build($next); ?>"><?= $this->getHtml('Next', '0', '0'); ?></a>
     </div>
     -->
-</div>
+</section>

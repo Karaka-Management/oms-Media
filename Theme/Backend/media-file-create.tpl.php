@@ -20,17 +20,17 @@ use phpOMS\Uri\UriFactory;
 ?>
 <div class="row">
     <div class="col-xs-12 col-md-8">
-        <div class="portlet">
+        <section class="portlet">
             <div class="portlet-body">
                 <input autocomplete="off" form="fEditor" name="name" type="text" class="wf-100">
             </div>
-        </div>
+        </section>
 
-        <div class="portlet">
+        <section class="portlet">
             <div class="portlet-body">
                 <?= $this->getData('editor')->render('editor'); ?>
             </div>
-        </div>
+        </section>
 
         <div class="box">
             <?= $this->getData('editor')->getData('text')->render('editor', 'content', 'fEditor'); ?>
@@ -42,7 +42,7 @@ use phpOMS\Uri\UriFactory;
             <a tabindex="0" class="button" href="<?= UriFactory::build('{/base}/media/list?path={?path}'); ?>"><?= $this->getHtml('Back'); ?></a>
         </div>
 
-        <div class="portlet">
+        <section class="portlet">
             <form id="fEditor" method="PUT" action="<?= UriFactory::build('{/api}media/file?{?}&csrf={$CSRF}'); ?>">
                 <div class="portlet-head"><?= $this->getHtml('Settings'); ?></div>
                 <div class="portlet-body">
@@ -64,9 +64,9 @@ use phpOMS\Uri\UriFactory;
                     <input type="submit" value="<?= $this->getHtml('Save', '0', '0'); ?>" name="save-media-file">
                 </div>
             </form>
-        </div>
+        </section>
 
-        <div class="portlet">
+        <section class="portlet">
             <div class="portlet-body">
                 <form>
                     <table class="layout">
@@ -79,7 +79,7 @@ use phpOMS\Uri\UriFactory;
                     </table>
                 </form>
             </div>
-        </div>
+        </section>
     </div>
 </div>
 

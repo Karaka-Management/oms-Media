@@ -16,7 +16,6 @@ namespace Modules\Media\Models;
 
 use Modules\Admin\Models\Account;
 use Modules\Admin\Models\NullAccount;
-use Modules\Tag\Models\Tag;
 use phpOMS\Security\EncryptionHelper;
 
 /**
@@ -52,14 +51,6 @@ class Media implements \JsonSerializable
      * @since 1.0.0
      */
     public ?MediaContent $content = null;
-
-    /**
-     * Type.
-     *
-     * @var MediaType[]
-     * @since 1.0.0
-     */
-    public array $types = [];
 
     /**
      * Extension.
@@ -188,14 +179,6 @@ class Media implements \JsonSerializable
      * @since 1.0.0
      */
     public ?int $unit = null;
-
-    /**
-     * Tags.
-     *
-     * @var Tag[]
-     * @since 1.0.0
-     */
-    public array $tags = [];
 
     /**
      * Language.
@@ -396,104 +379,18 @@ class Media implements \JsonSerializable
     }
 
     /**
-     * Adding new type.
+     * Has media tag by id
      *
-     * @param MediaType $type MediaType
-     *
-     * @return int
-     *
-     * @since 1.0.0
-     */
-    public function addMediaType(MediaType $type) : int
-    {
-        $this->types[] = $type;
-
-        \end($this->types);
-        $key = (int) \key($this->types);
-        \reset($this->types);
-
-        return $key;
-    }
-
-    /**
-     * Remove MediaType from list.
-     *
-     * @param int $id MediaType
+     * @param int $id Media tag id
      *
      * @return bool
      *
      * @since 1.0.0
      */
-    public function removeMediaType($id) : bool
+    public function hasMediaTagId(int $id) : bool
     {
-        if (isset($this->types[$id])) {
-            unset($this->types[$id]);
-
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * Get media types.
-     *
-     * @return MediaType[]
-     *
-     * @since 1.0.0
-     */
-    public function getMediaTypes() : array
-    {
-        return $this->types;
-    }
-
-    /**
-     * Get media type.
-     *
-     * @param int $id Element id
-     *
-     * @return MediaType
-     *
-     * @since 1.0.0
-     */
-    public function getMediaType(int $id) : MediaType
-    {
-        return $this->types[$id] ?? new NullMediaType();
-    }
-
-    /**
-     * Get media type by name
-     *
-     * @param string $name Type name
-     *
-     * @return MediaType
-     *
-     * @since 1.0.0
-     */
-    public function getMediaTypeName(string $name) : MediaType
-    {
-        foreach ($this->types as $type) {
-            if ($type->name === $name) {
-                return $type;
-            }
-        }
-
-        return new NullMediaType();
-    }
-
-    /**
-     * Has media type by id
-     *
-     * @param int $id Media type id
-     *
-     * @return bool
-     *
-     * @since 1.0.0
-     */
-    public function hasMediaTypeId(int $id) : bool
-    {
-        foreach ($this->types as $type) {
-            if ($type->id === $id) {
+        foreach ($this->tags as $tag) {
+            if ($tag->id === $id) {
                 return true;
             }
         }
@@ -502,60 +399,20 @@ class Media implements \JsonSerializable
     }
 
     /**
-     * Has media type by name
+     * Has media tag by name
      *
-     * @param string $name Media type name
+     * @param string $name Media tag name
      *
      * @return bool
      *
      * @since 1.0.0
      */
-    public function hasMediaTypeName(string $name) : bool
+    public function hasMediaTagName(string $name) : bool
     {
-        foreach ($this->types as $type) {
-            if ($type->name === $name) {
+        foreach ($this->tags as $tag) {
+            if ($tag->name === $name) {
                 return true;
             }
-        }
-
-        return false;
-    }
-
-    /**
-     * Adding new tag.
-     *
-     * @param Tag $tag Tag
-     *
-     * @return int
-     *
-     * @since 1.0.0
-     */
-    public function addTag(Tag $tag) : int
-    {
-        $this->tags[] = $tag;
-
-        \end($this->tags);
-        $key = (int) \key($this->tags);
-        \reset($this->tags);
-
-        return $key;
-    }
-
-    /**
-     * Remove Tag from list.
-     *
-     * @param int $id Tag
-     *
-     * @return bool
-     *
-     * @since 1.0.0
-     */
-    public function removeTag($id) : bool
-    {
-        if (isset($this->tags[$id])) {
-            unset($this->tags[$id]);
-
-            return true;
         }
 
         return false;
@@ -589,4 +446,6 @@ class Media implements \JsonSerializable
     {
         return $this->toArray();
     }
+
+    use \Modules\Tag\Models\TagListTrait;
 }

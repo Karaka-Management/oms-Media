@@ -90,7 +90,7 @@ $next     = empty($media) ? '{/base}/media/list' : '{/base}/media/list?{?}&offse
 
 <div class="row">
     <div class="col-xs-12">
-        <div class="portlet">
+        <section class="portlet">
             <div class="portlet-head">
                 <?= $this->getHtml('Media'); ?><i class="g-icon end-xs download btn">download</i>
             </div>
@@ -249,6 +249,6 @@ $next     = empty($media) ? '{/base}/media/list' : '{/base}/media/list?{?}&offse
                     <?= $this->getHtml('Download'); ?>
                 </a>
             </div>
-        </div>
+        </section>
     </div>
 </div>

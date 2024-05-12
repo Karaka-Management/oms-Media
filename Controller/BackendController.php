@@ -22,8 +22,6 @@ use Modules\Media\Models\CollectionMapper;
 use Modules\Media\Models\Media;
 use Modules\Media\Models\MediaClass;
 use Modules\Media\Models\MediaMapper;
-use Modules\Media\Models\MediaTypeL11nMapper;
-use Modules\Media\Models\MediaTypeMapper;
 use Modules\Media\Models\NullMedia;
 use Modules\Media\Models\PermissionCategory;
 use Modules\Media\Theme\Backend\Components\Media\ElementView;
@@ -390,43 +388,7 @@ final class BackendController extends Controller
         $settings               = SettingMapper::getAll()->where('module', $id)->executeGetArray();
         $view->data['settings'] = $settings;
 
-        $types               = MediaTypeMapper::getAll()->with('title')->where('title/language', $response->header->l11n->language)->executeGetArray();
-        $view->data['types'] = $types;
-
         $view->setTemplate('/Modules/' . static::NAME . '/Admin/Settings/Theme/Backend/settings');
-
-        return $view;
-    }
-
-    /**
-     * Routing end-point for application behavior.
-     *
-     * @param RequestAbstract  $request  Request
-     * @param ResponseAbstract $response Response
-     * @param array            $data     Generic data
-     *
-     * @return RenderableInterface
-     *
-     * @since 1.0.0
-     * @codeCoverageIgnore
-     */
-    public function viewMediaTypeSettings(RequestAbstract $request, ResponseAbstract $response, array $data = []) : RenderableInterface
-    {
-        $view = new View($this->app->l11nManager, $request, $response);
-        $view->setTemplate('/Modules/' . static::NAME . '/Admin/Settings/Theme/Backend/settings-type');
-
-        /** @var \phpOMS\Localization\BaseStringL11n $type */
-        $type = MediaTypeMapper::get()
-            ->with('title')
-            ->where('title/language', $response->header->l11n->language)
-            ->where('id', (int) $request->getData('id'))
-            ->execute();
-
-        $view->data['nav']  = $this->app->moduleManager->get('Navigation')->createNavigationMid(1007501001, $request, $response);
-        $view->data['type'] = $type;
-
-        $l11n               = MediaTypeL11nMapper::getAll()->where('type', $type->id)->executeGetArray();
-        $view->data['l11n'] = $l11n;
 
         return $view;
     }

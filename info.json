@@ -24,8 +24,8 @@
     },
     "providing": {
         "Navigation": "*",
-        "Media": "*",
-        "Search": "*"
+        "Search": "*",
+        "Tag": "*"
     },
     "load": [
         {

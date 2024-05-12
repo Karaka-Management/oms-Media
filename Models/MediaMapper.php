@@ -106,12 +106,6 @@ class MediaMapper extends DataMapperFactory
             'external' => 'media_tag_dst',
             'self'     => 'media_tag_src',
         ],
-        'types' => [
-            'mapper'   => MediaTypeMapper::class,
-            'table'    => 'media_type_rel',
-            'external' => 'media_type_rel_dst',
-            'self'     => 'media_type_rel_src',
-        ],
     ];
 
     /**
@@ -182,8 +176,6 @@ class MediaMapper extends DataMapperFactory
     /**
      * Get parent collection
      *
-     * WARNING: THIS IS NOT RETURNING THE COLLECTION OF A MEDIA OBJECT BUT ITS PARENT!!!
-     *
      * @param string $path Virtual path
      *
      * @return ReadMapper
@@ -195,9 +187,6 @@ class MediaMapper extends DataMapperFactory
         $path        = \dirname($path);
         $name        = \basename($path);
         $virtualPath = '/' . \trim(\dirname($path), '/');
-
-        //$virtualPath = '/' . \trim(\substr($path, 0, \strripos($path, '/') + 1), '/');
-        //$name        = \substr($path, \strripos($path, '/') + 1);
 
         return CollectionMapper::get()
             ->with('sources')

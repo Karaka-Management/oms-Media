@@ -29,8 +29,8 @@ use phpOMS\Uri\UriFactory;
 
 <div class="row">
     <div class="col-xs-12 col-md-6">
-        <form method="PUT" id="media-uploader" action="<?= UriFactory::build('{/api}media?csrf={$CSRF}'); ?>">
-            <div class="portlet">
+        <section class="portlet">
+            <form method="PUT" id="media-uploader" action="<?= UriFactory::build('{/api}media?csrf={$CSRF}'); ?>">
                 <div class="portlet-head"><?= $this->getHtml('Upload'); ?></div>
                 <div class="portlet-body">
                     <div class="form-group">
@@ -60,7 +60,7 @@ use phpOMS\Uri\UriFactory;
                 <div class="portlet-foot">
                     <input type="submit" id="iMediaCreate" name="mediaCreateButton" value="<?= $this->getHtml('Create', '0', '0'); ?>">
                 </div>
-            </div>
-        </form>
+            </form>
+        </section>
     </div>
 </div>

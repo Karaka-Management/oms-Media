@@ -17,7 +17,7 @@ use phpOMS\Uri\UriFactory;
 ?>
 <div class="row">
     <div class="col-xs-12 col-md-6">
-        <div class="portlet">
+        <section class="portlet">
             <div class="portlet-head"><?= $this->getHtml('Upload', 'Media', 'Backend'); ?></div>
             <form id="<?= $this->form; ?>-upload">
                 <div class="portlet-body">
@@ -61,7 +61,7 @@ use phpOMS\Uri\UriFactory;
                     </div>
                 </div>
             </form>
-        </div>
+        </section>
 
         <section class="portlet">
             <div class="portlet-head"><?= $this->getHtml('Files', 'Media', 'Backend'); ?><i class="g-icon download btn end-xs">download</i></div>

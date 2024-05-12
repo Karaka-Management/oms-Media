@@ -1,58 +1,4 @@
 {
-    "media_type": {
-        "name": "media_type",
-        "fields": {
-            "media_type_id": {
-                "name": "media_type_id",
-                "type": "INT",
-                "null": false,
-                "primary": true,
-                "autoincrement": true
-            },
-            "media_type_name": {
-                "name": "media_type_name",
-                "type": "VARCHAR(255)",
-                "null": false
-            },
-            "media_type_isvisible": {
-                "name": "media_type_isvisible",
-                "type": "TINYINT(1)",
-                "null": false
-            }
-        }
-    },
-    "media_type_l11n": {
-        "name": "media_type_l11n",
-        "fields": {
-            "media_type_l11n_id": {
-                "name": "media_type_l11n_id",
-                "type": "INT",
-                "null": false,
-                "primary": true,
-                "autoincrement": true
-            },
-            "media_type_l11n_title": {
-                "name": "media_type_l11n_title",
-                "type": "VARCHAR(255)",
-                "null": false
-            },
-            "media_type_l11n_type": {
-                "name": "media_type_l11n_type",
-                "type": "INT",
-                "null": false,
-                "foreignTable": "media_type",
-                "foreignKey": "media_type_id"
-            },
-            "media_type_l11n_language": {
-                "name": "media_type_l11n_language",
-                "type": "VARCHAR(2)",
-                "default": null,
-                "null": true,
-                "foreignTable": "language",
-                "foreignKey": "language_639_1"
-            }
-        }
-    },
     "media_parsed": {
         "name": "media_parsed",
         "fields": {
@@ -254,32 +200,6 @@
                 "null": false,
                 "foreignTable": "tag",
                 "foreignKey": "tag_id"
-            }
-        }
-    },
-    "media_type_rel": {
-        "name": "media_type_rel",
-        "fields": {
-            "media_type_rel_id": {
-                "name": "media_type_rel_id",
-                "type": "INT",
-                "null": false,
-                "primary": true,
-                "autoincrement": true
-            },
-            "media_type_rel_src": {
-                "name": "media_type_rel_src",
-                "type": "INT",
-                "null": false,
-                "foreignTable": "media",
-                "foreignKey": "media_id"
-            },
-            "media_type_rel_dst": {
-                "name": "media_type_rel_dst",
-                "type": "INT",
-                "null": false,
-                "foreignTable": "media_type",
-                "foreignKey": "media_type_id"
             }
         }
     }
