@@ -201,7 +201,7 @@ class UploadFile
 
             // Make sure uploaded file is not executable
             $currentPermissions = \fileperms($dest);
-            $newPermissions = $currentPermissions & ~0100;
+            $newPermissions     = $currentPermissions & ~0100;
             \chmod($dest, $newPermissions);
 
             if ($encryptionKey !== '') {

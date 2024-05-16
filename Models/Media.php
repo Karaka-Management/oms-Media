@@ -268,9 +268,7 @@ class Media implements \JsonSerializable
      */
     public function setPassword(?string $password) : void
     {
-        $temp = empty($password) ? null : \password_hash($password, \PASSWORD_BCRYPT);
-
-        $this->password = $temp === false ? null : $temp;
+        $this->password = empty($password) ? null : \password_hash($password, \PASSWORD_BCRYPT);
     }
 
     /**
