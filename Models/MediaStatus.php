@@ -6,7 +6,7 @@
  *
  * @package   Modules\Media\Models
  * @copyright Dennis Eichhorn
- * @license   OMS License 2.0
+ * @license   OMS License 2.2
  * @version   1.0.0
  * @link      https://jingga.app
  */
@@ -18,7 +18,7 @@ namespace Modules\Media\Models;
  * Media status enum.
  *
  * @package Modules\Media\Models
- * @license OMS License 2.0
+ * @license OMS License 2.2
  * @link    https://jingga.app
  * @since   1.0.0
  */
@@ -28,7 +28,7 @@ use phpOMS\Stdlib\Base\Enum;
  * Media status enum.
  *
  * @package phpOMS\DataStorage\Database
- * @license OMS License 2.0
+ * @license OMS License 2.2
  * @link    https://jingga.app
  * @since   1.0.0
  */
