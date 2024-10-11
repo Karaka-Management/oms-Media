@@ -19,7 +19,7 @@ use phpOMS\Uri\UriFactory;
     <div class="col-xs-12 col-md-6">
         <section class="portlet">
             <div class="portlet-head"><?= $this->getHtml('Upload', 'Media', 'Backend'); ?></div>
-            <form id="<?= $this->form; ?>-upload">
+            <form id="<?= $this->form; ?>-upload" action="<?= UriFactory::build($this->apiUri); ?>" method="put">
                 <div class="portlet-body">
                     <div class="form-group">
                         <label for="mediaInput"><?= $this->getHtml('Media', 'Media', 'Backend'); ?></label>
@@ -48,7 +48,7 @@ use phpOMS\Uri\UriFactory;
                                     </div>
                                 </div>
                             </div>
-                            <div class="ipt-second"><button><?= $this->getHtml('Select', 'Media', 'Backend'); ?></button></div>
+                            <!--<div class="ipt-second"><button><?= $this->getHtml('Select', 'Media', 'Backend'); ?></button></div>-->
                         </div>
                     </div>
 
@@ -56,9 +56,13 @@ use phpOMS\Uri\UriFactory;
                         <label for="iUpload"><?= $this->getHtml('Upload', 'Media', 'Backend'); ?></label>
                         <div class="wf-100">
                             <input type="hidden" name="virtualPath" form="<?= $this->form; ?>" value="<?= $this->virtualPath; ?>">
+                            <input type="hidden" name="ref" form="<?= $this->form; ?>" value="<?= $this->ref; ?>">
                             <input type="file" id="iUpload" name="upload" form="<?= $this->form; ?>" multiple>
                         </div>
                     </div>
+                </div>
+                <div class="portlet-foot">
+                    <input id="iSubmit" name="submit" type="submit" value="<?= $this->getHtml('Create', '0', '0'); ?>">
                 </div>
             </form>
         </section>
