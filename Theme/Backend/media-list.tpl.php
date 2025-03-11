@@ -34,7 +34,6 @@ $accountDir = $account->id . ' ' . $account->login;
 $previous = empty($media) ? '{/base}/media/list' : '{/base}/media/list?{?}&offset=' . \reset($media)->id . '&ptype=p';
 $next     = empty($media) ? '{/base}/media/list' : '{/base}/media/list?{?}&offset=' . \end($media)->id . '&ptype=n';
 ?>
-
 <div class="row">
     <div class="col-xs-12">
         <div class="box">

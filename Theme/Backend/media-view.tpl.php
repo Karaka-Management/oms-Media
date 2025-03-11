@@ -139,7 +139,6 @@ echo $this->data['nav']->render();
 <?php
     $media = $media->class === MediaClass::REFERENCE ? $media->source : $media;
 ?>
-
 <div class="row col-simple">
     <div class="col-xs-12 col-simple">
         <?= $view->render($media); ?>
