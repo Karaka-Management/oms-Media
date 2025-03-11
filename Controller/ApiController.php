@@ -291,6 +291,8 @@ final class ApiController extends Controller
      *
      * @return Collection
      *
+     * @question Do we want the tag parameter to be an array?
+     *
      * @since 1.0.0
      */
     public function uploadFiles(
