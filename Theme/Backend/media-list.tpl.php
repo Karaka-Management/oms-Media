@@ -22,7 +22,7 @@ include __DIR__ . '/template-functions.php';
 /**
  * @var \phpOMS\Views\View $this
  */
-$mediaPath = \urldecode($this->getData('path') ?? '/');
+$mediaPath = \urldecode($this->data['path'] ?? '/');
 
 /** @var \Modules\Media\Models\Media[] $media */
 $media = $this->data['media'] ?? [];

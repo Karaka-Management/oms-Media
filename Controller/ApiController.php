@@ -100,7 +100,7 @@ final class ApiController extends Controller
         }
 
         $media = $data['media'] ?? MediaMapper::get()
-            ->where('id', (int) $request->getData('id'))
+            ->where('id', $request->getDataInt('id') ?? 0)
             ->execute();
 
         /** @var \Model\Setting $template */
@@ -498,9 +498,9 @@ final class ApiController extends Controller
             return $media;
         }
 
-        $app->eventManager->triggerSimilar('PRE:Module:Media-media-create', '', $media);
+        $app->eventManager->triggerSimilar('PRE:Media-media-create', '', $media);
         MediaMapper::create()->execute($media);
-        $app->eventManager->triggerSimilar('POST:Module:Media-media-create', '',
+        $app->eventManager->triggerSimilar('POST:Media-media-create', '',
             [
                 $account,
                 null, $media,
@@ -657,7 +657,7 @@ final class ApiController extends Controller
         }
 
         /** @var Media $old */
-        $old = MediaMapper::get()->where('id', (int) $request->getData('id'))->execute();
+        $old = MediaMapper::get()->where('id', $request->getDataInt('id') ?? 0)->execute();
         $new = $this->updateMediaFromRequest($request, clone $old);
 
         $this->updateModel($request->header->account, $old, $new, MediaMapper::class, 'media', $request->getOrigin());
@@ -1241,7 +1241,7 @@ final class ApiController extends Controller
 
         if ($request->hasData('id')) {
             /** @var Media $media */
-            $media    = MediaMapper::get()->where('id', (int) $request->getData('id'))->execute();
+            $media    = MediaMapper::get()->where('id', $request->getDataInt('id') ?? 0)->execute();
             $filePath = $media->getAbsolutePath();
         } else {
             $path  = \urldecode($request->getDataString('path') ?? '');

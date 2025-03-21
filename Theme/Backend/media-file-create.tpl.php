@@ -28,12 +28,12 @@ use phpOMS\Uri\UriFactory;
 
         <section class="portlet">
             <div class="portlet-body">
-                <?= $this->getData('editor')->render('editor'); ?>
+                <?= $this->data['editor']->render('editor'); ?>
             </div>
         </section>
 
         <div class="box">
-            <?= $this->getData('editor')->getData('text')->render('editor', 'content', 'fEditor'); ?>
+            <?= $this->data['editor']->data['text']->render('editor', 'content', 'fEditor'); ?>
         </div>
     </div>
 
